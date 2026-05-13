@@ -35,7 +35,7 @@ export default function Interstitial() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapRef.current,
-          start: 'top top',
+          start: 'top 15%',
           end: '+=200%',
           pin: true,
           scrub: 0.8,

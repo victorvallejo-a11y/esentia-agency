@@ -64,7 +64,7 @@ const departments = [
   {
     name: 'Operaciones',
     Icon: Cog,
-    bg: '#F0EDE6',
+    bg: '#D8D4CB',
     text: '#111111',
     accent: '#0F766E',
     glow: 'radial-gradient(ellipse 75% 60% at 80% 15%, #0F766E22 0%, transparent 60%)',
