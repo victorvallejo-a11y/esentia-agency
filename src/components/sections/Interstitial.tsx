@@ -24,8 +24,8 @@ export default function Interstitial() {
           ease: 'power3.out',
           scrollTrigger: {
             trigger: wrapRef.current,
-            start: 'top 85%',
-            end: 'top 30%',
+            start: 'top 100%',
+            end: 'top 40%',
             scrub: 0.7,
           }
         }

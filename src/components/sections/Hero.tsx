@@ -66,53 +66,57 @@ export default function Hero() {
         <Canvas3D />
       </div>
 
-      {/* ── TOP-LEFT: "Tu negocio / no duerme" (sin punto) ──────────────── */}
-      {/* +1.5cm (~57px) abajo, +1cm (~38px) hacia el centro vs borde */}
-      <div
-        className="hero-title-left absolute z-10"
-        style={{ top: '195px', left: '136px', maxWidth: '400px' }}
-      >
-        <h1
-          className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
-          style={{ fontSize: 'clamp(2.4rem, 3.84vw, 3.6rem)' }}
-        >
-          Tu negocio<br/>no duerme
-        </h1>
+      {/* ── DESKTOP: layout scattered ── */}
+      <div className="hidden md:block">
+        <div className="hero-title-left absolute z-10" style={{ top: '195px', left: '136px', maxWidth: '400px' }}>
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
+            style={{ fontSize: 'clamp(2.4rem, 3.84vw, 3.6rem)' }}>
+            Tu negocio<br/>no duerme
+          </h1>
+        </div>
+
+        <div className="hero-title-right absolute z-10 text-right" style={{ bottom: '100px', right: '72px', maxWidth: '680px' }}>
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
+            style={{ fontSize: 'clamp(2.4rem, 3.84vw, 3.6rem)' }}>
+            Tu atención<br/>
+            <span style={{whiteSpace:'nowrap'}}>al cliente, <span className="text-[#0F766E]">tampoco</span></span>
+          </h1>
+        </div>
+
+        <div className="hero-ctas absolute z-10 flex items-center gap-4 flex-wrap justify-center" style={{ bottom: '36px', left: 0, right: 0 }}>
+          <MagneticButton href="#calculadora"
+            className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-lg glow-pulse hover:bg-[#0d6960] transition-colors">
+            Calcula lo que estas perdiendo<ArrowRight size={15}/>
+          </MagneticButton>
+          <MagneticButton href="https://wa.me/34711237051"
+            className="inline-flex items-center gap-2 px-6 py-3.5 text-[15px] font-inter font-medium rounded-lg border border-[#1A1A1A]/15 text-[#1A1A1A] hover:border-[#0F766E] hover:text-[#0F766E] transition-all duration-200 bg-white/60 backdrop-blur-sm">
+            <MessageCircle size={15}/>WhatsApp
+          </MagneticButton>
+        </div>
       </div>
 
-      {/* ── BOTTOM-RIGHT: misma separación del borde que el texto izquierdo */}
-      <div
-        className="hero-title-right absolute z-10 text-right"
-        style={{ bottom: '100px', right: '72px', maxWidth: '680px' }}
-      >
-        <h1
-          className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
-          style={{ fontSize: 'clamp(2.4rem, 3.84vw, 3.6rem)' }}
-        >
-          Tu atención<br/>
-          <span style={{whiteSpace:'nowrap'}}>al cliente, <span className="text-[#0F766E]">tampoco</span></span>
-        </h1>
-      </div>
-
-      {/* ── CTAs — centered, clear below sphere ─────────────────────────── */}
-      <div
-        className="hero-ctas absolute z-10 flex items-center gap-4 flex-wrap justify-center"
-        style={{ bottom: '36px', left: 0, right: 0 }}
-      >
-        <MagneticButton
-          href="#calculadora"
-          className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-lg glow-pulse hover:bg-[#0d6960] transition-colors"
-        >
-          Calcula lo que estas perdiendo
-          <ArrowRight size={15}/>
-        </MagneticButton>
-        <MagneticButton
-          href="https://wa.me/34711237051"
-          className="inline-flex items-center gap-2 px-6 py-3.5 text-[15px] font-inter font-medium rounded-lg border border-[#1A1A1A]/15 text-[#1A1A1A] hover:border-[#0F766E] hover:text-[#0F766E] transition-all duration-200 bg-white/60 backdrop-blur-sm"
-        >
-          <MessageCircle size={15}/>
-          WhatsApp
-        </MagneticButton>
+      {/* ── MOBILE: layout centrado ── */}
+      <div className="md:hidden absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center gap-8">
+        <div className="hero-title-left">
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.6rem]">
+            Tu negocio<br/>no duerme
+          </h1>
+        </div>
+        <div className="hero-title-right">
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.6rem]">
+            Tu atención<br/>al cliente, <span className="text-[#0F766E]">tampoco</span>
+          </h1>
+        </div>
+        <div className="hero-ctas flex flex-col items-center gap-3 w-full">
+          <a href="#calculadora"
+            className="w-full max-w-xs inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-lg">
+            Calcula lo que pierdes<ArrowRight size={15}/>
+          </a>
+          <a href="https://wa.me/34711237051"
+            className="w-full max-w-xs inline-flex items-center justify-center gap-2 px-6 py-4 text-[15px] font-inter font-medium rounded-lg border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
+            <MessageCircle size={15}/>WhatsApp
+          </a>
+        </div>
       </div>
 
       {/* Scroll indicator */}

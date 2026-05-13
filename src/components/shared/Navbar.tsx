@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { Calendar, Phone, Mail, ChevronDown } from 'lucide-react'
+import { Calendar, Phone, Mail, ChevronDown, X } from 'lucide-react'
 
 const links = [
   { label: 'Servicios',  href: '#servicios' },
@@ -18,6 +18,7 @@ export default function Navbar() {
   const [p,            setP]            = useState(0)   // progress 0→1
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [menuOpen,     setMenuOpen]     = useState(false)
+  const [mobileOpen,   setMobileOpen]   = useState(false)
   const dropRef = useRef<HTMLDivElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -75,6 +76,7 @@ export default function Navbar() {
   // const scrolled = p > 0.85
 
   return (
+    <>
     <nav
       style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, paddingTop: `${padTop}px` }}
     >
@@ -211,12 +213,64 @@ export default function Navbar() {
         </div>
 
         {/* Hamburger mobile */}
-        <button className="md:hidden flex flex-col gap-1.5 p-1" aria-label="Menu">
+        <button className="md:hidden flex flex-col gap-1.5 p-1" aria-label="Menu" onClick={() => setMobileOpen(true)}>
           <span className="w-5 h-px bg-[#1A1A1A] block"/>
           <span className="w-5 h-px bg-[#1A1A1A] block"/>
           <span className="w-3 h-px bg-[#1A1A1A] block"/>
         </button>
       </div>
     </nav>
+
+    {/* ── MOBILE MENU OVERLAY ── */}
+    <div
+      className="md:hidden fixed inset-0 z-[100] bg-[#FAFAF7]"
+      style={{
+        opacity: mobileOpen ? 1 : 0,
+        pointerEvents: mobileOpen ? 'auto' : 'none',
+        transition: 'opacity 0.3s ease',
+      }}
+    >
+      <div className="flex flex-col h-full px-6 pt-6 pb-10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-12">
+          <a href="#" className="font-inter font-semibold text-[13px] tracking-[0.06em] uppercase text-[#1A1A1A]">
+            ESENTIA AGENCY
+          </a>
+          <button onClick={() => setMobileOpen(false)} className="p-1" aria-label="Cerrar">
+            <X size={20} className="text-[#1A1A1A]" />
+          </button>
+        </div>
+
+        {/* Links */}
+        <nav className="flex flex-col gap-1 flex-1">
+          {links.map(l => (
+            <a key={l.href} href={l.href}
+              onClick={e => { setMobileOpen(false); scrollTo(e, l.href) }}
+              className="text-[2rem] font-barlow font-bold uppercase tracking-tight text-[#1A1A1A] py-3 border-b border-black/[0.06] hover:text-[#0F766E] transition-colors">
+              {l.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Contacto */}
+        <div className="flex flex-col gap-3 mt-8">
+          <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 py-4 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-xl">
+            <Calendar size={16} /> Consultoría gratuita
+          </a>
+          <div className="flex gap-3">
+            <a href="tel:+34711237051"
+              className="flex-1 flex items-center justify-center gap-2 py-3.5 border border-black/10 rounded-xl text-[14px] font-inter text-[#1A1A1A]">
+              <Phone size={15} /> Llamar
+            </a>
+            <a href="mailto:victor.vallejo@esentiaagency.es"
+              className="flex-1 flex items-center justify-center gap-2 py-3.5 border border-black/10 rounded-xl text-[14px] font-inter text-[#1A1A1A]">
+              <Mail size={15} /> Email
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </>
   )
 }

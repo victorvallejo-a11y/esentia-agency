@@ -135,7 +135,47 @@ export default function Services() {
           </h2>
         </div>
 
-        <div ref={panelsRef} className="flex gap-[6px] h-[480px]">
+        {/* ── MOBILE: cards verticales ── */}
+        <div className="md:hidden flex flex-col gap-3">
+          {departments.map((dept, i) => {
+            const { Icon } = dept
+            const isOpen = hovered === i
+            return (
+              <div key={i} className="rounded-xl overflow-hidden cursor-pointer"
+                style={{ backgroundColor: dept.bg }}
+                onClick={() => setHovered(isOpen ? null : i)}>
+                <div className="flex items-center gap-4 px-5 py-4">
+                  <div className="flex items-center justify-center rounded-lg flex-shrink-0"
+                    style={{ width: 38, height: 38, backgroundColor: `${dept.accent}1e`, border: `1px solid ${dept.accent}35` }}>
+                    <Icon size={16} style={{ color: dept.accent }} />
+                  </div>
+                  <h3 className="font-barlow font-bold uppercase text-[1rem] tracking-wide flex-1"
+                    style={{ color: dept.text }}>{dept.name}</h3>
+                  <span style={{ color: dept.accent, fontSize: 18, transition: 'transform 0.3s', display: 'block', transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)' }}>+</span>
+                </div>
+                {isOpen && (
+                  <div className="px-5 pb-5">
+                    <p className="font-inter text-[13px] mb-4" style={{ color: dept.text, opacity: 0.6 }}>{dept.tagline}</p>
+                    <ul className="flex flex-col gap-2 mb-4">
+                      {dept.bullets.map((b, j) => (
+                        <li key={j} className="flex items-start gap-2.5 font-inter text-[13px]" style={{ color: dept.text, opacity: 0.75 }}>
+                          <span className="mt-[5px] w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: dept.accent }} />{b}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex items-baseline gap-2 pt-3" style={{ borderTop: `1px solid ${dept.accent}28` }}>
+                      <span className="font-mono font-semibold text-[1.4rem]" style={{ color: dept.accent }}>{dept.metric}</span>
+                      <span className="font-inter text-[12px]" style={{ color: dept.text, opacity: 0.38 }}>{dept.metricLabel}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* ── DESKTOP: paneles horizontales ── */}
+        <div ref={panelsRef} className="hidden md:flex gap-[6px] h-[480px]">
           {departments.map((dept, i) => {
             const isHovered  = hovered === i
             const anyHovered = hovered !== null
@@ -282,7 +322,7 @@ export default function Services() {
         </div>
 
         <p
-          className="text-center text-[11px] font-inter text-[#111111]/25 mt-4 tracking-wide"
+          className="hidden md:block text-center text-[11px] font-inter text-[#111111]/25 mt-4 tracking-wide"
           style={{ opacity: hovered === null ? 1 : 0, transition: 'opacity 0.3s ease' }}
         >
           Pasa el cursor sobre cada área
