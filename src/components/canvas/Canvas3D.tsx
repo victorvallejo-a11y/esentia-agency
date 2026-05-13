@@ -6,8 +6,8 @@ export default function Canvas3D() {
   const wrapRef   = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    const wrap   = wrapRef.current
+    const canvas = canvasRef.current!
+    const wrap   = wrapRef.current!
     if (!canvas || !wrap) return
 
     const ctx = canvas.getContext('2d')
