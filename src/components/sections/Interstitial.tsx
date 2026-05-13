@@ -24,8 +24,8 @@ export default function Interstitial() {
           ease: 'power3.out',
           scrollTrigger: {
             trigger: wrapRef.current,
-            start: 'top 100%',
-            end: 'top 40%',
+            start: 'top 110%',
+            end: 'top 20%',
             scrub: 0.7,
           }
         }
@@ -35,7 +35,7 @@ export default function Interstitial() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapRef.current,
-          start: 'top 15%',
+          start: 'top top',
           end: '+=200%',
           pin: true,
           scrub: 0.8,
