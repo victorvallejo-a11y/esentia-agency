@@ -7,10 +7,10 @@ export default function FloatingDots({ light = false }: { light?: boolean }) {
   const wrapRef   = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    const wrap   = wrapRef.current
+    const canvas = canvasRef.current!
+    const wrap   = wrapRef.current!
     if (!canvas || !wrap) return
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d')!
     if (!ctx) return
 
     const N = 70
