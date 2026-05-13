@@ -28,7 +28,7 @@ const barlow = Barlow_Condensed({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://esentia.agency'),
-  title: 'Esentia Agency — Automatización con IA para PYMEs',
+  title: 'Esentia Agency',
   description: 'Chatbots de WhatsApp, asistentes de voz y automatizaciones con IA que trabajan 24/7 para tu negocio.',
   keywords: ['automatización IA', 'chatbot WhatsApp', 'asistente voz', 'PYME', 'agencia IA', 'Barcelona'],
 }
