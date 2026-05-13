@@ -135,40 +135,75 @@ export default function Services() {
           </h2>
         </div>
 
-        {/* ── MOBILE: cards verticales ── */}
+        {/* ── MOBILE: cards verticales con animación ── */}
         <div className="md:hidden flex flex-col gap-3">
           {departments.map((dept, i) => {
             const { Icon } = dept
             const isOpen = hovered === i
             return (
               <div key={i} className="rounded-xl overflow-hidden cursor-pointer"
-                style={{ backgroundColor: dept.bg }}
+                style={{
+                  backgroundColor: dept.bg,
+                  transition: 'box-shadow 0.35s ease',
+                  boxShadow: isOpen ? `0 8px 32px ${dept.accent}22` : 'none',
+                }}
                 onClick={() => setHovered(isOpen ? null : i)}>
+
+                {/* Header siempre visible */}
                 <div className="flex items-center gap-4 px-5 py-4">
                   <div className="flex items-center justify-center rounded-lg flex-shrink-0"
-                    style={{ width: 38, height: 38, backgroundColor: `${dept.accent}1e`, border: `1px solid ${dept.accent}35` }}>
+                    style={{
+                      width: 38, height: 38,
+                      backgroundColor: `${dept.accent}1e`,
+                      border: `1px solid ${dept.accent}35`,
+                      transition: 'background 0.3s ease',
+                    }}>
                     <Icon size={16} style={{ color: dept.accent }} />
                   </div>
                   <h3 className="font-barlow font-bold uppercase text-[1rem] tracking-wide flex-1"
                     style={{ color: dept.text }}>{dept.name}</h3>
-                  <span style={{ color: dept.accent, fontSize: 18, transition: 'transform 0.3s', display: 'block', transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)' }}>+</span>
+                  <span style={{
+                    color: dept.accent,
+                    fontSize: 22,
+                    display: 'block',
+                    transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+                    lineHeight: 1,
+                  }}>+</span>
                 </div>
-                {isOpen && (
-                  <div className="px-5 pb-5">
+
+                {/* Contenido animado con max-height */}
+                <div style={{
+                  maxHeight: isOpen ? '400px' : '0px',
+                  overflow: 'hidden',
+                  transition: 'max-height 0.45s cubic-bezier(0.4,0,0.2,1)',
+                }}>
+                  <div style={{
+                    padding: '0 20px 20px',
+                    opacity: isOpen ? 1 : 0,
+                    transform: isOpen ? 'translateY(0)' : 'translateY(-8px)',
+                    transition: 'opacity 0.35s ease 0.08s, transform 0.35s ease 0.08s',
+                  }}>
                     <p className="font-inter text-[13px] mb-4" style={{ color: dept.text, opacity: 0.6 }}>{dept.tagline}</p>
                     <ul className="flex flex-col gap-2 mb-4">
                       {dept.bullets.map((b, j) => (
-                        <li key={j} className="flex items-start gap-2.5 font-inter text-[13px]" style={{ color: dept.text, opacity: 0.75 }}>
-                          <span className="mt-[5px] w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: dept.accent }} />{b}
+                        <li key={j} className="flex items-start gap-2.5 font-inter text-[13px]"
+                          style={{ color: dept.text, opacity: 0.75 }}>
+                          <span className="mt-[5px] w-1.5 h-1.5 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: dept.accent }} />{b}
                         </li>
                       ))}
                     </ul>
-                    <div className="flex items-baseline gap-2 pt-3" style={{ borderTop: `1px solid ${dept.accent}28` }}>
-                      <span className="font-mono font-semibold text-[1.4rem]" style={{ color: dept.accent }}>{dept.metric}</span>
-                      <span className="font-inter text-[12px]" style={{ color: dept.text, opacity: 0.38 }}>{dept.metricLabel}</span>
+                    <div className="flex items-baseline gap-2 pt-3"
+                      style={{ borderTop: `1px solid ${dept.accent}28` }}>
+                      <span className="font-mono font-semibold text-[1.4rem]"
+                        style={{ color: dept.accent }}>{dept.metric}</span>
+                      <span className="font-inter text-[12px]"
+                        style={{ color: dept.text, opacity: 0.38 }}>{dept.metricLabel}</span>
                     </div>
                   </div>
-                )}
+                </div>
+
               </div>
             )
           })}
