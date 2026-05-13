@@ -95,25 +95,26 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ── MOBILE: layout centrado ── */}
-      <div className="md:hidden absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center gap-8">
-        <div className="hero-title-left">
-          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.6rem]">
-            Tu negocio<br/>no duerme
-          </h1>
-        </div>
-        <div className="hero-title-right">
-          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.6rem]">
-            Tu atención<br/>al cliente, <span className="text-[#0F766E]">tampoco</span>
-          </h1>
-        </div>
-        <div className="hero-ctas flex flex-col items-center gap-3 w-full">
+      {/* ── MOBILE: texto arriba, esfera en medio, texto+botones abajo ── */}
+      {/* Título superior */}
+      <div className="md:hidden absolute top-[14%] left-0 right-0 z-10 text-center px-6">
+        <h1 className="hero-title-left font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.8rem]">
+          Tu negocio<br/>no duerme
+        </h1>
+      </div>
+
+      {/* Título inferior + botones */}
+      <div className="md:hidden absolute bottom-[6%] left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
+        <h1 className="hero-title-right font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.8rem] text-center">
+          Tu atención<br/>al cliente, <span className="text-[#0F766E]">tampoco</span>
+        </h1>
+        <div className="hero-ctas flex flex-col items-center gap-3 w-full mt-2">
           <a href="#calculadora"
-            className="w-full max-w-xs inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-lg">
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-xl">
             Calcula lo que pierdes<ArrowRight size={15}/>
           </a>
           <a href="https://wa.me/34711237051"
-            className="w-full max-w-xs inline-flex items-center justify-center gap-2 px-6 py-4 text-[15px] font-inter font-medium rounded-lg border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[15px] font-inter font-medium rounded-xl border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
             <MessageCircle size={15}/>WhatsApp
           </a>
         </div>
