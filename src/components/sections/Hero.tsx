@@ -97,16 +97,16 @@ export default function Hero() {
 
       {/* ── MOBILE: texto arriba, esfera en medio, texto+botones abajo ── */}
       {/* Título superior */}
-      <div className="md:hidden absolute top-[14%] left-0 right-0 z-10 text-center px-6">
-        <h1 className="hero-title-left font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.8rem]">
+      <div className="md:hidden absolute top-[7%] left-0 right-0 z-10 text-center px-6">
+        <h1 className="hero-title-left font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.4rem]">
           Tu negocio<br/>no duerme
         </h1>
       </div>
 
       {/* Título inferior + botones */}
-      <div className="md:hidden absolute bottom-[6%] left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
-        <h1 className="hero-title-right font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.8rem] text-center">
-          Tu atención<br/>al cliente, <span className="text-[#0F766E]">tampoco</span>
+      <div className="md:hidden absolute bottom-[5%] left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
+        <h1 className="hero-title-right font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.4rem] text-center">
+          Tu atención<br/><span style={{whiteSpace:'nowrap'}}>al cliente, <span className="text-[#0F766E]">tampoco</span></span>
         </h1>
         <div className="hero-ctas flex flex-col items-center gap-3 w-full mt-2">
           <a href="#calculadora"
