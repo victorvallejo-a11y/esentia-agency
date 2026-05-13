@@ -72,7 +72,7 @@ export default function Navbar() {
   const bar2Opacity   = menuOpen ? 0 : 1
   const bar3Transform = menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none'
 
-  const scrolled = p > 0.85
+  // const scrolled = p > 0.85
 
   return (
     <nav

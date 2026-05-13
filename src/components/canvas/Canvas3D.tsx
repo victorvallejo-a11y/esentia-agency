@@ -53,7 +53,7 @@ export default function Canvas3D() {
     }
     window.addEventListener('mousemove', onMouse)
 
-    let rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0, autoRotY = 0
+    let rotX = 0, rotY = 0, autoRotY = 0
     // También el tilt del mouse arranca neutral hasta que se mueva
     let smTargetX = 0, smTargetY = 0
 
