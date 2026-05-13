@@ -10,7 +10,7 @@ export default function Canvas3D() {
     const wrap   = wrapRef.current!
     if (!canvas || !wrap) return
 
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d')!
     if (!ctx) return
 
     const N         = 900
