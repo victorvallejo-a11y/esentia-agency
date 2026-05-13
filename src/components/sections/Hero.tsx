@@ -61,8 +61,8 @@ export default function Hero() {
   return (
     <section ref={heroRef} id="inicio" className="relative w-full h-screen bg-[#FAFAF7] overflow-hidden">
 
-      {/* Canvas — background */}
-      <div className="absolute inset-0 z-0">
+      {/* Canvas — background, en móvil lo subimos un poco */}
+      <div className="absolute inset-0 z-0 md:top-0 -top-[8%]">
         <Canvas3D />
       </div>
 
@@ -97,7 +97,7 @@ export default function Hero() {
 
       {/* ── MOBILE: texto arriba, esfera en medio, texto+botones abajo ── */}
       {/* Título superior */}
-      <div className="md:hidden absolute top-[7%] left-0 right-0 z-10 text-center px-6">
+      <div className="md:hidden absolute top-[18%] left-0 right-0 z-10 text-center px-6">
         <h1 className="hero-title-left font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.4rem]">
           Tu negocio<br/>no duerme
         </h1>
