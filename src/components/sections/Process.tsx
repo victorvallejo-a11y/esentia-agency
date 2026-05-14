@@ -41,6 +41,7 @@ export default function Process() {
   const [active, setActive] = useState<number | null>(null)
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 768
     const ctx = gsap.context(() => {
       // Header
       gsap.fromTo('.process-header',
@@ -51,41 +52,31 @@ export default function Process() {
 
       // Pasos alternan: impares desde izquierda, pares desde derecha
       gsap.utils.toArray<HTMLElement>('.process-step').forEach((el, i) => {
-        const fromX = i % 2 === 0 ? -60 : 60
+        const fromX = isMobile ? 0 : (i % 2 === 0 ? -60 : 60)
         gsap.fromTo(el,
           { x: fromX, opacity: 0 },
           { x: 0, opacity: 1, duration: 0.75, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 82%', toggleActions: 'play none none none' },
+            scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
             delay: i * 0.08,
           }
         )
       })
 
-      // Línea vertical que crece al scrollear
-      gsap.fromTo('.process-vline',
-        { scaleY: 0, transformOrigin: 'top center' },
-        { scaleY: 1, ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 55%',
-            end: 'bottom 60%',
-            scrub: true,
+      // Línea y dot — solo en desktop
+      if (!isMobile) {
+        gsap.fromTo('.process-vline',
+          { scaleY: 0, transformOrigin: 'top center' },
+          { scaleY: 1, ease: 'none',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 55%', end: 'bottom 60%', scrub: true }
           }
-        }
-      )
-
-      // Dot viajero que baja por la línea
-      gsap.fromTo('.process-dot',
-        { top: '0%' },
-        { top: '100%', ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 55%',
-            end: 'bottom 60%',
-            scrub: true,
+        )
+        gsap.fromTo('.process-dot',
+          { top: '0%' },
+          { top: '100%', ease: 'none',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 55%', end: 'bottom 60%', scrub: true }
           }
-        }
-      )
+        )
+      }
     }, sectionRef)
     return () => ctx.revert()
   }, [])
