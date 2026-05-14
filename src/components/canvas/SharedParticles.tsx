@@ -14,7 +14,7 @@ export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: num
     const ctx = canvas.getContext('2d')!
     if (!ctx) return
 
-    const N = 140
+    const N = 180
     let W = 0, H = 0
 
     function resize() {
@@ -34,7 +34,7 @@ export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: num
       vx: (Math.random() - 0.5) * 0.32,
       vy: (Math.random() - 0.5) * 0.22,
       r:  2.2 + Math.random() * 3.8,
-      opacity: 0.4 + Math.random() * 0.5,
+      opacity: 0.55 + Math.random() * 0.45,
       phase: Math.random() * Math.PI * 2,
       freq:  0.15 + Math.random() * 0.2,
     }))
@@ -102,7 +102,7 @@ export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: num
   }, [splitRatio])
 
   return (
-    <div ref={wrapRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+    <div ref={wrapRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
       <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0 }} />
     </div>
   )

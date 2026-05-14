@@ -38,23 +38,38 @@ export default function FAQ() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header fade-up
-      gsap.fromTo('.faq-header',
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
-          scrollTrigger: { trigger: '.faq-header', start: 'top 85%', toggleActions: 'play none none none' } }
+      // Badge slides in from left
+      gsap.fromTo('.faq-badge',
+        { x: -40, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
+          scrollTrigger: { trigger: '.faq-header', start: 'top 82%', toggleActions: 'play none none none' } }
       )
 
-      // Items en cascada — slide-up con stagger
+      // Title: big word-by-word reveal
+      gsap.fromTo('.faq-title-word',
+        { y: '110%', opacity: 0 },
+        { y: '0%', opacity: 1, duration: 0.75, ease: 'power4.out', stagger: 0.09,
+          scrollTrigger: { trigger: '.faq-header', start: 'top 82%', toggleActions: 'play none none none' } }
+      )
+
+      // Divider line expands
+      gsap.fromTo('.faq-divider',
+        { scaleX: 0, transformOrigin: 'left center' },
+        { scaleX: 1, duration: 0.9, ease: 'power3.inOut', delay: 0.3,
+          scrollTrigger: { trigger: '.faq-header', start: 'top 82%', toggleActions: 'play none none none' } }
+      )
+
+      // FAQ items: alternating slide-in from left/right
       gsap.utils.toArray<HTMLElement>('.faq-item').forEach((el, i) => {
+        const fromX = i % 2 === 0 ? -60 : 60
         gsap.fromTo(el,
-          { y: 36, opacity: 0 },
+          { x: fromX, opacity: 0, scale: 0.96 },
           {
-            y: 0, opacity: 1,
-            duration: 0.65,
+            x: 0, opacity: 1, scale: 1,
+            duration: 0.7,
             ease: 'power3.out',
-            delay: i * 0.07,
-            scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
+            delay: i * 0.08,
+            scrollTrigger: { trigger: el, start: 'top 92%', toggleActions: 'play none none none' },
           }
         )
       })
@@ -63,25 +78,36 @@ export default function FAQ() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="faq" className="relative bg-white w-full py-28 overflow-hidden">
+    <section ref={sectionRef} id="faq" className="relative w-full py-28 overflow-hidden" style={{ zIndex: 1 }}>
 
       <div className="relative z-10 w-full max-w-3xl mx-auto px-8">
 
-        <div className="faq-header mb-10">
-          <p className="text-[11px] font-inter uppercase tracking-[0.18em] text-[#0F766E] mb-3">
-            Preguntas frecuentes
-          </p>
-          <h2 className="text-[clamp(2.2rem,4vw,3.4rem)] font-inter font-semibold leading-tight tracking-[-0.03em] text-[#111111]">
-            Lo que nos suelen{' '}
-            <span className="text-[#0F766E]">preguntar</span>
-          </h2>
+        <div className="faq-header mb-12">
+          <div className="faq-badge inline-block mb-4">
+            <p className="text-[11px] font-inter uppercase tracking-[0.18em] text-[#0F766E]">
+              Preguntas frecuentes
+            </p>
+          </div>
+
+          {/* Title with per-word clip reveal */}
+          <div className="overflow-hidden">
+            <h2 className="text-[clamp(2.2rem,4vw,3.4rem)] font-inter font-semibold leading-tight tracking-[-0.03em] text-[#111111] flex flex-wrap gap-x-3">
+              {['Lo', 'que', 'nos', 'suelen'].map((word, i) => (
+                <span key={i} className="faq-title-word inline-block">{word}</span>
+              ))}
+              <span className="faq-title-word inline-block text-[#0F766E]">preguntar</span>
+            </h2>
+          </div>
+
+          {/* Animated divider */}
+          <div className="faq-divider mt-6 h-px bg-[#0F766E]/30" />
         </div>
 
         <div className="flex flex-col">
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className="faq-item border-t border-[#1A1A1A]/[0.08] last:border-b cursor-pointer"
+              className="faq-item border-b border-[#1A1A1A]/[0.08] cursor-pointer group"
               onClick={() => setOpen(open === i ? null : i)}
             >
               <div className="flex items-center justify-between gap-6 py-5">
@@ -95,12 +121,12 @@ export default function FAQ() {
                   {faq.q}
                 </h3>
                 <div
-                  className="w-7 h-7 rounded-full border flex items-center justify-center flex-shrink-0"
+                  className="w-7 h-7 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-300"
                   style={{
                     borderColor: open === i ? '#0F766E' : 'rgba(26,26,26,0.15)',
                     color: open === i ? '#0F766E' : 'rgba(26,26,26,0.35)',
                     transform: open === i ? 'rotate(45deg)' : 'rotate(0deg)',
-                    transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                    background: open === i ? 'rgba(15,118,110,0.07)' : 'transparent',
                   }}
                 >
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -109,14 +135,26 @@ export default function FAQ() {
                   </svg>
                 </div>
               </div>
-              <div style={{ maxHeight: open === i ? '160px' : '0px', overflow: 'hidden', transition: 'max-height 0.4s cubic-bezier(0.4,0,0.2,1)' }}>
-                <p className="font-inter text-[14px] text-[#1A1A1A]/50 leading-relaxed pb-5 max-w-xl">
+              <div style={{ maxHeight: open === i ? '200px' : '0px', overflow: 'hidden', transition: 'max-height 0.45s cubic-bezier(0.4,0,0.2,1)' }}>
+                <p className="font-inter text-[14px] text-[#1A1A1A]/55 leading-relaxed pb-5 max-w-xl">
                   {faq.a}
                 </p>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Closing stamp */}
+        <div className="mt-16 text-center" style={{ opacity: 0, animation: 'faqClose 0.8s 0.4s ease forwards' }}>
+          <style>{`@keyframes faqClose { from { opacity:0; transform: translateY(20px) } to { opacity:1; transform: translateY(0) } }`}</style>
+          <p className="text-[13px] font-inter text-[#1A1A1A]/35 tracking-wide">
+            ¿Tienes otra pregunta?{' '}
+            <a href="https://wa.me/34711237051" className="text-[#0F766E] underline underline-offset-2 hover:text-[#0d6960] transition-colors">
+              Escríbenos directamente
+            </a>
+          </p>
+        </div>
+
       </div>
     </section>
   )

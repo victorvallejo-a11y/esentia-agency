@@ -23,7 +23,10 @@ export default function Home() {
       <Process />
 
       {/* Canvas compartido que abarca Calculator + FAQ */}
-      <div style={{ position: 'relative' }}>
+      <div style={{
+        position: 'relative',
+        background: 'linear-gradient(to bottom, #080d0c 0%, #080d0c 50%, #ffffff 50%, #ffffff 100%)',
+      }}>
         <SharedParticles splitRatio={0.5} />
         <Calculator />
         <FAQ />

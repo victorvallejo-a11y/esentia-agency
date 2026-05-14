@@ -88,7 +88,7 @@ export default function Calculator() {
   const costColor = results.costLost < 500 ? 'text-emerald-400' : results.costLost < 2000 ? 'text-amber-400' : 'text-red-400'
 
   return (
-    <section id="calculadora" className="relative bg-[#080d0c] text-white overflow-hidden h-screen flex flex-col justify-center">
+    <section id="calculadora" className="relative text-white overflow-hidden h-screen flex flex-col justify-center" style={{ zIndex: 1 }}>
       {/* Glow central teal */}
       <div className="absolute inset-0 z-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(15,118,110,0.22) 0%, transparent 70%)' }}
