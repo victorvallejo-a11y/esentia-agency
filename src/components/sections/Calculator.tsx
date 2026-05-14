@@ -8,7 +8,6 @@ import RevealOnScroll from '@/components/shared/RevealOnScroll'
 import MagneticButton from '@/components/shared/MagneticButton'
 import { ArrowRight, Clock, TrendingDown, PhoneCall, TrendingUp } from 'lucide-react'
 
-const FloatingDots = dynamic(() => import('@/components/canvas/FloatingDots'), { ssr: false })
 
 const questions = [
   {
@@ -91,10 +90,6 @@ export default function Calculator() {
 
   return (
     <section id="calculadora" className="relative bg-[#080d0c] text-white overflow-hidden h-screen flex flex-col justify-center">
-      {/* Partículas flotantes — eco visual del hero */}
-      <div className="absolute inset-0 z-0">
-        <FloatingDots />
-      </div>
       {/* Glow central teal */}
       <div className="absolute inset-0 z-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(15,118,110,0.22) 0%, transparent 70%)' }}

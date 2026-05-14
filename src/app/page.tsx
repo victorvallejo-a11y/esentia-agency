@@ -1,4 +1,5 @@
-﻿"use client"
+"use client"
+import dynamic from 'next/dynamic'
 import Hero from "@/components/sections/Hero"
 import Problem from "@/components/sections/Problem"
 import Services from "@/components/sections/Services"
@@ -10,6 +11,8 @@ import FAQ from "@/components/sections/FAQ"
 import Booking from "@/components/sections/Booking"
 import Footer from "@/components/sections/Footer"
 
+const SharedParticles = dynamic(() => import('@/components/canvas/SharedParticles'), { ssr: false })
+
 export default function Home() {
   return (
     <main>
@@ -19,29 +22,14 @@ export default function Home() {
       <Services />
       <Process />
 
-      {/*
-        ── Transición Calculator → FAQ ─────────────────────────────────────
-        300vh de scroll total: ~80vh de reposo en Calculator, ~150vh de wipe,
-        el resto para leer FAQ. Ambas secciones absolutas dentro del mismo
-        sticky — FAQ detrás (z10), Calculator delante (z20).
-        El ScrollTrigger clipea Calculator de abajo hacia arriba.
-      */}
-      {/* bg oscuro para que nunca asome blanco durante el scroll */}
-      {/* GSAP pin congela el scroll aquí — igual que Interstitial */}
-      <div id="calc-faq-wrap" style={{ position: 'relative', overflow: 'hidden', height: '100vh' }}>
-        {/* FAQ — detrás, siempre quieta */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 10, overflow: 'hidden' }}>
-          <FAQ />
-        </div>
-        {/* Calculator — delante, se borra de abajo hacia arriba */}
-        <div id="calc-sticky-inner" style={{ position: 'absolute', inset: 0, zIndex: 20, overflow: 'hidden' }}>
-          <Calculator />
-        </div>
+      {/* Canvas compartido que abarca Calculator + FAQ */}
+      <div style={{ position: 'relative' }}>
+        <SharedParticles splitRatio={0.5} />
+        <Calculator />
+        <FAQ />
       </div>
 
-      <div style={{ marginTop: 0 }}>
-        <CaseStudies />
-      </div>
+      <CaseStudies />
       <Booking />
       <Footer />
     </main>

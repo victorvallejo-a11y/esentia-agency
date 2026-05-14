@@ -2,11 +2,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import dynamic from 'next/dynamic'
 
 if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger)
-
-const FloatingDots = dynamic(() => import('@/components/canvas/FloatingDots'), { ssr: false })
 
 const faqs = [
   {
@@ -40,44 +37,33 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(null)
 
   useEffect(() => {
-    // ── PIN + wipe — igual que Interstitial ──────────────────────────────
-    // La página se congela aquí. El usuario scrollea "dentro" del pin.
-    // 20% pausa Calculator → 60% wipe → 20% pausa FAQ → libera
+    const ctx = gsap.context(() => {
+      // Header fade-up
+      gsap.fromTo('.faq-header',
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: '.faq-header', start: 'top 85%', toggleActions: 'play none none none' } }
+      )
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#calc-faq-wrap',
-        pin: true,
-        start: 'top top',
-        end: '+=280%',
-        scrub: true,
-        anticipatePin: 1,
-      }
-    })
-
-    // Pausa en Calculator
-    tl.to({}, { duration: 0.2 })
-
-    // Wipe de abajo hacia arriba, lineal puro
-    tl.fromTo('#calc-sticky-inner',
-      { clipPath: 'inset(0% 0% 0% 0%)' },
-      { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.6, ease: 'none' }
-    )
-
-    // Pausa en FAQ
-    tl.to({}, { duration: 0.2 })
-
-    return () => { tl.scrollTrigger?.kill() }
+      // Items en cascada — slide-up con stagger
+      gsap.utils.toArray<HTMLElement>('.faq-item').forEach((el, i) => {
+        gsap.fromTo(el,
+          { y: 36, opacity: 0 },
+          {
+            y: 0, opacity: 1,
+            duration: 0.65,
+            ease: 'power3.out',
+            delay: i * 0.07,
+            scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
+          }
+        )
+      })
+    }, sectionRef)
+    return () => ctx.revert()
   }, [])
 
   return (
-    // h-screen: ocupa exactamente el viewport — no scrollea, es estática
-    <section ref={sectionRef} id="faq" className="relative bg-white w-full h-full overflow-hidden flex flex-col justify-center" style={{ minHeight: '100vh' }}>
-
-      {/* Partículas sobre blanco */}
-      <div className="absolute inset-0 z-0">
-        <FloatingDots light />
-      </div>
+    <section ref={sectionRef} id="faq" className="relative bg-white w-full py-28 overflow-hidden">
 
       <div className="relative z-10 w-full max-w-3xl mx-auto px-8">
 
@@ -85,7 +71,7 @@ export default function FAQ() {
           <p className="text-[11px] font-inter uppercase tracking-[0.18em] text-[#0F766E] mb-3">
             Preguntas frecuentes
           </p>
-          <h2 className="text-[clamp(2.8rem,5vw,4.2rem)] font-inter font-semibold leading-tight tracking-[-0.03em] text-[#111111]">
+          <h2 className="text-[clamp(2.2rem,4vw,3.4rem)] font-inter font-semibold leading-tight tracking-[-0.03em] text-[#111111]">
             Lo que nos suelen{' '}
             <span className="text-[#0F766E]">preguntar</span>
           </h2>
@@ -95,14 +81,14 @@ export default function FAQ() {
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className="faq-item border-t border-[#1A1A1A]/08 last:border-b cursor-pointer"
+              className="faq-item border-t border-[#1A1A1A]/[0.08] last:border-b cursor-pointer"
               onClick={() => setOpen(open === i ? null : i)}
             >
               <div className="flex items-center justify-between gap-6 py-5">
                 <h3
                   className="font-inter font-medium leading-snug transition-colors duration-200"
                   style={{
-                    fontSize: 'clamp(17px, 1.6vw, 21px)',
+                    fontSize: 'clamp(15px, 1.5vw, 19px)',
                     color: open === i ? '#0F766E' : '#1A1A1A',
                   }}
                 >
