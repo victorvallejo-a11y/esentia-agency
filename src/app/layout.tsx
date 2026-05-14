@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono, Barlow_Condensed } from 'next/font/google'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider'
 import CustomCursor from '@/components/shared/CustomCursor'
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CustomCursor />
           <Navbar />
           {children}
+          <Analytics />
         </SmoothScrollProvider>
       </body>
     </html>
