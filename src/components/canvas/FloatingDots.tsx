@@ -98,7 +98,7 @@ export default function FloatingDots({ light = false }: { light?: boolean }) {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', onResize)
     }
-  }, [])
+  }, [light])
 
   return (
     <div ref={wrapRef} style={{ position: 'absolute', inset: 0 }}>
