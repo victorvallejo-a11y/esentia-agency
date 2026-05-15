@@ -10,7 +10,7 @@ import { ArrowRight, Clock, TrendingDown, PhoneCall, MessageSquare, TrendingUp }
 const questions = [
   {
     id: 'hours',
-    text: '¿Cuántas horas al día inviertes tú o tu equipo en gestionar clientes manualmente? (responder, hacer seguimiento, agendar...)',
+    text: '¿Cuántas horas al día dedica tu equipo a gestionar clientes manualmente? (responder, seguimiento, agendar...)',
     options: [
       { label: 'Menos de 1h', value: 0.5 },
       { label: '1 a 3h', value: 2 },
@@ -20,22 +20,22 @@ const questions = [
   },
   {
     id: 'missedCalls',
-    text: '¿Cuántas llamadas se quedan sin atender al momento cada día? (clientes que llaman y no hay nadie disponible)',
+    text: '¿Cuántas llamadas se quedan sin atender al momento cada día? (clientes que llaman y no hay nadie libre)',
     options: [
-      { label: '1 o 2 — tampoco mucho', value: 1.5 },
+      { label: '1 o 2', value: 1.5 },
       { label: '3 a 5', value: 4 },
-      { label: '6 a 10', value: 8 },
-      { label: 'Más de 10 — es un problema', value: 13 },
+      { label: '5 a 8', value: 6.5 },
+      { label: 'Más de 8 — es un problema real', value: 10 },
     ],
   },
   {
     id: 'missedMessages',
-    text: '¿Cuántos mensajes recibes al día (WhatsApp, email, web) sin responder en menos de 1 hora?',
+    text: '¿Cuántos mensajes recibes al día (WhatsApp, email, formulario web) sin responder en menos de 1 hora?',
     options: [
       { label: '1 a 5', value: 3 },
-      { label: '5 a 15', value: 10 },
-      { label: '15 a 30', value: 22 },
-      { label: 'Más de 30 — imposible responder todo', value: 40 },
+      { label: '5 a 10', value: 7 },
+      { label: '10 a 20', value: 15 },
+      { label: 'Más de 20', value: 25 },
     ],
   },
   {
@@ -43,9 +43,9 @@ const questions = [
     text: '¿Cuál es el valor medio de lo que paga un cliente tuyo?',
     options: [
       { label: 'Menos de 100 €', value: 70 },
-      { label: '100 € a 500 €', value: 280 },
-      { label: '500 € a 2.000 €', value: 1100 },
-      { label: 'Más de 2.000 €', value: 3000 },
+      { label: '100 € a 500 €', value: 250 },
+      { label: '500 € a 1.500 €', value: 900 },
+      { label: 'Más de 1.500 €', value: 2000 },
     ],
   },
   {
@@ -53,9 +53,9 @@ const questions = [
     text: '¿Tienes algún sistema automático que haga seguimiento a los leads que no compraron de inmediato?',
     options: [
       { label: 'Sí, funciona bien', value: 0 },
-      { label: 'Sí, pero falla o no lo uso', value: 0.7 },
-      { label: 'No tengo nada', value: 1.2 },
-      { label: '¿Qué es un lead?', value: 1.5 },
+      { label: 'Sí, pero falla o no lo uso', value: 0.6 },
+      { label: 'No tengo nada', value: 1.0 },
+      { label: '¿Qué es un lead?', value: 1.3 },
     ],
   },
   {
@@ -89,15 +89,17 @@ function calcResults(ans: number[]) {
   const missedCallsMonth = Math.round(missedCallsDay * 22)
   const missedMsgMonth   = Math.round(missedMsgDay * 22)
 
-  // Coste estimado: llamadas convierten ~25%, mensajes ~10%
-  // El multiplicador de follow-up refleja cuánto más se pierde sin sistema
-  const multiplier = noFollowup > 0 ? 1 + noFollowup * 0.35 : 1
+  // Lógica realista:
+  // Llamadas: ~35% no vuelven a llamar. De esos, ~20% habrían comprado → 7% del total
+  // Mensajes:  ~25% no siguen. De esos, ~12% habrían comprado → 3% del total
+  // Multiplicador de follow-up: sin sistema se pierde un 20-40% adicional
+  const followupMult = noFollowup > 0 ? 1 + noFollowup * 0.25 : 1
   const costLost = Math.round(
-    (missedCallsMonth * 0.25 * ticket + missedMsgMonth * 0.10 * ticket) * multiplier
+    (missedCallsMonth * 0.07 * ticket + missedMsgMonth * 0.03 * ticket) * followupMult
   )
 
-  // ROI: estimamos inversión media de 1.500 €
-  const returnMonths = Math.max(1, Math.round(1500 / Math.max(costLost, 300)))
+  // ROI: inversión media ~1.200 €
+  const returnMonths = Math.max(1, Math.round(1200 / Math.max(costLost, 200)))
 
   return { hoursMonth, costLost, missedCallsMonth, missedMsgMonth, returnMonths }
 }
@@ -238,74 +240,73 @@ export default function Calculator() {
 
               {/* PHASE 3 — Resultado */}
               {phase === 'result' && (
-                <div style={{animation:'revealScale 0.8s cubic-bezier(0.34,1.56,0.64,1)'}}>
-                  <style>{`@keyframes revealScale{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}`}</style>
+                <div style={{animation:'revealScale 0.6s cubic-bezier(0.34,1.56,0.64,1)'}}>
+                  <style>{`@keyframes revealScale{from{opacity:0;transform:scale(0.93)}to{opacity:1;transform:scale(1)}}`}</style>
 
-                  <div className="flex items-center justify-between mb-6">
-                    <p className="text-[11px] font-mono text-[#2DD4BF] uppercase tracking-widest">Estimación aproximada</p>
-                    <span className="text-[10px] font-inter text-white/25">Basado en tus respuestas</span>
-                  </div>
+                  <p className="text-[10px] font-mono text-[#2DD4BF] uppercase tracking-widest mb-4">
+                    Estimación aproximada · basada en tus respuestas
+                  </p>
 
-                  {/* 4 métricas en 2×2 */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-white/[0.03] rounded-xl p-4 text-center">
-                      <Clock size={16} className="mx-auto mb-2 text-[#2DD4BF]"/>
-                      <div className="font-mono font-semibold text-[#2DD4BF] text-[1.9rem] leading-none mb-1">
+                  {/* 4 métricas en 2×2 — compactas */}
+                  <div className="grid grid-cols-2 gap-2.5 mb-4">
+                    <div className="bg-white/[0.04] rounded-xl p-3 text-center">
+                      <Clock size={13} className="mx-auto mb-1.5 text-[#2DD4BF]"/>
+                      <div className="font-mono font-semibold text-[#2DD4BF] text-[1.45rem] leading-none mb-0.5">
                         {results.hoursMonth}h
                       </div>
-                      <p className="text-[11px] font-inter text-white/40 leading-snug">horas manuales<br/>perdidas al mes</p>
+                      <p className="text-[10px] font-inter text-white/35 leading-snug">horas manuales/mes</p>
                     </div>
 
-                    <div className="bg-white/[0.03] rounded-xl p-4 text-center">
-                      <TrendingDown size={16} className="mx-auto mb-2 text-[#2DD4BF]"/>
-                      <div className={`font-mono font-semibold text-[1.9rem] leading-none mb-1 ${costColor}`}>
-                        ~{results.costLost.toLocaleString('es-ES')} €
+                    <div className="bg-white/[0.04] rounded-xl p-3 text-center">
+                      <TrendingDown size={13} className="mx-auto mb-1.5 text-[#2DD4BF]"/>
+                      <div className={`font-mono font-semibold text-[1.45rem] leading-none mb-0.5 ${costColor}`}>
+                        ~{results.costLost.toLocaleString('es-ES')}€
                       </div>
-                      <p className="text-[11px] font-inter text-white/40 leading-snug">coste estimado de<br/>clientes perdidos/mes</p>
+                      <p className="text-[10px] font-inter text-white/35 leading-snug">coste clientes perdidos/mes</p>
                     </div>
 
-                    <div className="bg-white/[0.03] rounded-xl p-4 text-center">
-                      <PhoneCall size={16} className="mx-auto mb-2 text-[#2DD4BF]"/>
-                      <div className="font-mono font-semibold text-[#2DD4BF] text-[1.9rem] leading-none mb-1">
+                    <div className="bg-white/[0.04] rounded-xl p-3 text-center">
+                      <PhoneCall size={13} className="mx-auto mb-1.5 text-[#2DD4BF]"/>
+                      <div className="font-mono font-semibold text-[#2DD4BF] text-[1.45rem] leading-none mb-0.5">
                         ~{results.missedCallsMonth}
                       </div>
-                      <p className="text-[11px] font-inter text-white/40 leading-snug">llamadas sin atender<br/>al mes</p>
+                      <p className="text-[10px] font-inter text-white/35 leading-snug">llamadas sin atender/mes</p>
                     </div>
 
-                    <div className="bg-white/[0.03] rounded-xl p-4 text-center">
-                      <MessageSquare size={16} className="mx-auto mb-2 text-[#2DD4BF]"/>
-                      <div className="font-mono font-semibold text-[#2DD4BF] text-[1.9rem] leading-none mb-1">
+                    <div className="bg-white/[0.04] rounded-xl p-3 text-center">
+                      <MessageSquare size={13} className="mx-auto mb-1.5 text-[#2DD4BF]"/>
+                      <div className="font-mono font-semibold text-[#2DD4BF] text-[1.45rem] leading-none mb-0.5">
                         ~{results.missedMsgMonth}
                       </div>
-                      <p className="text-[11px] font-inter text-white/40 leading-snug">mensajes sin respuesta<br/>a tiempo al mes</p>
+                      <p className="text-[10px] font-inter text-white/35 leading-snug">mensajes sin respuesta/mes</p>
                     </div>
                   </div>
 
                   {/* ROI box */}
-                  <div className="rounded-xl border border-[#0F766E]/40 bg-[#0F766E]/[0.08] p-4 mb-5">
-                    <div className="flex items-center gap-2 mb-1">
-                      <TrendingUp size={14} className="text-[#2DD4BF]"/>
-                      <p className="text-[11px] font-mono text-[#2DD4BF] uppercase tracking-wider font-medium">Retorno estimado</p>
+                  <div className="rounded-xl border border-[#0F766E]/35 bg-[#0F766E]/[0.07] p-3.5 mb-4">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <TrendingUp size={12} className="text-[#2DD4BF]"/>
+                      <p className="text-[10px] font-mono text-[#2DD4BF] uppercase tracking-wider">Retorno estimado</p>
                     </div>
-                    <p className="text-[14px] font-inter text-white font-semibold">
+                    <p className="text-[13px] font-inter text-white font-semibold">
                       Recuperas la inversión en{' '}
                       <span className="text-[#2DD4BF]">
                         {results.returnMonths === 1 ? 'menos de 1 mes' : `${results.returnMonths} meses`}
                       </span>
                     </p>
-                    <p className="text-[11px] font-inter text-white/30 mt-1">
-                      Estimación conservadora. Resultados reales varían según sector y modelo de negocio.
+                    <p className="text-[10px] font-inter text-white/25 mt-1">
+                      Cálculo conservador. Los resultados reales dependen del sector y el negocio.
                     </p>
                   </div>
 
-                  <div className="border-t border-white/[0.06] pt-5 text-center">
-                    <p className="text-[13px] font-inter text-white/55 mb-4">
+                  <div className="border-t border-white/[0.06] pt-4 text-center">
+                    <p className="text-[12px] font-inter text-white/50 mb-3">
                       ¿Quieres recuperar ese tiempo y ese dinero?
                     </p>
                     <MagneticButton
                       href="https://wa.me/34711237051"
-                      className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#0F766E] text-white text-[14px] font-inter font-medium rounded-xl glow-pulse hover:bg-[#0d6960] transition-colors">
-                      Hablar con un experto <ArrowRight size={15}/>
+                      className="inline-flex items-center gap-2 px-5 py-3 bg-[#0F766E] text-white text-[13px] font-inter font-medium rounded-xl glow-pulse hover:bg-[#0d6960] transition-colors">
+                      Hablar con un experto <ArrowRight size={14}/>
                     </MagneticButton>
                   </div>
                 </div>
