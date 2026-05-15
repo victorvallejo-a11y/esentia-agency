@@ -39,13 +39,13 @@ export default function SharedParticles() {
       updateWrapperGradient()
     }
 
-    // Pone el gradiente exacto en el wrapper padre según la frontera real
+    // Pone el gradiente en px fijos — así no salta cuando el FAQ accordion cambia la altura total
     function updateWrapperGradient() {
       const parent = wrap.parentElement as HTMLElement | null
-      if (!parent || H === 0) return
-      const pct = Math.round((boundary / H) * 100)
+      if (!parent || boundary === 0) return
+      const px = Math.round(boundary)
       parent.style.background =
-        `linear-gradient(to bottom, #080d0c 0%, #080d0c ${pct}%, #F0F0E8 ${pct}%, #F0F0E8 100%)`
+        `linear-gradient(to bottom, #080d0c 0px, #080d0c ${px}px, #F0F0E8 ${px}px, #F0F0E8 100%)`
     }
 
     resize()
