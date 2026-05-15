@@ -92,12 +92,12 @@ export default function Interstitial() {
 
         <div
           className="font-inter font-semibold leading-[1.05] tracking-[-0.03em] text-white"
-          style={{ fontSize: 'clamp(2.6rem, 5.5vw, 5.2rem)' }}
+          style={{ fontSize: 'clamp(1.55rem, 5.5vw, 5.2rem)' }}
         >
-          <div className="i-line overflow-hidden"><span className="block">El 78% de los clientes</span></div>
-          <div className="i-line overflow-hidden"><span className="block">compra al primero que</span></div>
+          <div className="i-line overflow-hidden"><span className="block whitespace-nowrap">El 78% de los clientes</span></div>
+          <div className="i-line overflow-hidden"><span className="block whitespace-nowrap">compra al primero que</span></div>
           <div className="i-line overflow-hidden">
-            <span className="block">responde.{' '}
+            <span className="block whitespace-nowrap">responde.{' '}
               <span className="i-teal text-white">¿Eres tú?</span>
             </span>
           </div>
