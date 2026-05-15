@@ -92,20 +92,20 @@ export default function Interstitial() {
 
         <div
           className="font-inter font-semibold leading-[1.05] tracking-[-0.03em] text-white"
-          style={{ fontSize: 'clamp(1.55rem, 5.5vw, 5.2rem)' }}
+          style={{ fontSize: 'clamp(2rem, 5.5vw, 5.2rem)' }}
         >
-          <div className="i-line overflow-hidden"><span className="block whitespace-nowrap">El 78% de los clientes</span></div>
-          <div className="i-line overflow-hidden"><span className="block whitespace-nowrap">compra al primero que</span></div>
+          <div className="i-line overflow-hidden"><span className="block ">El 78% de los clientes</span></div>
+          <div className="i-line overflow-hidden"><span className="block ">compra al primero que</span></div>
           <div className="i-line overflow-hidden">
-            <span className="block whitespace-nowrap">responde.{' '}
+            <span className="block ">responde.{' '}
               <span className="i-teal text-white">¿Eres tú?</span>
             </span>
           </div>
         </div>
 
         <p className="i-sub mt-10 text-[clamp(0.85rem,1.5vw,1rem)] font-inter text-white/40 max-w-lg leading-relaxed">
-          Cada minuto sin respuesta es una oportunidad que se va a tu competencia.
-          La IA no descansa. Tú tampoco deberías tener que hacerlo.
+          Cada minuto sin respuesta es una venta que ya tiene tu competencia.
+          Automatiza y deja de perder clientes por algo que tiene solución.
         </p>
       </div>
     </div>
