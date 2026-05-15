@@ -1,9 +1,9 @@
 'use client'
 import { useEffect, useRef } from 'react'
 
-// Canvas compartido que abarca dos secciones (oscura arriba, clara abajo)
-// Las partículas cambian de color al cruzar la frontera
-export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: number }) {
+// Canvas compartido Calculator (dark) + FAQ (white)
+// La frontera se mide en tiempo real desde el DOM — funciona en móvil y desktop
+export default function SharedParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const wrapRef   = useRef<HTMLDivElement>(null)
 
@@ -14,8 +14,18 @@ export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: num
     const ctx = canvas.getContext('2d')!
     if (!ctx) return
 
-    const N = 180
-    let W = 0, H = 0
+    const N = 160
+    let W = 0, H = 0, boundary = 0
+
+    function measureBoundary() {
+      // Buscamos la sección oscura (#calculadora) dentro del wrapper
+      const calcEl = wrap.parentElement?.querySelector('#calculadora') as HTMLElement | null
+      if (calcEl) {
+        boundary = calcEl.offsetHeight
+      } else {
+        boundary = H * 0.5
+      }
+    }
 
     function resize() {
       W = wrap.offsetWidth  || window.innerWidth
@@ -25,29 +35,39 @@ export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: num
       canvas.style.width  = W + 'px'
       canvas.style.height = H + 'px'
       ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0)
+      measureBoundary()
+      updateWrapperGradient()
     }
+
+    // Pone el gradiente exacto en el wrapper padre según la frontera real
+    function updateWrapperGradient() {
+      const parent = wrap.parentElement as HTMLElement | null
+      if (!parent || H === 0) return
+      const pct = Math.round((boundary / H) * 100)
+      parent.style.background =
+        `linear-gradient(to bottom, #080d0c 0%, #080d0c ${pct}%, #ffffff ${pct}%, #ffffff 100%)`
+    }
+
     resize()
 
     const pts = Array.from({ length: N }, () => ({
       x:  Math.random() * W,
       y:  Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.32,
-      vy: (Math.random() - 0.5) * 0.22,
-      r:  2.2 + Math.random() * 3.8,
-      opacity: 0.55 + Math.random() * 0.45,
+      vx: (Math.random() - 0.5) * 0.30,
+      vy: (Math.random() - 0.5) * 0.20,
+      r:  2.0 + Math.random() * 3.5,
+      opacity: 0.50 + Math.random() * 0.45,
       phase: Math.random() * Math.PI * 2,
-      freq:  0.15 + Math.random() * 0.2,
+      freq:  0.14 + Math.random() * 0.20,
     }))
 
     const start = performance.now()
     let raf: number
 
-    // Devuelve color según si el punto está en zona oscura o clara
+    // Interpolación suave de color alrededor de la frontera
     function getColor(y: number, alpha: number): string {
-      const boundary = H * splitRatio
-      // Zona oscura (Calculator): teal brillante
-      // Zona clara (FAQ): teal oscuro
-      const t = Math.max(0, Math.min(1, (y - boundary * 0.85) / (H * 0.15)))
+      const zone = boundary * 0.10          // 10% de transición
+      const t = Math.max(0, Math.min(1, (y - (boundary - zone)) / (zone * 2)))
       const r = Math.round(45  + (15  - 45)  * t)
       const g = Math.round(212 + (118 - 212) * t)
       const b = Math.round(191 + (110 - 191) * t)
@@ -74,8 +94,8 @@ export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: num
         ctx.fill()
       }
 
-      // Líneas entre puntos cercanos
-      const MAX = 180
+      // Líneas de red orgánica
+      const MAX = 170
       for (let i = 0; i < N; i++) {
         for (let j = i + 1; j < N; j++) {
           const dx = pts[i].x - pts[j].x
@@ -83,12 +103,12 @@ export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: num
           const d  = Math.sqrt(dx * dx + dy * dy)
           if (d < MAX) {
             const midY = (pts[i].y + pts[j].y) / 2
-            const alpha = 0.28 * (1 - d / MAX)
+            const alpha = 0.26 * (1 - d / MAX)
             ctx.beginPath()
             ctx.moveTo(pts[i].x, pts[i].y)
             ctx.lineTo(pts[j].x, pts[j].y)
             ctx.strokeStyle = getColor(midY, alpha)
-            ctx.lineWidth = 0.7
+            ctx.lineWidth = 0.65
             ctx.stroke()
           }
         }
@@ -96,10 +116,26 @@ export default function SharedParticles({ splitRatio = 0.5 }: { splitRatio?: num
     }
 
     raf = requestAnimationFrame(tick)
-    const onResize = () => { ctx.setTransform(1, 0, 0, 1, 0, 0); resize() }
+
+    const onResize = () => {
+      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      resize()
+    }
     window.addEventListener('resize', onResize)
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize) }
-  }, [splitRatio])
+
+    // ResizeObserver para detectar cambios de layout (p.ej. acordeón FAQ)
+    const ro = new ResizeObserver(() => {
+      measureBoundary()
+      updateWrapperGradient()
+    })
+    ro.observe(wrap.parentElement || wrap)
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', onResize)
+      ro.disconnect()
+    }
+  }, [])
 
   return (
     <div ref={wrapRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>

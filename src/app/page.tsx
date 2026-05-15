@@ -22,12 +22,9 @@ export default function Home() {
       <Services />
       <Process />
 
-      {/* Canvas compartido que abarca Calculator + FAQ */}
-      <div style={{
-        position: 'relative',
-        background: 'linear-gradient(to bottom, #080d0c 0%, #080d0c 50%, #ffffff 50%, #ffffff 100%)',
-      }}>
-        <SharedParticles splitRatio={0.5} />
+      {/* Canvas compartido que abarca Calculator + FAQ — gradiente calculado dinámicamente */}
+      <div style={{ position: 'relative', background: '#080d0c' }}>
+        <SharedParticles />
         <Calculator />
         <FAQ />
       </div>
