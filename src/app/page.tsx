@@ -23,7 +23,7 @@ export default function Home() {
       <Process />
 
       {/* Canvas compartido que abarca Calculator + FAQ — gradiente calculado dinámicamente */}
-      <div style={{ position: 'relative', background: '#080d0c' }}>
+      <div style={{ position: 'relative', background: '#080d0c' }} id="calc-faq-wrapper">
         <SharedParticles />
         <Calculator />
         <FAQ />

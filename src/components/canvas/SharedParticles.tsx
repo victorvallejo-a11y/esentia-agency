@@ -45,7 +45,7 @@ export default function SharedParticles() {
       if (!parent || H === 0) return
       const pct = Math.round((boundary / H) * 100)
       parent.style.background =
-        `linear-gradient(to bottom, #080d0c 0%, #080d0c ${pct}%, #ffffff ${pct}%, #ffffff 100%)`
+        `linear-gradient(to bottom, #080d0c 0%, #080d0c ${pct}%, #F0F0E8 ${pct}%, #F0F0E8 100%)`
     }
 
     resize()
