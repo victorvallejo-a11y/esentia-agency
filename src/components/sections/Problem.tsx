@@ -53,19 +53,19 @@ export default function Problem() {
 
           <RevealOnScroll delay={80} className="bg-[#111111] p-8 md:p-10 flex flex-col gap-3">
             <div className="font-mono font-semibold text-[#F59E0B] leading-none" style={{fontSize:'clamp(3.5rem,8vw,6rem)'}}>
-              3.0h
+              +12h
             </div>
             <p className="text-[14px] font-inter text-white/55 leading-snug max-w-xs">
-              al dia respondiendo lo mismo. Preguntas repetitivas que podrian estar automatizadas
+              de media tarda una empresa en responder un mensaje. Tu cliente no espera tanto
             </p>
           </RevealOnScroll>
 
           <RevealOnScroll delay={160} className="bg-[#111111] p-8 md:p-10 flex flex-col gap-3">
             <div className="font-mono font-semibold text-[#10B981] leading-none" style={{fontSize:'clamp(3.5rem,8vw,6rem)'}}>
-              <AnimatedCounter target={23} suffix="%" className="tabular-nums"/>
+              ×7
             </div>
             <p className="text-[14px] font-inter text-white/55 leading-snug max-w-xs">
-              de llamadas sin atender. Cada llamada perdida es un cliente en manos de tu competencia
+              más ventas cierra quien responde en menos de 1h frente a quien tarda más de 24h
             </p>
           </RevealOnScroll>
         </div>
