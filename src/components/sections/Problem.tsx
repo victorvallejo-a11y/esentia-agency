@@ -53,10 +53,10 @@ export default function Problem() {
 
           <RevealOnScroll delay={80} className="bg-[#111111] p-8 md:p-10 flex flex-col gap-3">
             <div className="font-mono font-semibold text-[#F59E0B] leading-none" style={{fontSize:'clamp(3.5rem,8vw,6rem)'}}>
-              +12h
+              <AnimatedCounter target={7} suffix="%" className="tabular-nums"/>
             </div>
             <p className="text-[14px] font-inter text-white/55 leading-snug max-w-xs">
-              de media tarda una empresa en responder un mensaje. Tu cliente no espera tanto
+              de empresas responde a un lead en menos de 5 minutos. ¿La tuya lo hace?
             </p>
           </RevealOnScroll>
 
@@ -65,7 +65,7 @@ export default function Problem() {
               ×7
             </div>
             <p className="text-[14px] font-inter text-white/55 leading-snug max-w-xs">
-              más ventas cierra quien responde en menos de 1h frente a quien tarda más de 24h
+              más posibilidades de cerrar la venta si respondes en menos de 1 minuto frente a esperar 5
             </p>
           </RevealOnScroll>
         </div>
