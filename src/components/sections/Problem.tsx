@@ -56,7 +56,7 @@ export default function Problem() {
               <AnimatedCounter target={7} prefix="×" className="tabular-nums"/>
             </div>
             <p className="text-[14px] font-inter text-white/55 leading-snug max-w-xs">
-              más probabilidades de cerrar la venta si eres el primero en responder
+              veces más probable cerrar la venta si eres el primero en responder
             </p>
           </RevealOnScroll>
 
