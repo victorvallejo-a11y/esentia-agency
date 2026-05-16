@@ -53,7 +53,7 @@ export default function Problem() {
 
           <RevealOnScroll delay={80} className="bg-[#111111] p-8 md:p-10 flex flex-col gap-3">
             <div className="font-mono font-semibold text-[#F59E0B] leading-none" style={{fontSize:'clamp(3.5rem,8vw,6rem)'}}>
-              ×7
+              <AnimatedCounter target={7} prefix="×" className="tabular-nums"/>
             </div>
             <p className="text-[14px] font-inter text-white/55 leading-snug max-w-xs">
               más posibilidades de cerrar la venta si respondes en menos de 1 minuto frente a esperar 5
