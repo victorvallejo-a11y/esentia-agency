@@ -162,8 +162,7 @@ export default function Calculator() {
   return (
     <section
       id="calculadora"
-      className="relative text-white overflow-hidden min-h-screen flex flex-col justify-center py-16"
-      style={{ zIndex: 1 }}
+      className="relative bg-[#111111] text-white overflow-hidden min-h-screen flex flex-col justify-center py-16"
     >
       {/* Glow central teal */}
       <div className="absolute inset-0 z-0 pointer-events-none"

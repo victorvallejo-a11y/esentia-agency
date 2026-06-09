@@ -38,10 +38,12 @@ const steps = [
 
 export default function Process() {
   const sectionRef  = useRef<HTMLElement>(null)
-  const [active, setActive] = useState<number | null>(null)
+  const [active, setActive]   = useState<number | null>(null)
+  const [reached, setReached] = useState<boolean[]>(steps.map(() => false))
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768
+
     const ctx = gsap.context(() => {
       // Header
       gsap.fromTo('.process-header',
@@ -50,7 +52,7 @@ export default function Process() {
           scrollTrigger: { trigger: '.process-header', start: 'top 85%', toggleActions: 'play none none none' } }
       )
 
-      // Pasos alternan: impares desde izquierda, pares desde derecha
+      // Pasos — entrada alternada
       gsap.utils.toArray<HTMLElement>('.process-step').forEach((el, i) => {
         const fromX = isMobile ? 0 : (i % 2 === 0 ? -60 : 60)
         gsap.fromTo(el,
@@ -77,6 +79,18 @@ export default function Process() {
           }
         )
       }
+
+      // Iluminación de pasos al scroll — desktop Y mobile
+      // El step se ilumina cuando su mitad superior entra en pantalla (~62% del viewport)
+      gsap.utils.toArray<HTMLElement>('.process-step').forEach((el, i) => {
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 65%',
+          onEnter:     () => setReached(prev => { const n = [...prev]; n[i] = true;  return n }),
+          onLeaveBack: () => setReached(prev => { const n = [...prev]; n[i] = false; return n }),
+        })
+      })
+
     }, sectionRef)
     return () => ctx.revert()
   }, [])
@@ -99,11 +113,8 @@ export default function Process() {
 
           {/* Línea + dot viajero */}
           <div className="hidden md:block relative flex-shrink-0 mt-2" style={{ width: '2px' }}>
-            {/* Track fondo */}
             <div className="absolute inset-0 bg-white/[0.07] rounded-full" />
-            {/* Línea que crece */}
             <div className="process-vline absolute inset-0 bg-[#2DD4BF] rounded-full origin-top" />
-            {/* Dot viajero */}
             <div
               className="process-dot absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#2DD4BF] shadow-[0_0_12px_#2DD4BF]"
               style={{ top: '0%', marginTop: '-6px' }}
@@ -112,69 +123,86 @@ export default function Process() {
 
           {/* Pasos */}
           <div className="flex flex-col gap-0 flex-1">
-            {steps.map((step, i) => (
-              <div
-                key={i}
-                className="process-step group cursor-pointer"
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-                onClick={() => setActive(active === i ? null : i)}
-              >
-                <div className="py-8 flex items-start gap-6">
-                  {/* Número */}
-                  <span
-                    className="font-mono text-[13px] font-medium flex-shrink-0 mt-0.5 transition-colors duration-300"
-                    style={{ color: active === i ? '#2DD4BF' : 'rgba(255,255,255,0.2)' }}
-                  >
-                    {step.num}
-                  </span>
-
-                  <div className="flex-1 min-w-0">
-                    {/* Título + flecha */}
-                    <div className="flex items-center justify-between gap-4 mb-2">
-                      <h3
-                        className="text-[clamp(1.1rem,2vw,1.4rem)] font-inter font-semibold leading-tight transition-colors duration-300"
-                        style={{ color: active === i ? '#ffffff' : 'rgba(255,255,255,0.65)' }}
-                      >
-                        {step.title}
-                      </h3>
-                      {/* Indicador expand */}
-                      <div
-                        className="w-7 h-7 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-400"
-                        style={{
-                          borderColor: active === i ? '#2DD4BF' : 'rgba(255,255,255,0.12)',
-                          transform: active === i ? 'rotate(45deg)' : 'rotate(0deg)',
-                          color: active === i ? '#2DD4BF' : 'rgba(255,255,255,0.3)',
-                          transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
-                        }}
-                      >
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                          <line x1="5" y1="1" x2="5" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                          <line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                        </svg>
-                      </div>
-                    </div>
-
-                    {/* Desc siempre visible */}
-                    <p className="text-[14px] font-inter text-white/45 leading-relaxed">
-                      {step.desc}
-                    </p>
-
-                    {/* Detail — se expande al click */}
-                    <div
+            {steps.map((step, i) => {
+              const isLit    = reached[i]
+              const isActive = active === i
+              return (
+                <div
+                  key={i}
+                  className="process-step group cursor-pointer"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                  onClick={() => setActive(isActive ? null : i)}
+                >
+                  <div className="py-8 flex items-start gap-6">
+                    {/* Número */}
+                    <span
+                      className="font-mono text-[13px] font-medium flex-shrink-0 mt-0.5"
                       style={{
-                        maxHeight: active === i ? '120px' : '0px',
-                        overflow: 'hidden',
-                        transition: 'max-height 0.45s cubic-bezier(0.4,0,0.2,1)',
+                        color: isActive ? '#2DD4BF' : isLit ? '#2DD4BF' : 'rgba(255,255,255,0.2)',
+                        transition: 'color 0.5s ease',
                       }}
                     >
-                      <p className="text-[13px] font-inter text-[#2DD4BF]/70 leading-relaxed pt-3 pb-1">
-                        {step.detail}
+                      {step.num}
+                    </span>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-4 mb-2">
+                        <h3
+                          className="text-[clamp(1.1rem,2vw,1.4rem)] font-inter font-semibold leading-tight"
+                          style={{
+                            color: isActive
+                              ? '#ffffff'
+                              : isLit
+                              ? '#ffffff'
+                              : 'rgba(255,255,255,0.35)',
+                            transition: 'color 0.5s ease',
+                            textShadow: isLit && !isActive ? '0 0 20px rgba(45,212,191,0.15)' : 'none',
+                          }}
+                        >
+                          {step.title}
+                        </h3>
+                        <div
+                          className="w-7 h-7 rounded-full border flex items-center justify-center flex-shrink-0"
+                          style={{
+                            borderColor: isActive ? '#2DD4BF' : 'rgba(255,255,255,0.12)',
+                            transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)',
+                            color: isActive ? '#2DD4BF' : 'rgba(255,255,255,0.3)',
+                            transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                          }}
+                        >
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                            <line x1="5" y1="1" x2="5" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                            <line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                          </svg>
+                        </div>
+                      </div>
+
+                      <p
+                        className="text-[14px] font-inter leading-relaxed"
+                        style={{
+                          color: isLit ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.28)',
+                          transition: 'color 0.5s ease',
+                        }}
+                      >
+                        {step.desc}
                       </p>
+
+                      <div
+                        style={{
+                          maxHeight: isActive ? '120px' : '0px',
+                          overflow: 'hidden',
+                          transition: 'max-height 0.45s cubic-bezier(0.4,0,0.2,1)',
+                        }}
+                      >
+                        <p className="text-[13px] font-inter text-[#2DD4BF]/70 leading-relaxed pt-3 pb-1">
+                          {step.detail}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
         </div>

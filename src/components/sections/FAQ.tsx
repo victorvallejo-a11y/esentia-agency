@@ -78,7 +78,7 @@ export default function FAQ() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="faq" className="relative w-full py-28 overflow-hidden" style={{ zIndex: 1 }}>
+    <section ref={sectionRef} id="faq" className="relative bg-[#F0F0E8] w-full py-28 overflow-hidden">
 
       <div className="relative z-10 w-full max-w-3xl mx-auto px-8">
 

@@ -1,5 +1,4 @@
 "use client"
-import dynamic from 'next/dynamic'
 import Hero from "@/components/sections/Hero"
 import Problem from "@/components/sections/Problem"
 import Services from "@/components/sections/Services"
@@ -11,7 +10,6 @@ import FAQ from "@/components/sections/FAQ"
 import Booking from "@/components/sections/Booking"
 import Footer from "@/components/sections/Footer"
 
-const SharedParticles = dynamic(() => import('@/components/canvas/SharedParticles'), { ssr: false })
 
 export default function Home() {
   return (
@@ -22,12 +20,8 @@ export default function Home() {
       <Services />
       <Process />
 
-      {/* Canvas compartido que abarca Calculator + FAQ — gradiente calculado dinámicamente */}
-      <div style={{ position: 'relative', background: '#080d0c' }} id="calc-faq-wrapper">
-        <SharedParticles />
-        <Calculator />
-        <FAQ />
-      </div>
+      <Calculator />
+      <FAQ />
 
       <CaseStudies />
       <Booking />
