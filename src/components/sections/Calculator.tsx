@@ -127,11 +127,32 @@ export default function Calculator() {
 
   const onSubmit = async (data: FormData) => {
     setSubmitting(true)
-    await new Promise(r => setTimeout(r, 700))
-    setResults(calcResults(answers))
+
+    // Calcular resultados antes de enviar para incluirlos en el email
+    const res = calcResults(answers)
+
+    try {
+      await fetch('https://formspree.io/f/mgobylvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          nombre: data.name,
+          telefono: data.phone,
+          email: data.email,
+          horas_perdidas_mes: `${res.hoursMonth}h`,
+          coste_estimado_mes: `~${res.costLost.toLocaleString('es-ES')}€`,
+          llamadas_sin_atender_mes: `~${res.missedCallsMonth}`,
+          mensajes_sin_respuesta_mes: `~${res.missedMsgMonth}`,
+          retorno_estimado: res.returnMonths === 1 ? 'menos de 1 mes' : `${res.returnMonths} meses`,
+        }),
+      })
+    } catch (e) {
+      console.error('Formspree error:', e)
+    }
+
+    setResults(res)
     setPhase('result')
     setSubmitting(false)
-    console.log('Lead:', data)
   }
 
   const costColor =
