@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import FloatingDots from '@/components/canvas/FloatingDots'
 
 if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger)
 
@@ -79,6 +80,7 @@ export default function FAQ() {
 
   return (
     <section ref={sectionRef} id="faq" className="relative bg-[#F0F0E8] w-full py-28 overflow-hidden">
+      <FloatingDots light />
 
       <div className="relative z-10 w-full max-w-3xl mx-auto px-8">
 
