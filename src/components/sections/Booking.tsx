@@ -24,7 +24,7 @@ export default function Booking() {
   }, [])
 
   return (
-    <section ref={ref} id="contacto" className="bg-[#0A0A0A] py-24 border-t border-white/[0.04]">
+    <section ref={ref} id="contacto" className="bg-[#111111] py-24 border-t border-white/[0.04]">
       <div className="booking-content max-w-2xl mx-auto px-6 text-center">
 
         <p className="text-[11px] font-inter uppercase tracking-[0.18em] text-[#2DD4BF] mb-4">
