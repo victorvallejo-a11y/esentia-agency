@@ -79,6 +79,10 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 type Phase = 'questions' | 'contact' | 'result'
 
+// Clave para rate-limit en sessionStorage
+const RATE_KEY = 'calc_last_submit'
+const RATE_LIMIT_MS = 60_000 // 1 minuto entre envíos
+
 function calcResults(ans: number[]) {
   const [hoursDay, missedCallsDay, missedMsgDay, ticket, noFollowup, teamSize] = ans
 
@@ -126,6 +130,11 @@ export default function Calculator() {
   }
 
   const onSubmit = async (data: FormData) => {
+    // Rate limiting: evita spam / envíos repetidos en menos de 1 minuto
+    const lastSubmit = Number(sessionStorage.getItem(RATE_KEY) ?? 0)
+    if (Date.now() - lastSubmit < RATE_LIMIT_MS) return
+    sessionStorage.setItem(RATE_KEY, String(Date.now()))
+
     setSubmitting(true)
 
     // Calcular resultados antes de enviar para incluirlos en el email
@@ -221,6 +230,8 @@ export default function Calculator() {
                     Déjanos tus datos y te lo enviamos en menos de 24h
                   </p>
                   <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                    {/* Honeypot — los bots rellenan esto, los humanos no lo ven */}
+                    <input name="_gotcha" type="text" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} />
                     <div>
                       <label className="sr-only" htmlFor="name">Nombre</label>
                       <input id="name" {...register('name')} placeholder="Tu nombre"

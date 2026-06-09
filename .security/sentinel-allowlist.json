@@ -1,0 +1,8 @@
+{
+  "paths": [
+    ".gitignore"
+  ],
+  "domains": [],
+  "commands": [],
+  "_comment": "Allowlist para Sentinel. .gitignore se edita para PROTEGER .env, no para exponerlo."
+}
