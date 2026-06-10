@@ -35,23 +35,26 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Blur-to-sharp por línea: cada línea enfoca desde blur(18px) + leve drift
-      const lines  = ['.h-line-1', '.h-line-2', '.h-line-3', '.h-line-4']
-      const delays = [0.35, 0.55, 2.0, 2.2]
-      lines.forEach((sel, i) => {
-        gsap.fromTo(sel,
-          { filter: 'blur(18px)', opacity: 0, y: 10 },
-          { filter: 'blur(0px)',  opacity: 1, y: 0, duration: 0.95, ease: 'power2.out', delay: delays[i] }
-        )
-      })
-      // CTAs y scroll
+      const IN = { filter: 'blur(18px)', opacity: 0, y: 8 }
+      const OUT = { filter: 'blur(0px)',  opacity: 1, y: 0, duration: 0.62, ease: 'power2.out' }
+
+      // Título izquierdo — grupo, ambas líneas juntas
+      gsap.fromTo(['.h-line-1', '.h-line-2'], IN, { ...OUT, delay: 0.4 })
+
+      // Título derecho — "Tu atención" + "al cliente," juntos
+      gsap.fromTo(['.h-line-3', '.h-line-4'], IN, { ...OUT, delay: 2.0 })
+
+      // "tampoco" — 1s después, sincronizado con la onda del canvas
+      gsap.fromTo('.h-line-5', IN, { ...OUT, delay: 3.1 })
+
+      // CTAs y scroll — tras el "tampoco"
       gsap.fromTo('.hero-ctas',
         { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', delay: 3.2 }
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', delay: 4.0 }
       )
       gsap.fromTo('.hero-scroll',
         { opacity: 0 },
-        { opacity: 1, duration: 0.6, ease: 'power2.out', delay: 4.1 }
+        { opacity: 1, duration: 0.6, ease: 'power2.out', delay: 4.8 }
       )
     }, heroRef)
     return () => ctx.revert()
@@ -79,9 +82,8 @@ export default function Hero() {
           <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
             style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
             <span className="h-line-3 block">Tu atención</span>
-            <span className="h-line-4 block" style={{ whiteSpace: 'nowrap' }}>
-              al cliente, <span className="text-[#0F766E]">tampoco</span>
-            </span>
+            <span className="h-line-4 block">al cliente,</span>
+            <span className="h-line-5 block text-[#0F766E]">tampoco</span>
           </h1>
         </div>
 
@@ -109,9 +111,8 @@ export default function Hero() {
       <div className="md:hidden absolute bottom-[5%] left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
         <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem] text-center">
           <span className="h-line-3 block">Tu atención</span>
-          <span className="h-line-4 block" style={{ whiteSpace: 'nowrap' }}>
-            al cliente, <span className="text-[#0F766E]">tampoco</span>
-          </span>
+          <span className="h-line-4 block">al cliente,</span>
+          <span className="h-line-5 block text-[#0F766E]">tampoco</span>
         </h1>
         <div className="hero-ctas flex flex-col items-center gap-3 w-full mt-2">
           <a href="#calculadora"
