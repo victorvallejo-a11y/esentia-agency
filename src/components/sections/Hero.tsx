@@ -35,20 +35,20 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Left title: golpe seco — scale + slide + fade
-      gsap.fromTo('.hero-title-left',
-        { y: 40, opacity: 0, scale: 1.06 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.75, ease: 'back.out(1.4)', delay: 0.2 }
-      )
-      // Texto 2: mismo golpe, 1.2s después
-      gsap.fromTo('.hero-title-right',
-        { y: 40, opacity: 0, scale: 1.06 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.75, ease: 'back.out(1.4)', delay: 1.4 }
-      )
-      // CTAs: tras la esfera
+      // Clip-reveal por línea: sube desde abajo con leve giro
+      // [L1, L2] título izquierdo — [L3, L4] título derecho
+      const lines  = ['.h-line-1', '.h-line-2', '.h-line-3', '.h-line-4']
+      const delays = [0.4, 0.57, 2.0, 2.17]
+      lines.forEach((sel, i) => {
+        gsap.fromTo(sel,
+          { y: '108%', rotate: 2, transformOrigin: 'bottom left' },
+          { y: '0%', rotate: 0, duration: 0.72, ease: 'power3.out', delay: delays[i] }
+        )
+      })
+      // CTAs y scroll
       gsap.fromTo('.hero-ctas',
-        { y: 20, opacity: 0, scale: 1.03 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.2)', delay: 3.2 }
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', delay: 3.2 }
       )
       gsap.fromTo('.hero-scroll',
         { opacity: 0 },
@@ -68,18 +68,29 @@ export default function Hero() {
 
       {/* ── DESKTOP: layout scattered ── */}
       <div className="hidden md:block">
-        <div className="hero-title-left absolute z-10" style={{ top: '138px', left: '143px', maxWidth: '750px' }}>
+        <div className="absolute z-10" style={{ top: '138px', left: '143px', maxWidth: '750px' }}>
           <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
             style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
-            Tu negocio<br/>no duerme
+            <div style={{ overflow: 'hidden' }}>
+              <span className="h-line-1 inline-block">Tu negocio</span>
+            </div>
+            <div style={{ overflow: 'hidden' }}>
+              <span className="h-line-2 inline-block">no duerme</span>
+            </div>
           </h1>
         </div>
 
-        <div className="hero-title-right absolute z-10 text-right" style={{ bottom: '100px', right: '60px' }}>
+        <div className="absolute z-10 text-right" style={{ bottom: '100px', right: '60px' }}>
           <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
             style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
-            Tu atención<br/>
-            <span style={{whiteSpace:'nowrap'}}>al cliente, <span className="text-[#0F766E]">tampoco</span></span>
+            <div style={{ overflow: 'hidden' }}>
+              <span className="h-line-3 inline-block">Tu atención</span>
+            </div>
+            <div style={{ overflow: 'hidden' }}>
+              <span className="h-line-4 inline-block" style={{ whiteSpace: 'nowrap' }}>
+                al cliente, <span className="text-[#0F766E]">tampoco</span>
+              </span>
+            </div>
           </h1>
         </div>
 
@@ -96,17 +107,28 @@ export default function Hero() {
       </div>
 
       {/* ── MOBILE: texto arriba, esfera en medio, texto+botones abajo ── */}
-      {/* Título superior */}
       <div className="md:hidden absolute top-[13%] left-0 right-0 z-10 text-center px-6">
-        <h1 className="hero-title-left font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
-          Tu negocio<br/>no duerme
+        <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
+          <div style={{ overflow: 'hidden' }}>
+            <span className="h-line-1 inline-block">Tu negocio</span>
+          </div>
+          <div style={{ overflow: 'hidden' }}>
+            <span className="h-line-2 inline-block">no duerme</span>
+          </div>
         </h1>
       </div>
 
       {/* Título inferior + botones */}
       <div className="md:hidden absolute bottom-[5%] left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
-        <h1 className="hero-title-right font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem] text-center">
-          Tu atención<br/><span style={{whiteSpace:'nowrap'}}>al cliente, <span className="text-[#0F766E]">tampoco</span></span>
+        <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem] text-center">
+          <div style={{ overflow: 'hidden' }}>
+            <span className="h-line-3 inline-block">Tu atención</span>
+          </div>
+          <div style={{ overflow: 'hidden' }}>
+            <span className="h-line-4 inline-block" style={{ whiteSpace: 'nowrap' }}>
+              al cliente, <span className="text-[#0F766E]">tampoco</span>
+            </span>
+          </div>
         </h1>
         <div className="hero-ctas flex flex-col items-center gap-3 w-full mt-2">
           <a href="#calculadora"
