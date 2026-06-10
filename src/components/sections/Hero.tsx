@@ -61,7 +61,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section ref={heroRef} id="inicio" className="relative w-full h-screen bg-[#FAFAF7] overflow-hidden">
+    <section ref={heroRef} id="inicio" className="relative w-full bg-[#FAFAF7] overflow-hidden" style={{ height: '100dvh' }}>
 
       {/* Canvas — background, en móvil lo subimos un poco */}
       <div className="absolute inset-0 z-0 md:top-0 -top-[14%]">
