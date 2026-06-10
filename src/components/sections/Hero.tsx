@@ -68,16 +68,16 @@ export default function Hero() {
 
       {/* ── DESKTOP: layout scattered ── */}
       <div className="hidden md:block">
-        <div className="hero-title-left absolute z-10" style={{ top: '195px', left: '136px', maxWidth: '400px' }}>
+        <div className="hero-title-left absolute z-10" style={{ top: '195px', left: '136px', maxWidth: '750px' }}>
           <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
-            style={{ fontSize: 'clamp(2.4rem, 3.84vw, 3.6rem)' }}>
+            style={{ fontSize: 'clamp(5rem, 8vw, 7.2rem)' }}>
             Tu negocio<br/>no duerme
           </h1>
         </div>
 
-        <div className="hero-title-right absolute z-10 text-right" style={{ bottom: '100px', right: '72px', maxWidth: '680px' }}>
+        <div className="hero-title-right absolute z-10 text-right" style={{ bottom: '100px', right: '60px' }}>
           <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
-            style={{ fontSize: 'clamp(2.4rem, 3.84vw, 3.6rem)' }}>
+            style={{ fontSize: 'clamp(5rem, 8vw, 7.2rem)' }}>
             Tu atención<br/>
             <span style={{whiteSpace:'nowrap'}}>al cliente, <span className="text-[#0F766E]">tampoco</span></span>
           </h1>
