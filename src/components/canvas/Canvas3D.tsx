@@ -15,7 +15,7 @@ export default function Canvas3D() {
 
     const N         = 900
     const GA        = Math.PI * (3 - Math.sqrt(5))
-    const R         = 0.36
+    let   R         = 0.36
     const TRAVEL    = 3050
     const DELAY_MAX = 200
 
@@ -34,6 +34,7 @@ export default function Canvas3D() {
     function resize() {
       W = wrap.offsetWidth  || window.innerWidth
       H = wrap.offsetHeight || window.innerHeight
+      R = W < 600 ? 0.28 : 0.36
       canvas.width  = Math.round(W * devicePixelRatio)
       canvas.height = Math.round(H * devicePixelRatio)
       canvas.style.width  = W + 'px'

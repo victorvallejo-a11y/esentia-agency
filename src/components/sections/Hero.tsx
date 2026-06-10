@@ -61,10 +61,10 @@ export default function Hero() {
   }, [])
 
   return (
-    <section ref={heroRef} id="inicio" className="relative w-full bg-[#FAFAF7] overflow-hidden" style={{ height: '100dvh' }}>
+    <section ref={heroRef} id="inicio" className="relative w-full bg-[#FAFAF7] overflow-hidden" style={{ height: '100svh' }}>
 
       {/* Canvas — background, en móvil lo subimos un poco */}
-      <div className="absolute inset-0 z-0 md:top-0 -top-[14%]">
+      <div className="absolute inset-0 z-0 md:top-0 -top-[17%]">
         <Canvas3D />
       </div>
 
