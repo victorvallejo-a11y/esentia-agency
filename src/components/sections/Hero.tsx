@@ -34,6 +34,18 @@ export default function Hero() {
   const heroRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
+    // Lock hero height to window.innerHeight captured at mount.
+    // Instagram's in-app browser fires resize when its bottom nav bar
+    // appears/disappears, changing innerHeight and causing reflow.
+    // By locking to a pixel value (not a CSS viewport unit), the hero
+    // stays stable. orientationchange updates it when the device rotates.
+    const lockHeight = () => {
+      if (heroRef.current) heroRef.current.style.height = `${window.innerHeight}px`
+    }
+    lockHeight()
+    const onOrient = () => { setTimeout(lockHeight, 300) }
+    window.addEventListener('orientationchange', onOrient)
+
     const ctx = gsap.context(() => {
       const IN = { filter: 'blur(18px)', opacity: 0, y: 8 }
       const OUT = { filter: 'blur(0px)',  opacity: 1, y: 0, duration: 0.62, ease: 'power2.out' }
@@ -57,14 +69,17 @@ export default function Hero() {
         { opacity: 1, duration: 0.6, ease: 'power2.out', delay: 4.8 }
       )
     }, heroRef)
-    return () => ctx.revert()
+    return () => {
+      ctx.revert()
+      window.removeEventListener('orientationchange', onOrient)
+    }
   }, [])
 
   return (
     <section ref={heroRef} id="inicio" className="relative w-full bg-[#FAFAF7] overflow-hidden" style={{ height: '100svh' }}>
 
       {/* Canvas — background, en móvil lo subimos un poco */}
-      <div className="absolute inset-0 z-0 md:top-0 -top-[17%]">
+      <div className="absolute inset-0 z-0 md:top-0 -top-[14%]">
         <Canvas3D />
       </div>
 
