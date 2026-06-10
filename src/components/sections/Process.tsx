@@ -102,9 +102,9 @@ export default function Process() {
         {/* Header */}
         <div className="process-header mb-20">
           <p className="text-[11px] font-inter uppercase tracking-[0.18em] text-[#2DD4BF] mb-3">Cómo funciona</p>
-          <h2 className="text-[clamp(2rem,4vw,3rem)] font-inter font-semibold leading-tight tracking-[-0.02em]">
-            De idea a resultado,{' '}
-            <span className="text-[#2DD4BF]">a tu ritmo.</span>
+          <h2 className="text-[clamp(2.3rem,4vw,3rem)] font-inter font-semibold leading-tight tracking-[-0.02em]">
+            Proceso claro.{' '}
+            <span className="text-[#2DD4BF]">Resultados concretos.</span>
           </h2>
         </div>
 
@@ -148,7 +148,7 @@ export default function Process() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-4 mb-2">
                         <h3
-                          className="text-[clamp(1.1rem,2vw,1.4rem)] font-inter font-semibold leading-tight"
+                          className="text-[clamp(1.2rem,2vw,1.4rem)] font-inter font-semibold leading-tight"
                           style={{
                             color: isActive
                               ? '#ffffff'

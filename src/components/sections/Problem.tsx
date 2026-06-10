@@ -35,7 +35,7 @@ export default function Problem() {
 
         <RevealOnScroll className="mb-16 max-w-2xl">
           <p className="text-[12px] font-inter uppercase tracking-[0.15em] text-[#2DD4BF] mb-4">El problema</p>
-          <h2 className="text-[clamp(1.8rem,3.5vw,2.6rem)] font-inter font-semibold leading-tight tracking-[-0.02em]">
+          <h2 className="text-[clamp(2.2rem,3.5vw,2.6rem)] font-inter font-semibold leading-tight tracking-[-0.02em]">
             Cada minuto que tardas en responder,{' '}
             <em className="not-italic text-white/60">alguien mas lo hace</em>
           </h2>
@@ -53,19 +53,19 @@ export default function Problem() {
 
           <RevealOnScroll delay={80} className="bg-[#111111] p-8 md:p-10 flex flex-col gap-3">
             <div className="font-mono font-semibold text-[#F59E0B] leading-none" style={{fontSize:'clamp(3.5rem,8vw,6rem)'}}>
-              <AnimatedCounter target={7} prefix="×" className="tabular-nums"/>
+              <AnimatedCounter target={45} suffix="%" className="tabular-nums"/>
             </div>
             <p className="text-[14px] font-inter text-white/55 leading-snug max-w-xs">
-              veces más probable cerrar la venta si eres el primero en responder
+              de las tareas de una empresa son automatizables con tecnología ya disponible hoy
             </p>
           </RevealOnScroll>
 
           <RevealOnScroll delay={160} className="bg-[#111111] p-8 md:p-10 flex flex-col gap-3">
             <div className="font-mono font-semibold text-[#10B981] leading-none" style={{fontSize:'clamp(3.5rem,8vw,6rem)'}}>
-              <AnimatedCounter target={91} suffix="%" className="tabular-nums"/>
+              <AnimatedCounter target={30} suffix="%" className="tabular-nums"/>
             </div>
             <p className="text-[14px] font-inter text-white/55 leading-snug max-w-xs">
-              de los clientes que no logran contactar no vuelven a intentarlo. Los pierdes para siempre
+              de reducción en costes operativos logran las empresas que automatizan sus procesos clave
             </p>
           </RevealOnScroll>
         </div>

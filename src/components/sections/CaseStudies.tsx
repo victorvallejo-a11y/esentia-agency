@@ -63,7 +63,7 @@ export default function CaseStudies() {
         <RevealOnScroll direction="right" className="mb-14 flex items-end justify-between gap-6">
           <div>
             <p className="text-[12px] font-inter uppercase tracking-[0.15em] text-[#2DD4BF] mb-4">Resultados reales</p>
-            <h2 className="text-[clamp(2rem,4vw,2.8rem)] font-inter font-semibold leading-tight tracking-[-0.02em] text-white">
+            <h2 className="text-[clamp(2.3rem,4vw,2.8rem)] font-inter font-semibold leading-tight tracking-[-0.02em] text-white">
               Lo que pasa cuando la IA<br/>
               <span className="text-[#2DD4BF]">trabaja por ti</span>
             </h2>

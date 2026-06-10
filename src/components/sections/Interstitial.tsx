@@ -130,9 +130,8 @@ export default function Interstitial() {
           ))}
         </div>
 
-        <p className="i-sub mt-10 text-[clamp(0.9rem,1.6vw,1.05rem)] font-inter text-white/40 max-w-md leading-relaxed">
-          Cada minuto sin respuesta es una venta que ya tiene tu competencia.
-          Automatiza y deja de perder clientes por algo que tiene solución.
+        <p className="i-sub mt-10 text-[clamp(1rem,1.6vw,1.15rem)] font-inter text-white/40 max-w-md leading-relaxed">
+          Cada minuto sin respuesta es terreno que gana tu competencia.
         </p>
       </div>
     </div>

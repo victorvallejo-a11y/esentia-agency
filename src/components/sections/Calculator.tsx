@@ -10,37 +10,47 @@ import { ArrowRight, Clock, TrendingDown, PhoneCall, MessageSquare, TrendingUp }
 const questions = [
   {
     id: 'hours',
-    text: '¿Cuántas horas al día dedica tu equipo a gestionar clientes manualmente? (responder, seguimiento, agendar...)',
+    text: '¿Cuántas horas al día dedica tu equipo a gestionar clientes manualmente?',
     options: [
       { label: 'Menos de 1h', value: 0.5 },
       { label: '1 a 3h', value: 2 },
       { label: '3 a 6h', value: 4.5 },
-      { label: 'Más de 6h — es agotador', value: 7 },
+      { label: 'Más de 6h', value: 7 },
     ],
   },
   {
     id: 'missedCalls',
-    text: '¿Cuántas llamadas se quedan sin atender al momento cada día? (clientes que llaman y no hay nadie libre)',
+    text: '¿Cuántas llamadas al día pueden quedar sin ser atendidas al momento?',
     options: [
       { label: '1 o 2', value: 1.5 },
       { label: '3 a 5', value: 4 },
       { label: '5 a 8', value: 6.5 },
-      { label: 'Más de 8 — es un problema real', value: 10 },
+      { label: 'Más de 8', value: 10 },
     ],
   },
   {
-    id: 'missedMessages',
-    text: '¿Cuántos mensajes recibes al día (WhatsApp, email, formulario web) sin responder en menos de 1 hora?',
+    id: 'dept',
+    text: '¿Dónde crees que se pierde más tiempo en tu empresa?',
     options: [
-      { label: '1 a 5', value: 3 },
-      { label: '5 a 10', value: 7 },
-      { label: '10 a 20', value: 15 },
-      { label: 'Más de 20', value: 25 },
+      { label: 'Atención al cliente', value: 1.2 },
+      { label: 'Administración', value: 0.85 },
+      { label: 'Marketing / Ventas', value: 1.15 },
+      { label: 'Operaciones internas', value: 1.0 },
+    ],
+  },
+  {
+    id: 'dailyMessages',
+    text: '¿Cuántos mensajes puedes recibir al día? (WhatsApp, email, formulario...)',
+    options: [
+      { label: '5 – 10 mensajes', value: 7.5 },
+      { label: '10 – 30 mensajes', value: 20 },
+      { label: '30 – 60 mensajes', value: 45 },
+      { label: 'Más de 60', value: 75 },
     ],
   },
   {
     id: 'ticket',
-    text: '¿Cuál es el valor medio de lo que paga un cliente tuyo?',
+    text: '¿Cuál es el ticket medio de tus clientes?',
     options: [
       { label: 'Menos de 100 €', value: 70 },
       { label: '100 € a 500 €', value: 250 },
@@ -50,22 +60,12 @@ const questions = [
   },
   {
     id: 'followup',
-    text: '¿Tienes algún sistema automático que haga seguimiento a los leads que no compraron de inmediato?',
+    text: '¿Tienes algún sistema automático para hacer seguimiento a los leads que no compraron?',
     options: [
       { label: 'Sí, funciona bien', value: 0 },
-      { label: 'Sí, pero falla o no lo uso', value: 0.6 },
+      { label: 'Sí, pero no lo uso', value: 0.6 },
       { label: 'No tengo nada', value: 1.0 },
-      { label: '¿Qué es un lead?', value: 1.3 },
-    ],
-  },
-  {
-    id: 'team',
-    text: '¿Cuántas personas en tu empresa dedican tiempo a atención al cliente?',
-    options: [
-      { label: 'Solo yo', value: 1 },
-      { label: '1 o 2 personas más', value: 1.5 },
-      { label: '3 a 5 personas', value: 3 },
-      { label: 'Más de 5', value: 5 },
+      { label: 'No sé lo que es un lead', value: 1.3 },
     ],
   },
 ]
@@ -84,22 +84,24 @@ const RATE_KEY = 'calc_last_submit'
 const RATE_LIMIT_MS = 60_000 // 1 minuto entre envíos
 
 function calcResults(ans: number[]) {
-  const [hoursDay, missedCallsDay, missedMsgDay, ticket, noFollowup, teamSize] = ans
+  const [hoursDay, missedCallsDay, deptMult, dailyMessages, ticket, noFollowup] = ans
 
-  // Horas perdidas al mes (toda la plantilla)
-  const hoursMonth = Math.round(hoursDay * 22 * teamSize)
+  // Horas perdidas al mes
+  const hoursMonth = Math.round(hoursDay * 22)
 
-  // Oportunidades perdidas al mes
+  // Llamadas sin atender al mes
   const missedCallsMonth = Math.round(missedCallsDay * 22)
-  const missedMsgMonth   = Math.round(missedMsgDay * 22)
 
-  // Lógica realista:
-  // Llamadas: ~35% no vuelven a llamar. De esos, ~20% habrían comprado → 7% del total
-  // Mensajes:  ~25% no siguen. De esos, ~12% habrían comprado → 3% del total
-  // Multiplicador de follow-up: sin sistema se pierde un 20-40% adicional
+  // Mensajes sin respuesta rápida: ~40% de los recibidos no se responden en <1h
+  const missedMsgMonth = Math.round(dailyMessages * 0.4 * 22)
+
+  // Coste estimado:
+  // Llamadas: ~35% no vuelven, de esos ~20% habrían comprado → 7% del total
+  // Mensajes: ~25% no siguen, de esos ~12% habrían comprado → 3% del total
+  // deptMult: área con más pérdida ajusta el impacto
   const followupMult = noFollowup > 0 ? 1 + noFollowup * 0.25 : 1
   const costLost = Math.round(
-    (missedCallsMonth * 0.07 * ticket + missedMsgMonth * 0.03 * ticket) * followupMult
+    (missedCallsMonth * 0.07 * ticket + missedMsgMonth * 0.03 * ticket) * followupMult * deptMult
   )
 
   // ROI: inversión media ~1.200 €
@@ -181,7 +183,7 @@ export default function Calculator() {
       <div className="relative z-10 max-w-6xl mx-auto px-6 w-full">
         <RevealOnScroll direction="scale" className="mb-10 text-center">
           <p className="text-[12px] font-inter uppercase tracking-[0.15em] text-[#2DD4BF] mb-4">Diagnóstico gratuito</p>
-          <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-inter font-semibold leading-tight tracking-[-0.02em]">
+          <h2 className="text-[clamp(2.2rem,4vw,2.8rem)] font-inter font-semibold leading-tight tracking-[-0.02em]">
             ¿Cuánto te está costando<br/><span className="text-[#2DD4BF]">no automatizar?</span>
           </h2>
         </RevealOnScroll>
@@ -206,7 +208,7 @@ export default function Calculator() {
                   <p className="text-[11px] font-mono text-[#0F766E] uppercase tracking-widest mb-5">
                     {currentQ + 1} / {questions.length}
                   </p>
-                  <h3 className="text-[clamp(1rem,2.5vw,1.35rem)] font-inter font-semibold text-white leading-snug mb-7">
+                  <h3 className="text-[clamp(1.15rem,2.5vw,1.35rem)] font-inter font-semibold text-white leading-snug mb-7">
                     {questions[currentQ].text}
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -223,7 +225,7 @@ export default function Calculator() {
               {/* PHASE 2 — Contacto */}
               {phase === 'contact' && (
                 <div style={{animation:'slideIn 0.38s cubic-bezier(0.16,1,0.3,1)'}}>
-                  <h3 className="text-[clamp(1.2rem,2.5vw,1.6rem)] font-inter font-semibold text-white mb-2">
+                  <h3 className="text-[clamp(1.35rem,2.5vw,1.6rem)] font-inter font-semibold text-white mb-2">
                     Tu diagnóstico está listo
                   </h3>
                   <p className="text-[14px] font-inter text-white/50 mb-7">

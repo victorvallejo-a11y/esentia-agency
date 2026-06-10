@@ -129,7 +129,7 @@ export default function Services() {
 
         <div ref={headerRef} className="mb-12">
           <p className="text-[11px] font-inter uppercase tracking-[0.18em] text-[#0F766E] mb-3">Áreas de impacto</p>
-          <h2 className="text-[clamp(2rem,4vw,2.8rem)] font-inter font-semibold leading-tight tracking-[-0.02em] text-[#111111]">
+          <h2 className="text-[clamp(2.3rem,4vw,2.8rem)] font-inter font-semibold leading-tight tracking-[-0.02em] text-[#111111]">
             IA que trabaja en cada{' '}
             <span className="text-[#0F766E]">rincón de tu negocio</span>
           </h2>
@@ -141,7 +141,7 @@ export default function Services() {
             const { Icon } = dept
             const isOpen = hovered === i
             return (
-              <div key={i} className="rounded-xl overflow-hidden cursor-pointer"
+              <div key={i} className="rounded-xl overflow-hidden cursor-pointer relative"
                 style={{
                   backgroundColor: dept.bg,
                   transition: 'box-shadow 0.35s ease',
@@ -149,8 +149,25 @@ export default function Services() {
                 }}
                 onClick={() => setHovered(isOpen ? null : i)}>
 
+                {/* Radial glow — mismo que desktop */}
+                <div className="absolute inset-0 pointer-events-none" style={{ background: dept.glow }} />
+
+                {/* Número decorativo de fondo — visible siempre en mobile */}
+                <div
+                  className="absolute right-[-0.05em] bottom-[-0.1em] font-barlow font-bold leading-none pointer-events-none select-none"
+                  style={{
+                    fontSize: 'clamp(5rem,22vw,8rem)',
+                    color: dept.accent,
+                    opacity: isOpen ? 0.10 : 0.06,
+                    transition: 'opacity 0.35s ease',
+                    lineHeight: 1,
+                  }}
+                >
+                  {dept.bigNum}
+                </div>
+
                 {/* Header siempre visible */}
-                <div className="flex items-center gap-4 px-5 py-4">
+                <div className="relative flex items-center gap-4 px-5 py-4">
                   <div className="flex items-center justify-center rounded-lg flex-shrink-0"
                     style={{
                       width: 38, height: 38,
