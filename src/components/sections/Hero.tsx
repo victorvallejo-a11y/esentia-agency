@@ -83,7 +83,7 @@ export default function Hero() {
             style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
             <span className="h-line-3 block">Tu atención</span>
             <span className="h-line-4 block" style={{ whiteSpace: 'nowrap' }}>
-              al cliente, <span className="h-line-5 text-[#0F766E]">tampoco</span>
+              al cliente <span className="h-line-5 text-[#0F766E]">tampoco</span>
             </span>
           </h1>
         </div>
@@ -113,7 +113,7 @@ export default function Hero() {
         <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem] text-center">
           <span className="h-line-3 block">Tu atención</span>
           <span className="h-line-4 block" style={{ whiteSpace: 'nowrap' }}>
-            al cliente, <span className="h-line-5 text-[#0F766E]">tampoco</span>
+            al cliente <span className="h-line-5 text-[#0F766E]">tampoco</span>
           </span>
         </h1>
         <div className="hero-ctas flex flex-col items-center gap-3 w-full mt-2">
