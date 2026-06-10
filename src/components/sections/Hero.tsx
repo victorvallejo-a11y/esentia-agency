@@ -64,7 +64,7 @@ export default function Hero() {
     <section ref={heroRef} id="inicio" className="relative w-full h-screen bg-[#FAFAF7] overflow-hidden">
 
       {/* Canvas — background, en móvil lo subimos un poco */}
-      <div className="absolute inset-0 z-0 md:top-0 -top-[8%]">
+      <div className="absolute inset-0 z-0 md:top-0 -top-[10.5%]">
         <Canvas3D />
       </div>
 
