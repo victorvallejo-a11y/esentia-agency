@@ -21,6 +21,7 @@ export default function AnimatedCounter({ target, duration = 2000, suffix = '', 
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !started.current) {
         started.current = true
+        observer.disconnect()
         const start = performance.now()
         const step = (now: number) => {
           const progress = Math.min((now - start) / duration, 1)
@@ -29,10 +30,6 @@ export default function AnimatedCounter({ target, duration = 2000, suffix = '', 
           if (progress < 1) requestAnimationFrame(step)
         }
         requestAnimationFrame(step)
-      } else if (!entry.isIntersecting) {
-        // Reset for reversible animation
-        started.current = false
-        setValue(0)
       }
     }, { threshold: 0.5 })
 
