@@ -13,8 +13,9 @@ const departments = [
     bg: '#05111f',
     text: '#ffffff',
     accent: '#2DD4BF',
-    // Glow desde la esquina superior-derecha (móvil y escritorio).
-    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #2DD4BF55 0%, transparent 68%)',
+    // Móvil: glow esquina superior-izquierda. Escritorio: inferior-derecha.
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #2DD4BF55 0%, transparent 68%)',
+    glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #2DD4BF55 0%, transparent 68%)',
     tagline: 'Tu equipo solo habla con quien ya quiere comprar',
     bullets: [
       'Nunca más pierdas tiempo con un lead que no va a cerrar',
@@ -31,7 +32,8 @@ const departments = [
     bg: '#0F766E',
     text: '#ffffff',
     accent: '#ccfbf1',
-    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #ccfbf155 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #ccfbf155 0%, transparent 68%)',
+    glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #ccfbf155 0%, transparent 68%)',
     tagline: 'Respondes a las 3am sin estar despierto',
     bullets: [
       'Cero llamadas perdidas, cero clientes esperando',
@@ -48,7 +50,8 @@ const departments = [
     bg: '#160f00',
     text: '#ffffff',
     accent: '#f59e0b',
-    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #f59e0b52 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #f59e0b52 0%, transparent 68%)',
+    glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #f59e0b52 0%, transparent 68%)',
     tagline: 'Tu marca activa aunque no estés mirando',
     bullets: [
       'Cada lead recibe atención personalizada, sola',
@@ -65,7 +68,8 @@ const departments = [
     bg: '#D8D4CB',
     text: '#111111',
     accent: '#0F766E',
-    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #0F766E55 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #0F766E55 0%, transparent 68%)',
+    glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #0F766E55 0%, transparent 68%)',
     tagline: 'Tus herramientas hablan entre sí, tú no haces nada',
     bullets: [
       'El lunes tienes el informe de la semana esperándote',
@@ -82,7 +86,8 @@ const departments = [
     bg: '#0f0a1a',
     text: '#ffffff',
     accent: '#a78bfa',
-    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #a78bfa52 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #a78bfa52 0%, transparent 68%)',
+    glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #a78bfa52 0%, transparent 68%)',
     tagline: 'Sin papeleos, sin retrasos, sin errores',
     bullets: [
       'Las facturas se envían solas cuando toca',
@@ -145,8 +150,23 @@ export default function Services() {
                 }}
                 onClick={() => setHovered(isOpen ? null : i)}>
 
-                {/* Glow desde la esquina superior-derecha */}
-                <div className="absolute inset-0 pointer-events-none" style={{ background: dept.glow }} />
+                {/* Glow desde la esquina superior-izquierda */}
+                <div className="absolute inset-0 pointer-events-none" style={{ background: dept.glowMobile }} />
+
+                {/* Número grande translúcido anclado a la esquina inferior-derecha,
+                    solo visible al abrir — mismo efecto que escritorio */}
+                <div
+                  className="absolute right-[-0.05em] bottom-[-0.08em] font-barlow font-bold leading-none pointer-events-none select-none"
+                  style={{
+                    fontSize: 'clamp(6rem,34vw,10rem)',
+                    color: dept.accent,
+                    opacity: isOpen ? 0.12 : 0,
+                    transition: 'opacity 0.4s ease',
+                    lineHeight: 1,
+                  }}
+                >
+                  {dept.bigNum}
+                </div>
 
                 {/* Header siempre visible */}
                 <div className="relative flex items-center gap-4 px-5 py-4">
@@ -193,16 +213,12 @@ export default function Services() {
                         </li>
                       ))}
                     </ul>
-                    {/* Métrica: número grande translúcido + label al lado, leyéndose
-                        como una frase ("+65% de leads cualificados") */}
-                    <div className="flex items-baseline gap-2.5 pt-3"
+                    {/* Label a la derecha — se superpone al gran número translúcido
+                        anclado a la esquina (mismo efecto que escritorio) */}
+                    <div className="flex items-baseline justify-end pt-3"
                       style={{ borderTop: `1px solid ${dept.accent}28` }}>
-                      <span className="font-barlow font-bold leading-none flex-shrink-0"
-                        style={{ fontSize: '2.6rem', color: dept.accent, opacity: 0.42, lineHeight: 1 }}>
-                        {dept.bigNum}
-                      </span>
-                      <span className="font-inter text-[13px] leading-snug"
-                        style={{ color: dept.text, opacity: 0.6 }}>{dept.metricLabel}</span>
+                      <span className="font-inter text-[13px] text-right"
+                        style={{ color: dept.text, opacity: 0.55 }}>{dept.metricLabel}</span>
                     </div>
                   </div>
                 </div>
@@ -235,10 +251,10 @@ export default function Services() {
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
               >
-                {/* Glow desde la esquina superior-derecha */}
+                {/* Glow desde la esquina inferior-derecha */}
                 <div
                   className="absolute inset-0 pointer-events-none"
-                  style={{ background: dept.glow }}
+                  style={{ background: dept.glowDesktop }}
                 />
 
                 {/* Número decorativo — esquina inferior-derecha */}
