@@ -34,17 +34,15 @@ export default function Hero() {
   const heroRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    // Lock hero height to window.innerHeight captured at mount.
-    // Instagram's in-app browser fires resize when its bottom nav bar
-    // appears/disappears, changing innerHeight and causing reflow.
-    // By locking to a pixel value (not a CSS viewport unit), the hero
-    // stays stable. orientationchange updates it when the device rotates.
-    const lockHeight = () => {
-      if (heroRef.current) heroRef.current.style.height = `${window.innerHeight}px`
+    // Only lock height for Instagram's in-app browser.
+    // Instagram fires resize when its bottom nav bar appears/disappears,
+    // changing all CSS viewport units (svh/dvh/vh) and causing reflow.
+    // A fixed px value captured once at mount is immune to that.
+    // Regular browsers keep the 100svh CSS value — no JS override.
+    const onOrient = () => {}
+    if (/Instagram/i.test(navigator.userAgent) && heroRef.current) {
+      heroRef.current.style.height = `${window.innerHeight}px`
     }
-    lockHeight()
-    const onOrient = () => { setTimeout(lockHeight, 300) }
-    window.addEventListener('orientationchange', onOrient)
 
     const ctx = gsap.context(() => {
       const IN = { filter: 'blur(18px)', opacity: 0, y: 8 }
@@ -115,7 +113,7 @@ export default function Hero() {
       </div>
 
       {/* ── MOBILE: texto arriba, esfera en medio, texto+botones abajo ── */}
-      <div className="md:hidden absolute top-[13%] left-0 right-0 z-10 text-center px-6">
+      <div className="md:hidden absolute top-[5%] left-0 right-0 z-10 text-center px-6">
         <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
           <span className="h-line-1 block">Tu negocio</span>
           <span className="h-line-2 block">no duerme</span>
@@ -123,7 +121,7 @@ export default function Hero() {
       </div>
 
       {/* Título inferior + botones */}
-      <div className="md:hidden absolute bottom-[5%] left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
+      <div className="md:hidden absolute bottom-3 left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
         <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem] text-center">
           <span className="h-line-3 block">Tu atención</span>
           <span className="h-line-4 block">al cliente</span>
@@ -131,11 +129,11 @@ export default function Hero() {
         </h1>
         <div className="hero-ctas flex flex-col items-center gap-3 w-full mt-2">
           <a href="#calculadora"
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-xl">
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-xl">
             Calcula lo que pierdes<ArrowRight size={15}/>
           </a>
           <a href="https://wa.me/34711237051"
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[15px] font-inter font-medium rounded-xl border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[15px] font-inter font-medium rounded-xl border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
             <MessageCircle size={15}/>WhatsApp
           </a>
         </div>
