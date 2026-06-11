@@ -94,7 +94,7 @@ export default function Hero() {
         <div className="hidden md:block">
           <div className="absolute z-10" style={{ top: '138px', left: '98px', maxWidth: '750px' }}>
             <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
-              style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
+              style={{ fontSize: 'clamp(3.04rem, 4.8vw, 4.32rem)' }}>
               <span className="h-line-1 block">Tu negocio</span>
               <span className="h-line-2 block">no duerme</span>
             </h1>
@@ -102,7 +102,7 @@ export default function Hero() {
 
           <div className="absolute z-10 text-right" style={{ bottom: '100px', right: '60px' }}>
             <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
-              style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
+              style={{ fontSize: 'clamp(3.04rem, 4.8vw, 4.32rem)' }}>
               <span className="h-line-3 block">Tu atención</span>
               <span className="h-line-4 block">al cliente</span>
               <span className="h-line-5 block text-[#0F766E]">tampoco</span>
@@ -125,7 +125,7 @@ export default function Hero() {
             Los botones NO van aquí: viven en una franja bajo el fold. ── */}
         <div className="md:hidden absolute left-0 right-0 z-10 text-center px-6"
           style={{ top: isInsta ? 'calc(3% + 49px)' : 'calc(5% + 57px)' }}>
-          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]" style={{ fontSize: '2.32rem' }}>
             <span className="h-line-1 block">Tu negocio</span>
             <span className="h-line-2 block">no duerme</span>
           </h1>
@@ -133,7 +133,7 @@ export default function Hero() {
 
         <div className="md:hidden absolute left-0 right-0 z-10 px-5 text-center"
           style={{ top: isInsta ? 'calc(70% + 38px)' : 'calc(76% + 11px)' }}>
-          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]" style={{ fontSize: '2.32rem' }}>
             <span className="h-line-3 block">Tu atención</span>
             <span className="h-line-4 block">al cliente</span>
             <span className="h-line-5 block text-[#0F766E]">tampoco</span>
