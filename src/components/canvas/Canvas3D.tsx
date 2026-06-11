@@ -15,7 +15,9 @@ export default function Canvas3D() {
 
     const N         = 900
     const GA        = Math.PI * (3 - Math.sqrt(5))
-    const R         = 0.36
+    const isInsta   = /Instagram/i.test(navigator.userAgent)
+    // 10% bigger on regular mobile; Instagram and desktop keep 0.36
+    let   R         = 0.36
     const TRAVEL    = 3050
     const DELAY_MAX = 200
 
@@ -34,6 +36,7 @@ export default function Canvas3D() {
     function resize() {
       W = wrap.offsetWidth  || window.innerWidth
       H = wrap.offsetHeight || window.innerHeight
+      R = (!isInsta && W < 768) ? 0.396 : 0.36
       canvas.width  = Math.round(W * devicePixelRatio)
       canvas.height = Math.round(H * devicePixelRatio)
       canvas.style.width  = W + 'px'

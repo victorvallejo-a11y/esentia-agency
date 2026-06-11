@@ -34,15 +34,21 @@ export default function Hero() {
   const heroRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    // Only lock height for Instagram's in-app browser.
-    // Instagram fires resize when its bottom nav bar appears/disappears,
-    // changing all CSS viewport units (svh/dvh/vh) and causing reflow.
-    // A fixed px value captured once at mount is immune to that.
-    // Regular browsers keep the 100svh CSS value — no JS override.
-    const onOrient = () => {}
-    if (/Instagram/i.test(navigator.userAgent) && heroRef.current) {
+    const isInsta = /Instagram/i.test(navigator.userAgent)
+    const topBlock    = heroRef.current?.querySelector<HTMLElement>('.m-top-block')
+    const bottomBlock = heroRef.current?.querySelector<HTMLElement>('.m-bottom-block')
+
+    if (isInsta && heroRef.current) {
+      // Lock height: Instagram fires resize on nav-bar show/hide, changing svh
       heroRef.current.style.height = `${window.innerHeight}px`
+      // Top text: 2cm lower (accepts overlap with sphere — only stable option)
+      if (topBlock) topBlock.style.top = 'calc(5% + 76px)'
+    } else {
+      // Regular mobile: top text 1.5cm lower, bottom group 2cm closer to sphere
+      if (topBlock)    topBlock.style.top    = 'calc(5% + 57px)'
+      if (bottomBlock) bottomBlock.style.bottom = '88px'
     }
+    const onOrient = () => {}
 
     const ctx = gsap.context(() => {
       const IN = { filter: 'blur(18px)', opacity: 0, y: 8 }
@@ -113,7 +119,7 @@ export default function Hero() {
       </div>
 
       {/* ── MOBILE: texto arriba, esfera en medio, texto+botones abajo ── */}
-      <div className="md:hidden absolute top-[5%] left-0 right-0 z-10 text-center px-6">
+      <div className="m-top-block md:hidden absolute top-[5%] left-0 right-0 z-10 text-center px-6">
         <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
           <span className="h-line-1 block">Tu negocio</span>
           <span className="h-line-2 block">no duerme</span>
@@ -121,7 +127,7 @@ export default function Hero() {
       </div>
 
       {/* Título inferior + botones */}
-      <div className="md:hidden absolute bottom-3 left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
+      <div className="m-bottom-block md:hidden absolute bottom-3 left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
         <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem] text-center">
           <span className="h-line-3 block">Tu atención</span>
           <span className="h-line-4 block">al cliente</span>
