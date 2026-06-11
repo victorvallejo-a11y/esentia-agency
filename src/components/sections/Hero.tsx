@@ -1,6 +1,6 @@
 'use client'
 import dynamic from 'next/dynamic'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import MagneticButton from '@/components/shared/MagneticButton'
 import { ArrowRight, MessageCircle, ChevronDown } from 'lucide-react'
@@ -32,23 +32,17 @@ const Canvas3D = dynamic(() => import('@/components/canvas/Canvas3D'), {
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement>(null)
+  // Instagram in-app browser: lock height to a px value captured at mount.
+  // Instagram fires resize when its bottom nav bar shows/hides, which would
+  // change any CSS viewport unit (svh/dvh/vh) and bounce the layout.
+  // null = regular browser (keeps 100svh from CSS).
+  const [igHeight, setIgHeight] = useState<number | null>(null)
+  const isInsta = igHeight !== null
 
   useEffect(() => {
-    const isInsta = /Instagram/i.test(navigator.userAgent)
-    const topBlock    = heroRef.current?.querySelector<HTMLElement>('.m-top-block')
-    const bottomBlock = heroRef.current?.querySelector<HTMLElement>('.m-bottom-block')
-
-    if (isInsta && heroRef.current) {
-      // Lock height: Instagram fires resize on nav-bar show/hide, changing svh
-      heroRef.current.style.height = `${window.innerHeight}px`
-      // Top text: 2cm lower (accepts overlap with sphere — only stable option)
-      if (topBlock) topBlock.style.top = 'calc(5% + 76px)'
-    } else {
-      // Regular mobile: top text 1.5cm lower, bottom group 2cm closer to sphere
-      if (topBlock)    topBlock.style.top    = 'calc(5% + 57px)'
-      if (bottomBlock) bottomBlock.style.bottom = '88px'
+    if (/Instagram/i.test(navigator.userAgent)) {
+      setIgHeight(window.innerHeight)
     }
-    const onOrient = () => {}
 
     const ctx = gsap.context(() => {
       const IN = { filter: 'blur(18px)', opacity: 0, y: 8 }
@@ -57,13 +51,13 @@ export default function Hero() {
       // Título izquierdo — grupo, ambas líneas juntas
       gsap.fromTo(['.h-line-1', '.h-line-2'], IN, { ...OUT, delay: 0.4 })
 
-      // Título derecho — "Tu atención" + "al cliente," juntos
+      // Título derecho — "Tu atención" + "al cliente" juntos
       gsap.fromTo(['.h-line-3', '.h-line-4'], IN, { ...OUT, delay: 2.0 })
 
       // "tampoco" — 1s después, sincronizado con la onda del canvas
       gsap.fromTo('.h-line-5', IN, { ...OUT, delay: 3.1 })
 
-      // CTAs y scroll — tras el "tampoco"
+      // CTAs (desktop) y scroll — tras el "tampoco"
       gsap.fromTo('.hero-ctas',
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', delay: 4.0 }
@@ -73,83 +67,92 @@ export default function Hero() {
         { opacity: 1, duration: 0.6, ease: 'power2.out', delay: 4.8 }
       )
     }, heroRef)
-    return () => {
-      ctx.revert()
-      window.removeEventListener('orientationchange', onOrient)
-    }
+    return () => ctx.revert()
   }, [])
 
   return (
-    <section ref={heroRef} id="inicio" className="relative w-full bg-[#FAFAF7] overflow-hidden" style={{ height: '100svh' }}>
+    <>
+      <section
+        ref={heroRef}
+        id="inicio"
+        className="relative w-full bg-[#FAFAF7] overflow-hidden"
+        style={{ height: igHeight ? `${igHeight}px` : '100svh' }}
+      >
 
-      {/* Canvas — background, en móvil lo subimos un poco */}
-      <div className="absolute inset-0 z-0 md:top-0 -top-[14%]">
-        <Canvas3D />
-      </div>
+        {/* Canvas — fondo. Posición vertical de la esfera por dispositivo:
+            móvil normal baja la esfera (top 5%), Instagram la sube un poco. */}
+        <div className={`absolute inset-0 z-0 md:top-0 ${isInsta ? '-top-[9.2%]' : 'top-[5%]'}`}>
+          <Canvas3D />
+        </div>
 
-      {/* ── DESKTOP: layout scattered ── */}
-      <div className="hidden md:block">
-        <div className="absolute z-10" style={{ top: '138px', left: '143px', maxWidth: '750px' }}>
-          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
-            style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
+        {/* ── DESKTOP: layout scattered ── */}
+        <div className="hidden md:block">
+          <div className="absolute z-10" style={{ top: '138px', left: '143px', maxWidth: '750px' }}>
+            <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
+              style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
+              <span className="h-line-1 block">Tu negocio</span>
+              <span className="h-line-2 block">no duerme</span>
+            </h1>
+          </div>
+
+          <div className="absolute z-10 text-right" style={{ bottom: '100px', right: '60px' }}>
+            <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
+              style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
+              <span className="h-line-3 block">Tu atención</span>
+              <span className="h-line-4 block">al cliente</span>
+              <span className="h-line-5 block text-[#0F766E]">tampoco</span>
+            </h1>
+          </div>
+
+          <div className="hero-ctas absolute z-10 flex items-center gap-4 flex-wrap justify-center" style={{ bottom: '36px', left: 0, right: 0 }}>
+            <MagneticButton href="#calculadora"
+              className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-lg glow-pulse hover:bg-[#0d6960] transition-colors">
+              Calcula lo que estas perdiendo<ArrowRight size={15}/>
+            </MagneticButton>
+            <MagneticButton href="https://wa.me/34711237051"
+              className="inline-flex items-center gap-2 px-6 py-3.5 text-[15px] font-inter font-medium rounded-lg border border-[#1A1A1A]/15 text-[#1A1A1A] hover:border-[#0F766E] hover:text-[#0F766E] transition-all duration-200 bg-white/60 backdrop-blur-sm">
+              <MessageCircle size={15}/>WhatsApp
+            </MagneticButton>
+          </div>
+        </div>
+
+        {/* ── MOBILE: texto arriba, esfera en medio, texto abajo.
+            Los botones NO van aquí: viven en una franja bajo el fold. ── */}
+        <div className="md:hidden absolute left-0 right-0 z-10 text-center px-6"
+          style={{ top: isInsta ? '3%' : '5%' }}>
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
             <span className="h-line-1 block">Tu negocio</span>
             <span className="h-line-2 block">no duerme</span>
           </h1>
         </div>
 
-        <div className="absolute z-10 text-right" style={{ bottom: '100px', right: '60px' }}>
-          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
-            style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
+        <div className="md:hidden absolute left-0 right-0 z-10 px-5 text-center"
+          style={{ top: isInsta ? '70%' : '76%' }}>
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
             <span className="h-line-3 block">Tu atención</span>
             <span className="h-line-4 block">al cliente</span>
             <span className="h-line-5 block text-[#0F766E]">tampoco</span>
           </h1>
         </div>
 
-        <div className="hero-ctas absolute z-10 flex items-center gap-4 flex-wrap justify-center" style={{ bottom: '36px', left: 0, right: 0 }}>
-          <MagneticButton href="#calculadora"
-            className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-lg glow-pulse hover:bg-[#0d6960] transition-colors">
-            Calcula lo que estas perdiendo<ArrowRight size={15}/>
-          </MagneticButton>
-          <MagneticButton href="https://wa.me/34711237051"
-            className="inline-flex items-center gap-2 px-6 py-3.5 text-[15px] font-inter font-medium rounded-lg border border-[#1A1A1A]/15 text-[#1A1A1A] hover:border-[#0F766E] hover:text-[#0F766E] transition-all duration-200 bg-white/60 backdrop-blur-sm">
-            <MessageCircle size={15}/>WhatsApp
-          </MagneticButton>
+        {/* Scroll indicator */}
+        <div className="hero-scroll absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
+          <ChevronDown size={14} className="scroll-indicator text-[#64748B]"/>
         </div>
-      </div>
 
-      {/* ── MOBILE: texto arriba, esfera en medio, texto+botones abajo ── */}
-      <div className="m-top-block md:hidden absolute top-[5%] left-0 right-0 z-10 text-center px-6">
-        <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
-          <span className="h-line-1 block">Tu negocio</span>
-          <span className="h-line-2 block">no duerme</span>
-        </h1>
-      </div>
+      </section>
 
-      {/* Título inferior + botones */}
-      <div className="m-bottom-block md:hidden absolute bottom-3 left-0 right-0 z-10 px-5 flex flex-col items-center gap-3">
-        <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem] text-center">
-          <span className="h-line-3 block">Tu atención</span>
-          <span className="h-line-4 block">al cliente</span>
-          <span className="h-line-5 block text-[#0F766E]">tampoco</span>
-        </h1>
-        <div className="hero-ctas flex flex-col items-center gap-3 w-full mt-2">
-          <a href="#calculadora"
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-xl">
-            Calcula lo que pierdes<ArrowRight size={15}/>
-          </a>
-          <a href="https://wa.me/34711237051"
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-[15px] font-inter font-medium rounded-xl border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
-            <MessageCircle size={15}/>WhatsApp
-          </a>
-        </div>
+      {/* ── MOBILE: franja de botones bajo el fold — aparece al deslizar ── */}
+      <div className="md:hidden bg-[#FAFAF7] px-5 pt-2 pb-10 flex flex-col items-center gap-3">
+        <a href="#calculadora"
+          className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-xl">
+          Calcula lo que pierdes<ArrowRight size={15}/>
+        </a>
+        <a href="https://wa.me/34711237051"
+          className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[15px] font-inter font-medium rounded-xl border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
+          <MessageCircle size={15}/>WhatsApp
+        </a>
       </div>
-
-      {/* Scroll indicator */}
-      <div className="hero-scroll absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
-        <ChevronDown size={14} className="scroll-indicator text-[#64748B]"/>
-      </div>
-
-    </section>
+    </>
   )
 }
