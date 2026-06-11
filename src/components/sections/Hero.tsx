@@ -83,7 +83,10 @@ export default function Hero() {
 
         {/* Canvas — fondo. Posición vertical de la esfera por dispositivo:
             móvil normal baja la esfera (top 5%), Instagram la sube un poco. */}
-        <div className={`absolute inset-0 z-0 md:top-0 ${isInsta ? '-top-[9.2%]' : 'top-[5%]'}`}>
+        <div
+          className={`absolute inset-0 z-0 md:top-0 ${isInsta ? '' : 'top-[5%]'}`}
+          style={isInsta ? { top: 'calc(-9.2% + 38px)' } : undefined}
+        >
           <Canvas3D />
         </div>
 
@@ -129,7 +132,7 @@ export default function Hero() {
         </div>
 
         <div className="md:hidden absolute left-0 right-0 z-10 px-5 text-center"
-          style={{ top: isInsta ? '70%' : '76%' }}>
+          style={{ top: isInsta ? 'calc(70% + 38px)' : 'calc(76% + 11px)' }}>
           <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
             <span className="h-line-3 block">Tu atención</span>
             <span className="h-line-4 block">al cliente</span>

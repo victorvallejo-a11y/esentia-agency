@@ -36,7 +36,7 @@ export default function Canvas3D() {
     function resize() {
       W = wrap.offsetWidth  || window.innerWidth
       H = wrap.offsetHeight || window.innerHeight
-      R = (!isInsta && W < 768) ? 0.396 : 0.36
+      R = isInsta ? 0.389 : (W < 768 ? 0.396 : 0.36)
       canvas.width  = Math.round(W * devicePixelRatio)
       canvas.height = Math.round(H * devicePixelRatio)
       canvas.style.width  = W + 'px'
