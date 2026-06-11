@@ -124,7 +124,7 @@ export default function Hero() {
         {/* ── MOBILE: texto arriba, esfera en medio, texto abajo.
             Los botones NO van aquí: viven en una franja bajo el fold. ── */}
         <div className="md:hidden absolute left-0 right-0 z-10 text-center px-6"
-          style={{ top: isInsta ? 'calc(3% + 49px)' : 'calc(0% + 25px)' }}>
+          style={{ top: isInsta ? 'calc(3% + 49px)' : 'calc(0% + 90px)' }}>
           <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]" style={{ fontSize: isInsta ? '4.1rem' : '5.3rem' }}>
             <span className="h-line-1 block">Tu negocio</span>
             <span className="h-line-2 block">no duerme</span>
