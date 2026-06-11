@@ -17,8 +17,11 @@ export default function Canvas3D() {
     const isMobile  = isInsta || (typeof window !== 'undefined' && window.innerWidth < 768)
     // Móvil: menos partículas y DPR acotado → entrada fluida. La GPU móvil
     // se ahoga rellenando ~900 puntos + gradientes a 3x de resolución (DPR³).
-    const N         = isMobile ? 640 : 900
+    const N         = isMobile ? 400 : 900
     const DPR       = Math.min((typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1), isMobile ? 1.5 : 2)
+    // Cuánto se agrandan los puntos del contorno. En móvil lo bajamos para
+    // que el borde de la esfera no se sature (los puntos se comprimen ahí).
+    const CONTOUR   = isMobile ? 0.25 : 0.6
     const GA        = Math.PI * (3 - Math.sqrt(5))
     // 10% bigger on regular mobile; Instagram and desktop keep 0.36
     let   R         = 0.36
@@ -190,7 +193,7 @@ export default function Canvas3D() {
 
       for (const p of projected) {
         if (p.progress <= 0) continue
-        const contourBoost = 1 + p.edgeness * 0.6
+        const contourBoost = 1 + p.edgeness * CONTOUR
         const dn = p.depthNorm
         const size    = (1.2 + dn * 0.8) * contourBoost
         const opacity = (0.55 + dn * 0.35) * Math.min(1, p.progress * 1.5)
