@@ -124,8 +124,8 @@ export default function Hero() {
         {/* ── MOBILE: texto arriba, esfera en medio, texto abajo.
             Los botones NO van aquí: viven en una franja bajo el fold. ── */}
         <div className="md:hidden absolute left-0 right-0 z-10 text-center px-6"
-          style={{ top: isInsta ? 'calc(3% + 49px)' : 'calc(5% + 57px)' }}>
-          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]" style={{ fontSize: '2.9rem' }}>
+          style={{ top: isInsta ? 'calc(3% + 49px)' : 'calc(5% + 102px)' }}>
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]" style={{ fontSize: isInsta ? '2.9rem' : '3.6rem' }}>
             <span className="h-line-1 block">Tu negocio</span>
             <span className="h-line-2 block">no duerme</span>
           </h1>
@@ -133,7 +133,7 @@ export default function Hero() {
 
         <div className="md:hidden absolute left-0 right-0 z-10 px-5 text-center"
           style={{ top: isInsta ? 'calc(70% + 38px)' : 'calc(76% + 11px)' }}>
-          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]" style={{ fontSize: '2.9rem' }}>
+          <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]" style={{ fontSize: isInsta ? '2.9rem' : '3.6rem' }}>
             <span className="h-line-3 block">Tu atención</span>
             <span className="h-line-4 block">al cliente</span>
             <span className="h-line-5 block text-[#0F766E]">tampoco</span>
