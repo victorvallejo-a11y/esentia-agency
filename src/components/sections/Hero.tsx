@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import MagneticButton from '@/components/shared/MagneticButton'
+import RevealOnScroll from '@/components/shared/RevealOnScroll'
 import { ArrowRight, MessageCircle, ChevronDown } from 'lucide-react'
 
 const Canvas3D = dynamic(() => import('@/components/canvas/Canvas3D'), {
@@ -67,6 +68,7 @@ export default function Hero() {
         { opacity: 1, duration: 0.6, ease: 'power2.out', delay: 4.8 }
       )
     }, heroRef)
+
     return () => ctx.revert()
   }, [])
 
@@ -119,7 +121,7 @@ export default function Hero() {
         {/* ── MOBILE: texto arriba, esfera en medio, texto abajo.
             Los botones NO van aquí: viven en una franja bajo el fold. ── */}
         <div className="md:hidden absolute left-0 right-0 z-10 text-center px-6"
-          style={{ top: isInsta ? '3%' : '5%' }}>
+          style={{ top: isInsta ? 'calc(3% + 49px)' : 'calc(5% + 57px)' }}>
           <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A] text-[2.9rem]">
             <span className="h-line-1 block">Tu negocio</span>
             <span className="h-line-2 block">no duerme</span>
@@ -142,16 +144,21 @@ export default function Hero() {
 
       </section>
 
-      {/* ── MOBILE: franja de botones bajo el fold — aparece al deslizar ── */}
+      {/* ── MOBILE: franja de botones bajo el fold — aparecen al deslizar
+          (RevealOnScroll: fade-up al entrar en viewport, escalonados) ── */}
       <div className="md:hidden bg-[#FAFAF7] px-5 pt-2 pb-10 flex flex-col items-center gap-3">
-        <a href="#calculadora"
-          className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-xl">
-          Calcula lo que pierdes<ArrowRight size={15}/>
-        </a>
-        <a href="https://wa.me/34711237051"
-          className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[15px] font-inter font-medium rounded-xl border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
-          <MessageCircle size={15}/>WhatsApp
-        </a>
+        <RevealOnScroll className="w-full" delay={0}>
+          <a href="#calculadora"
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#0F766E] text-white text-[15px] font-inter font-medium rounded-xl">
+            Calcula lo que pierdes<ArrowRight size={15}/>
+          </a>
+        </RevealOnScroll>
+        <RevealOnScroll className="w-full" delay={120}>
+          <a href="https://wa.me/34711237051"
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-[15px] font-inter font-medium rounded-xl border border-[#1A1A1A]/15 text-[#1A1A1A] bg-white/60">
+            <MessageCircle size={15}/>WhatsApp
+          </a>
+        </RevealOnScroll>
       </div>
     </>
   )
