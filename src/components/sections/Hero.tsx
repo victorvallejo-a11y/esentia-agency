@@ -92,7 +92,7 @@ export default function Hero() {
 
         {/* ── DESKTOP: layout scattered ── */}
         <div className="hidden md:block">
-          <div className="absolute z-10" style={{ top: '138px', left: '143px', maxWidth: '750px' }}>
+          <div className="absolute z-10" style={{ top: '138px', left: '98px', maxWidth: '750px' }}>
             <h1 className="font-barlow font-bold uppercase leading-[0.95] tracking-[0.02em] text-[#1A1A1A]"
               style={{ fontSize: 'clamp(3.8rem, 6vw, 5.4rem)' }}>
               <span className="h-line-1 block">Tu negocio</span>
