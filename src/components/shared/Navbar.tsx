@@ -247,9 +247,9 @@ export default function Navbar() {
           maxWidth:       scrolled ? '160px' : '100%',
           height:         scrolled ? '46px' : '62px',
           borderRadius:   scrolled ? '16px' : '0px',
-          background:     scrolled ? 'rgba(250,250,247,0.97)' : 'rgba(250,250,247,0)',
-          backdropFilter: scrolled ? 'blur(14px)' : 'blur(0px)',
-          WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'blur(0px)',
+          background:     scrolled ? 'rgba(255,255,253,0.58)' : 'rgba(250,250,247,0)',
+          backdropFilter: scrolled ? 'blur(22px)' : 'blur(0px)',
+          WebkitBackdropFilter: scrolled ? 'blur(22px)' : 'blur(0px)',
           boxShadow:      scrolled ? islandShadow : 'none',
           transition:     'max-width 0.55s cubic-bezier(0.4,0,0.2,1), height 0.45s ease, border-radius 0.45s ease, background 0.4s ease, box-shadow 0.4s ease, margin-top 0.45s ease',
         }}
