@@ -15,21 +15,38 @@ const BOOKING_URL = 'https://calendar.app.google/Xezqc3mQe6yi23k26'
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
 export default function Navbar() {
-  const [p,            setP]            = useState(0)   // progress 0→1
+  const [p,            setP]            = useState(0)      // progress 0→1 (scrub escritorio)
+  const [scrolled,     setScrolled]     = useState(false)  // estado isla (móvil, binario)
+  const [hidden,       setHidden]       = useState(false)  // navbar oculto al bajar (web+móvil)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [menuOpen,     setMenuOpen]     = useState(false)
   const [mobileOpen,   setMobileOpen]   = useState(false)
   const dropRef = useRef<HTMLDivElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+  const lastY   = useRef(0)
 
-  // Progress basado en scroll — rango 0-140px
   useEffect(() => {
     const onScroll = () => {
-      const progress = Math.min(window.scrollY / 140, 1)
-      setP(progress)
-      if (progress < 0.5) setMenuOpen(false)
+      const y = window.scrollY
+      // Escritorio: scrub continuo 0-140px
+      setP(Math.min(y / 140, 1))
+      // Móvil: la isla aparece tras 120px (delay para que se aprecie la transición)
+      setScrolled(y > 120)
+      if (y < 60) setMenuOpen(false)
+
+      // Ocultar al bajar / mostrar al subir — a partir de ~la 2ª sección
+      const hideAfter = window.innerHeight * 1.2
+      if (y > hideAfter && y > lastY.current + 3) {
+        setHidden(true)
+        setMenuOpen(false)
+        setDropdownOpen(false)
+      } else if (y < lastY.current - 3) {
+        setHidden(false)
+      }
+      lastY.current = y
     }
     window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll() // inicializar por si se carga a media página
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
@@ -52,7 +69,13 @@ export default function Navbar() {
     else el.scrollIntoView({ behavior: 'smooth' })
   }
 
-  // Valores interpolados
+  const scrollTop = () => {
+    const lenis = (window as unknown as Record<string, unknown>).__lenis as { scrollTo: (t: number, opts: object) => void } | undefined
+    if (lenis) lenis.scrollTo(0, { duration: 1.2 })
+    else window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // ── Valores interpolados (escritorio) ──
   const maxW      = lerp(1152, 340,  p)
   const padV      = lerp(24,   10,   p)
   const padTop    = lerp(0,    12,   p)
@@ -61,28 +84,30 @@ export default function Navbar() {
   const blur      = lerp(0,    14,   p)
   const shadow    = p > 0.05 ? `0 4px 24px rgba(0,0,0,${(p * 0.09).toFixed(3)}), 0 0 0 1px rgba(0,0,0,${(p * 0.07).toFixed(3)})` : 'none'
 
-  // Links: empiezan a desvanecerse en p=0.2, desaparecen en p=0.65
   const linksOpacity = Math.max(0, Math.min(1, (0.65 - p) / 0.45))
   const linksScale   = lerp(1, 0.88, Math.min(1, p / 0.65))
-
-  // Hamburger: empieza a aparecer en p=0.4, completo en p=0.85
   const burgerOpacity = Math.max(0, Math.min(1, (p - 0.4) / 0.45))
 
-  // Las 3 barras del hamburger
   const bar1Transform = menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none'
   const bar2Opacity   = menuOpen ? 0 : 1
   const bar3Transform = menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none'
 
-  // const scrolled = p > 0.85
+  const islandShadow = '0 4px 24px rgba(0,0,0,0.09), 0 0 0 1px rgba(0,0,0,0.06)'
 
   return (
     <>
     <nav
-      style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, paddingTop: `${padTop}px` }}
+      style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+        transform: hidden ? 'translateY(-120%)' : 'translateY(0)',
+        transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1)',
+      }}
     >
+      {/* ── ESCRITORIO: scrub continuo (links se desvanecen, isla emerge) ── */}
       <div
-        className="mx-auto flex items-center justify-between px-6"
+        className="hidden md:flex mx-auto items-center justify-between px-6"
         style={{
+          marginTop:      `${padTop}px`,
           maxWidth:       `${maxW}px`,
           paddingTop:     `${padV}px`,
           paddingBottom:  `${padV}px`,
@@ -99,9 +124,7 @@ export default function Navbar() {
         </a>
 
         {/* Zona central: links que se desvanecen + hamburger que emerge */}
-        <div className="hidden md:flex items-center justify-center" style={{ minWidth: 0 }}>
-
-          {/* Links */}
+        <div className="flex items-center justify-center" style={{ minWidth: 0 }}>
           <div
             className="flex items-center gap-8"
             style={{
@@ -163,7 +186,7 @@ export default function Navbar() {
         </div>
 
         {/* Botón Contactar + dropdown */}
-        <div ref={dropRef} className="hidden md:inline-block relative flex-shrink-0">
+        <div ref={dropRef} className="inline-block relative flex-shrink-0">
           <button
             onClick={() => setDropdownOpen(v => !v)}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-inter font-medium text-white bg-[#0F766E] rounded-md hover:bg-[#0d6960] transition-colors"
@@ -211,9 +234,55 @@ export default function Navbar() {
             </a>
           </div>
         </div>
+      </div>
 
-        {/* Hamburger mobile */}
-        <button className="md:hidden flex flex-col gap-1.5 p-1" aria-label="Menu" onClick={() => setMobileOpen(true)}>
+      {/* ── MÓVIL: estado binario con transición CSS. Al hacer scroll las 3
+          líneas se desvanecen y el logo queda centrado en la isla. Tocar el
+          logo abre el menú. ── */}
+      <div
+        className="md:hidden mx-auto relative flex items-center"
+        style={{
+          marginTop:      scrolled ? '12px' : '0px',
+          maxWidth:       scrolled ? '300px' : '100%',
+          height:         scrolled ? '46px' : '62px',
+          borderRadius:   scrolled ? '16px' : '0px',
+          background:     scrolled ? 'rgba(250,250,247,0.93)' : 'rgba(250,250,247,0)',
+          backdropFilter: scrolled ? 'blur(14px)' : 'blur(0px)',
+          WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'blur(0px)',
+          boxShadow:      scrolled ? islandShadow : 'none',
+          transition:     'max-width 0.55s cubic-bezier(0.4,0,0.2,1), height 0.45s ease, border-radius 0.45s ease, background 0.4s ease, box-shadow 0.4s ease, margin-top 0.45s ease',
+        }}
+      >
+        {/* Logo: izquierda arriba → centro en isla. Tap abre menú al estar en isla. */}
+        <button
+          onClick={() => { if (scrolled) setMobileOpen(true); else scrollTop() }}
+          aria-label={scrolled ? 'Abrir menú' : 'Inicio'}
+          className="absolute font-inter font-semibold text-[13px] tracking-[0.06em] uppercase text-[#1A1A1A]"
+          style={{
+            top:        '50%',
+            left:       scrolled ? '50%' : '24px',
+            transform:  scrolled ? 'translate(-50%,-50%)' : 'translate(0,-50%)',
+            transition: 'left 0.55s cubic-bezier(0.4,0,0.2,1), transform 0.55s cubic-bezier(0.4,0,0.2,1)',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          ESENTIA AGENCY
+        </button>
+
+        {/* 3 líneas: se desvanecen al entrar en isla */}
+        <button
+          onClick={() => setMobileOpen(true)}
+          aria-label="Menú"
+          className="absolute flex flex-col gap-1.5 p-1"
+          style={{
+            top:        '50%',
+            right:      '24px',
+            transform:  'translateY(-50%)',
+            opacity:        scrolled ? 0 : 1,
+            pointerEvents:  scrolled ? 'none' : 'auto',
+            transition:     'opacity 0.35s ease',
+          }}
+        >
           <span className="w-5 h-px bg-[#1A1A1A] block"/>
           <span className="w-5 h-px bg-[#1A1A1A] block"/>
           <span className="w-3 h-px bg-[#1A1A1A] block"/>
