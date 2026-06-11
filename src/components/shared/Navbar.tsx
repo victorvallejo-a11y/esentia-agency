@@ -34,8 +34,9 @@ export default function Navbar() {
       setScrolled(y > 120)
       if (y < 60) setMenuOpen(false)
 
-      // Ocultar al bajar / mostrar al subir — a partir de ~la 2ª sección
-      const hideAfter = window.innerHeight * 1.2
+      // Ocultar al bajar / mostrar al subir — móvil un pelín antes (entra en
+      // la parte oscura de la 2ª sección); escritorio a 1.2 viewports.
+      const hideAfter = window.innerHeight * (window.innerWidth < 768 ? 1.0 : 1.2)
       if (y > hideAfter && y > lastY.current + 3) {
         setHidden(true)
         setMenuOpen(false)
@@ -243,10 +244,10 @@ export default function Navbar() {
         className="md:hidden mx-auto relative flex items-center"
         style={{
           marginTop:      scrolled ? '12px' : '0px',
-          maxWidth:       scrolled ? '300px' : '100%',
+          maxWidth:       scrolled ? '160px' : '100%',
           height:         scrolled ? '46px' : '62px',
           borderRadius:   scrolled ? '16px' : '0px',
-          background:     scrolled ? 'rgba(250,250,247,0.93)' : 'rgba(250,250,247,0)',
+          background:     scrolled ? 'rgba(250,250,247,0.97)' : 'rgba(250,250,247,0)',
           backdropFilter: scrolled ? 'blur(14px)' : 'blur(0px)',
           WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'blur(0px)',
           boxShadow:      scrolled ? islandShadow : 'none',
