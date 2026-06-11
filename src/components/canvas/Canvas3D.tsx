@@ -17,7 +17,7 @@ export default function Canvas3D() {
     const isMobile  = isInsta || (typeof window !== 'undefined' && window.innerWidth < 768)
     // Móvil: menos partículas y DPR acotado → entrada fluida. La GPU móvil
     // se ahoga rellenando ~900 puntos + gradientes a 3x de resolución (DPR³).
-    const N         = isMobile ? 490 : 900
+    const N         = isMobile ? 530 : 900
     const DPR       = Math.min((typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1), isMobile ? 1.5 : 2)
     // Cuánto se agrandan los puntos del contorno. En móvil lo bajamos para
     // que el borde de la esfera no se sature (los puntos se comprimen ahí).
