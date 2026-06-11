@@ -14,7 +14,7 @@ const departments = [
     text: '#ffffff',
     accent: '#2DD4BF',
     // Móvil: glow esquina superior-izquierda. Escritorio: inferior-derecha.
-    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #2DD4BF55 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 96% 96%, #2DD4BF55 0%, transparent 68%)',
     glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #2DD4BF55 0%, transparent 68%)',
     tagline: 'Tu equipo solo habla con quien ya quiere comprar',
     bullets: [
@@ -32,7 +32,7 @@ const departments = [
     bg: '#0F766E',
     text: '#ffffff',
     accent: '#ccfbf1',
-    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #ccfbf155 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 96% 96%, #ccfbf155 0%, transparent 68%)',
     glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #ccfbf155 0%, transparent 68%)',
     tagline: 'Respondes a las 3am sin estar despierto',
     bullets: [
@@ -50,7 +50,7 @@ const departments = [
     bg: '#160f00',
     text: '#ffffff',
     accent: '#f59e0b',
-    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #f59e0b52 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 96% 96%, #f59e0b52 0%, transparent 68%)',
     glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #f59e0b52 0%, transparent 68%)',
     tagline: 'Tu marca activa aunque no estés mirando',
     bullets: [
@@ -68,7 +68,7 @@ const departments = [
     bg: '#D8D4CB',
     text: '#111111',
     accent: '#0F766E',
-    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #0F766E55 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 96% 96%, #0F766E55 0%, transparent 68%)',
     glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #0F766E55 0%, transparent 68%)',
     tagline: 'Tus herramientas hablan entre sí, tú no haces nada',
     bullets: [
@@ -86,7 +86,7 @@ const departments = [
     bg: '#0f0a1a',
     text: '#ffffff',
     accent: '#a78bfa',
-    glowMobile:  'radial-gradient(ellipse 85% 80% at 6% 6%, #a78bfa52 0%, transparent 68%)',
+    glowMobile:  'radial-gradient(ellipse 85% 80% at 96% 96%, #a78bfa52 0%, transparent 68%)',
     glowDesktop: 'radial-gradient(ellipse 85% 80% at 96% 96%, #a78bfa52 0%, transparent 68%)',
     tagline: 'Sin papeleos, sin retrasos, sin errores',
     bullets: [
