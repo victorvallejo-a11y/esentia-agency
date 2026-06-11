@@ -13,9 +13,8 @@ const departments = [
     bg: '#05111f',
     text: '#ffffff',
     accent: '#2DD4BF',
-    // Mobile: glow desde la izquierda. Desktop: desde esquina inferior-izquierda.
-    glowMobile:  'radial-gradient(ellipse 90% 75% at -5% 55%, #2DD4BF30 0%, transparent 60%)',
-    glowDesktop: 'radial-gradient(ellipse 80% 75% at 0% 100%, #2DD4BF30 0%, transparent 60%)',
+    // Glow desde la esquina superior-derecha (móvil y escritorio).
+    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #2DD4BF55 0%, transparent 68%)',
     tagline: 'Tu equipo solo habla con quien ya quiere comprar',
     bullets: [
       'Nunca más pierdas tiempo con un lead que no va a cerrar',
@@ -23,7 +22,6 @@ const departments = [
       'Una propuesta lista antes de que el cliente enfríe',
       'Sabes cuándo llamar antes de que se vaya a la competencia',
     ],
-    metric: '2.4x',
     metricLabel: 'más ventas cerradas',
     bigNum: '2.4×',
   },
@@ -33,8 +31,7 @@ const departments = [
     bg: '#0F766E',
     text: '#ffffff',
     accent: '#ccfbf1',
-    glowMobile:  'radial-gradient(ellipse 90% 75% at -5% 55%, #ccfbf138 0%, transparent 60%)',
-    glowDesktop: 'radial-gradient(ellipse 80% 75% at 0% 100%, #ccfbf138 0%, transparent 60%)',
+    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #ccfbf155 0%, transparent 68%)',
     tagline: 'Respondes a las 3am sin estar despierto',
     bullets: [
       'Cero llamadas perdidas, cero clientes esperando',
@@ -42,9 +39,8 @@ const departments = [
       'El cliente siente atención inmediata, siempre',
       'Un humano entra solo cuando de verdad hace falta',
     ],
-    metric: '-80%',
     metricLabel: 'tiempo de respuesta',
-    bigNum: '80%',
+    bigNum: '−80%',
   },
   {
     name: 'Marketing',
@@ -52,8 +48,7 @@ const departments = [
     bg: '#160f00',
     text: '#ffffff',
     accent: '#f59e0b',
-    glowMobile:  'radial-gradient(ellipse 90% 75% at -5% 55%, #f59e0b2e 0%, transparent 60%)',
-    glowDesktop: 'radial-gradient(ellipse 80% 75% at 0% 100%, #f59e0b2e 0%, transparent 60%)',
+    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #f59e0b52 0%, transparent 68%)',
     tagline: 'Tu marca activa aunque no estés mirando',
     bullets: [
       'Cada lead recibe atención personalizada, sola',
@@ -61,9 +56,8 @@ const departments = [
       'Sabes qué funciona sin abrir una hoja de cálculo',
       'Campañas que se ajustan solas según resultados',
     ],
-    metric: '+65%',
     metricLabel: 'leads cualificados',
-    bigNum: '65%',
+    bigNum: '+65%',
   },
   {
     name: 'Operaciones',
@@ -71,8 +65,7 @@ const departments = [
     bg: '#D8D4CB',
     text: '#111111',
     accent: '#0F766E',
-    glowMobile:  'radial-gradient(ellipse 90% 75% at -5% 55%, #0F766E33 0%, transparent 60%)',
-    glowDesktop: 'radial-gradient(ellipse 80% 75% at 0% 100%, #0F766E38 0%, transparent 60%)',
+    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #0F766E55 0%, transparent 68%)',
     tagline: 'Tus herramientas hablan entre sí, tú no haces nada',
     bullets: [
       'El lunes tienes el informe de la semana esperándote',
@@ -80,7 +73,6 @@ const departments = [
       'Todo conectado: CRM, facturación, stock, email',
       'Las tareas repetitivas simplemente desaparecen',
     ],
-    metric: '12h',
     metricLabel: 'semanales recuperadas',
     bigNum: '12h',
   },
@@ -90,8 +82,7 @@ const departments = [
     bg: '#0f0a1a',
     text: '#ffffff',
     accent: '#a78bfa',
-    glowMobile:  'radial-gradient(ellipse 90% 75% at -5% 55%, #a78bfa28 0%, transparent 60%)',
-    glowDesktop: 'radial-gradient(ellipse 80% 75% at 0% 100%, #a78bfa28 0%, transparent 60%)',
+    glow: 'radial-gradient(ellipse 85% 80% at 92% 4%, #a78bfa52 0%, transparent 68%)',
     tagline: 'Sin papeleos, sin retrasos, sin errores',
     bullets: [
       'Las facturas se envían solas cuando toca',
@@ -99,9 +90,8 @@ const departments = [
       'Los clientes reciben recordatorios automáticos',
       'Documentos generados en segundos, no en horas',
     ],
-    metric: '-70%',
     metricLabel: 'carga administrativa',
-    bigNum: '70%',
+    bigNum: '−70%',
   },
 ]
 
@@ -155,22 +145,8 @@ export default function Services() {
                 }}
                 onClick={() => setHovered(isOpen ? null : i)}>
 
-                {/* Glow desde la izquierda en móvil */}
-                <div className="absolute inset-0 pointer-events-none" style={{ background: dept.glowMobile }} />
-
-                {/* Número decorativo — solo visible cuando está abierto */}
-                <div
-                  className="absolute left-[-0.05em] bottom-[-0.1em] font-barlow font-bold leading-none pointer-events-none select-none"
-                  style={{
-                    fontSize: 'clamp(5rem,22vw,8rem)',
-                    color: dept.accent,
-                    opacity: isOpen ? 0.10 : 0,
-                    transition: 'opacity 0.35s ease',
-                    lineHeight: 1,
-                  }}
-                >
-                  {dept.bigNum}
-                </div>
+                {/* Glow desde la esquina superior-derecha */}
+                <div className="absolute inset-0 pointer-events-none" style={{ background: dept.glow }} />
 
                 {/* Header siempre visible */}
                 <div className="relative flex items-center gap-4 px-5 py-4">
@@ -217,11 +193,16 @@ export default function Services() {
                         </li>
                       ))}
                     </ul>
-                    {/* Métrica: solo el label — el bigNum ya muestra el número */}
-                    <div className="flex items-baseline pt-3"
+                    {/* Métrica: número grande translúcido + label al lado, leyéndose
+                        como una frase ("+65% de leads cualificados") */}
+                    <div className="flex items-baseline gap-2.5 pt-3"
                       style={{ borderTop: `1px solid ${dept.accent}28` }}>
-                      <span className="font-inter text-[13px]"
-                        style={{ color: dept.text, opacity: 0.45 }}>{dept.metricLabel}</span>
+                      <span className="font-barlow font-bold leading-none flex-shrink-0"
+                        style={{ fontSize: '2.6rem', color: dept.accent, opacity: 0.42, lineHeight: 1 }}>
+                        {dept.bigNum}
+                      </span>
+                      <span className="font-inter text-[13px] leading-snug"
+                        style={{ color: dept.text, opacity: 0.6 }}>{dept.metricLabel}</span>
                     </div>
                   </div>
                 </div>
@@ -254,15 +235,15 @@ export default function Services() {
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
               >
-                {/* Glow desde esquina inferior-izquierda en desktop */}
+                {/* Glow desde la esquina superior-derecha */}
                 <div
                   className="absolute inset-0 pointer-events-none"
-                  style={{ background: dept.glowDesktop }}
+                  style={{ background: dept.glow }}
                 />
 
-                {/* Número decorativo — esquina inferior-izquierda */}
+                {/* Número decorativo — esquina inferior-derecha */}
                 <div
-                  className="absolute left-[-0.05em] bottom-[-0.1em] font-barlow font-bold leading-none pointer-events-none select-none"
+                  className="absolute right-[-0.05em] bottom-[-0.1em] font-barlow font-bold leading-none pointer-events-none select-none"
                   style={{
                     fontSize: 'clamp(7rem,14vw,13rem)',
                     color: dept.accent,
@@ -349,9 +330,10 @@ export default function Services() {
                     ))}
                   </ul>
 
-                  {/* Solo el label — el bigNum translúcido ya muestra el número */}
+                  {/* Label alineado a la derecha — se superpone al gran número
+                      translúcido de la esquina inferior-derecha */}
                   <div
-                    className="flex items-baseline pt-4"
+                    className="flex items-baseline justify-end pt-4"
                     style={{
                       borderTop: `1px solid ${dept.accent}28`,
                       opacity: isHovered ? 1 : 0,
@@ -359,7 +341,7 @@ export default function Services() {
                       transition: `opacity 0.3s ease 0.44s, transform 0.3s ease 0.44s`,
                     }}
                   >
-                    <span className="font-inter text-[13px]" style={{ color: dept.text, opacity: 0.45 }}>
+                    <span className="font-inter text-[13px] text-right" style={{ color: dept.text, opacity: 0.55 }}>
                       {dept.metricLabel}
                     </span>
                   </div>
