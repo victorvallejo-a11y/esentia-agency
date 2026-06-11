@@ -13,9 +13,13 @@ export default function Canvas3D() {
     const ctx = canvas.getContext('2d')!
     if (!ctx) return
 
-    const N         = 900
-    const GA        = Math.PI * (3 - Math.sqrt(5))
     const isInsta   = /Instagram/i.test(navigator.userAgent)
+    const isMobile  = isInsta || (typeof window !== 'undefined' && window.innerWidth < 768)
+    // Móvil: menos partículas y DPR acotado → entrada fluida. La GPU móvil
+    // se ahoga rellenando ~900 puntos + gradientes a 3x de resolución (DPR³).
+    const N         = isMobile ? 640 : 900
+    const DPR       = Math.min((typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1), isMobile ? 1.5 : 2)
+    const GA        = Math.PI * (3 - Math.sqrt(5))
     // 10% bigger on regular mobile; Instagram and desktop keep 0.36
     let   R         = 0.36
     const TRAVEL    = 3050
@@ -37,11 +41,11 @@ export default function Canvas3D() {
       W = wrap.offsetWidth  || window.innerWidth
       H = wrap.offsetHeight || window.innerHeight
       R = isInsta ? 0.389 : (W < 768 ? 0.396 : 0.36)
-      canvas.width  = Math.round(W * devicePixelRatio)
-      canvas.height = Math.round(H * devicePixelRatio)
+      canvas.width  = Math.round(W * DPR)
+      canvas.height = Math.round(H * DPR)
       canvas.style.width  = W + 'px'
       canvas.style.height = H + 'px'
-      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0)
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0)
     }
     resize()
 
@@ -210,7 +214,9 @@ export default function Canvas3D() {
         grad.addColorStop(0.5, `rgba(15,118,110,${alpha.toFixed(3)})`)
         grad.addColorStop(1,   `rgba(15,118,110,0)`)
         ctx.fillStyle = grad
-        ctx.fillRect(0, 0, W, H)
+        // Solo el cuadro que contiene la esfera, no todo el canvas → mucho
+        // más barato en móvil (el gradiente fuera del círculo es transparente).
+        ctx.fillRect(W / 2 - spherePx, H / 2 - spherePx, spherePx * 2, spherePx * 2)
       }
     }
 
