@@ -247,7 +247,7 @@ export default function Navbar() {
           maxWidth:       scrolled ? '160px' : '100%',
           height:         scrolled ? '46px' : '62px',
           borderRadius:   scrolled ? '16px' : '0px',
-          background:     scrolled ? 'rgba(255,255,253,0.49)' : 'rgba(250,250,247,0)',
+          background:     scrolled ? 'rgba(255,255,253,0.69)' : 'rgba(250,250,247,0)',
           backdropFilter: scrolled ? 'blur(22px)' : 'blur(0px)',
           WebkitBackdropFilter: scrolled ? 'blur(22px)' : 'blur(0px)',
           boxShadow:      scrolled ? islandShadow : 'none',
