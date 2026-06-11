@@ -85,7 +85,7 @@ export default function Hero() {
             móvil normal baja la esfera (top 5%), Instagram la sube un poco. */}
         <div
           className="absolute inset-0 z-0 md:top-0"
-          style={{ top: isInsta ? 'calc(-9.2% + 53px)' : 'calc(5% - 19px)' }}
+          style={{ top: isInsta ? 'calc(-9.2% + 64px)' : 'calc(5% - 19px)' }}
         >
           <Canvas3D />
         </div>
