@@ -10,6 +10,9 @@ const nextConfig = {
 
   // ── Security Headers ─────────────────────────────────────────────────────
   async headers() {
+    // En desarrollo, Next necesita 'unsafe-eval' para el hot-reload (HMR/React Refresh).
+    // En producción NO se permite: la CSP sigue igual de estricta.
+    const isDev = process['env']['NODE_ENV'] !== 'production'
     return [
       {
         source: '/(.*)',
@@ -34,7 +37,7 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com",
+              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com https://va.vercel-scripts.com`,
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https:",

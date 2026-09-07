@@ -14,6 +14,11 @@ const BOOKING_URL = 'https://calendar.app.google/Xezqc3mQe6yi23k26'
 // Interpolación lineal
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
+// Easing "relentí al llegar": arranca con brío y frena muy suave al final (easeOutQuart)
+const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4)
+// Aire que dejamos bajo la navbar fija al aterrizar en una sección
+const NAV_OFFSET = -72
+
 export default function Navbar() {
   const [p,            setP]            = useState(0)      // progress 0→1 (scrub escritorio)
   const [scrolled,     setScrolled]     = useState(false)  // estado isla (móvil, binario)
@@ -63,17 +68,32 @@ export default function Navbar() {
   const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
     setMenuOpen(false)
+    setMobileOpen(false)
     const el = document.querySelector(href)
     if (!el) return
-    const lenis = (window as unknown as Record<string, unknown>).__lenis as { scrollTo: (el: Element, opts: object) => void } | undefined
-    if (lenis) lenis.scrollTo(el, { duration: 1.4 })
-    else el.scrollIntoView({ behavior: 'smooth' })
+    // Destino numérico absoluto (sin ambigüedad de elemento) menos el aire de la navbar
+    const y = el.getBoundingClientRect().top + window.scrollY + NAV_OFFSET
+    const lenis = (window as unknown as Record<string, unknown>).__lenis as
+      | { scrollTo: (target: number, opts?: object) => void; start?: () => void }
+      | undefined
+    if (lenis && typeof lenis.scrollTo === 'function') {
+      lenis.start?.() // por si estaba parado
+      lenis.scrollTo(y, { duration: 1.1, easing: easeOutQuart, force: true })
+    } else {
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
   }
 
   const scrollTop = () => {
-    const lenis = (window as unknown as Record<string, unknown>).__lenis as { scrollTo: (t: number, opts: object) => void } | undefined
-    if (lenis) lenis.scrollTo(0, { duration: 1.2 })
-    else window.scrollTo({ top: 0, behavior: 'smooth' })
+    const lenis = (window as unknown as Record<string, unknown>).__lenis as
+      | { scrollTo: (target: number, opts?: object) => void; start?: () => void }
+      | undefined
+    if (lenis && typeof lenis.scrollTo === 'function') {
+      lenis.start?.()
+      lenis.scrollTo(0, { duration: 1.0, easing: easeOutQuart, force: true })
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   // ── Valores interpolados (escritorio) ──

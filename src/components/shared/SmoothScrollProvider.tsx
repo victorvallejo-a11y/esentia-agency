@@ -26,6 +26,10 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
     return () => {
       cancelAnimationFrame(raf)
       lenis.destroy()
+      // No dejar una instancia destruida colgada en window: si Lenis desaparece,
+      // el navbar cae al fallback de scroll suave nativo en lugar de llamar a algo muerto.
+      const w = window as unknown as Record<string, unknown>
+      if (w.__lenis === lenis) delete w.__lenis
     }
   }, [])
 
