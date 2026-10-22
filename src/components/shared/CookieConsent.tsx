@@ -25,7 +25,21 @@ export default function CookieConsent() {
 
   useEffect(() => {
     let t: ReturnType<typeof setTimeout> | undefined
-    if (!read()) t = setTimeout(() => setOpen(true), 650)
+    // En la portada sale justo al acabar la intro (para no taparla); en el resto, al entrar.
+    let shown = false
+    const show = () => {
+      if (shown) return
+      shown = true
+      t = setTimeout(() => setOpen(true), 300)
+    }
+    const onIntro = () => show()
+    if (!read()) {
+      if (!document.querySelector('.hero') || (window as unknown as { __introDone?: boolean }).__introDone) t = setTimeout(() => setOpen(true), 650)
+      else {
+        window.addEventListener('es:intro', onIntro, { once: true })
+        t = setTimeout(show, 4500)
+      }
+    }
     const onClick = (e: MouseEvent) => {
       if (!(e.target as HTMLElement).closest('[data-open-consent]')) return
       setAn(read() === 'granted')
@@ -35,6 +49,7 @@ export default function CookieConsent() {
     document.addEventListener('click', onClick)
     return () => {
       if (t) clearTimeout(t)
+      window.removeEventListener('es:intro', onIntro)
       document.removeEventListener('click', onClick)
     }
   }, [])

@@ -188,7 +188,14 @@ function startOrb(cv: HTMLCanvasElement, hero: HTMLElement) {
 
 /* ── Intro de titulares ───────────────────────────────────────────────────
    Escritorio: los dos bloques nacen centrados y simétricos y viajan a sus
-   esquinas mientras la esfera condensa. Móvil: aparecen en cascada. */
+   esquinas mientras la esfera condensa. Móvil: nacen juntos en el centro del
+   hueco de la esfera y se abren arriba y abajo para dejarla aparecer.
+   Al terminar avisa (es:intro) para que la ventana de cookies no la tape. */
+const introDone = () => {
+  ;(window as unknown as { __introDone?: boolean }).__introDone = true
+  window.dispatchEvent(new Event('es:intro'))
+}
+
 function intro(hero: HTMLElement) {
   const A = hero.querySelector('.h-a') as HTMLElement
   const B = hero.querySelector('.h-b') as HTMLElement
@@ -197,12 +204,27 @@ function intro(hero: HTMLElement) {
   hero.classList.add('hero-live')
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
     gsap.set([A, B, C, hint], { opacity: 1 })
+    introDone()
     return null
   }
   return gsap.context(() => {
     if (window.innerWidth < DESK) {
-      gsap.set([A, B, C], { opacity: 0, y: 14, filter: 'blur(10px)' })
-      gsap.to([A, B, C], { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, stagger: 0.28, ease: 'power2.out', delay: 0.35, clearProps: 'filter' })
+      const slot = hero.querySelector('.orb-slot') as HTMLElement
+      const ra = A.getBoundingClientRect(), rb = B.getBoundingClientRect(), s = slot.getBoundingClientRect()
+      const mid = s.top + s.height / 2, gap = 6
+      const parts = [C.querySelector('p'), ...Array.from(C.querySelectorAll('.eb'))]
+      gsap.set(A, { y: mid - gap - ra.bottom, scale: 1.05, opacity: 0, filter: 'blur(12px)' })
+      gsap.set(B, { y: mid + gap - rb.top, scale: 1.05, opacity: 0, filter: 'blur(12px)' })
+      // Sin la transición CSS de los botones mientras dura la intro (si no, se ven antes de tiempo).
+      gsap.set(parts, { opacity: 0, y: 18, transition: 'none' })
+      gsap
+        .timeline({ onComplete: introDone })
+        .to(A, { opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }, 0.3)
+        .to(B, { opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }, 0.5)
+        .to([A, B], { y: 0, scale: 1, duration: 1.6, ease: 'expo.inOut' }, 1.35)
+        .to(parts, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out' }, 2.55)
+        .set([A, B], { clearProps: 'filter,scale' })
+        .set(parts, { clearProps: 'transition,transform' })
       return
     }
     const hr = hero.getBoundingClientRect(), ra = A.getBoundingClientRect(), rb = B.getBoundingClientRect()
@@ -220,7 +242,7 @@ function intro(hero: HTMLElement) {
     gsap.set(B, { x: bX, y: bY, opacity: 0, filter: 'blur(14px)' })
     gsap.set([C, hint], { opacity: 0, y: 14 })
     gsap
-      .timeline()
+      .timeline({ onComplete: introDone })
       .to(A, { opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }, 0.35)
       .to(B, { opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' }, 0.55)
       .to([A, B], { x: 0, y: 0, duration: 1.9, ease: 'expo.inOut' }, 1.5)
