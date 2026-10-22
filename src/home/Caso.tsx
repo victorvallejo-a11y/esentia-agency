@@ -30,6 +30,7 @@ export default function Caso() {
       <div className="case-pin">
         <div className="wrap case">
           <div className="case-head rv">
+            <p className="case-k">Caso de éxito real</p>
             <p className="who">
               Clínica Dra. Janice Middleton
               <small>Medicina estética · Barcelona</small>
@@ -37,9 +38,12 @@ export default function Caso() {
             <h2 className="display">
               La doctora ya no lleva la agenda. <em>La lleva Laura.</em>
             </h2>
-            <p className="case-line">Citas, fichas, consentimientos y recordatorios, conectados. WhatsApp es solo la puerta.</p>
+            <p className="case-line">
+              Un ejemplo real de lo que montamos: Laura, su asistente, lleva citas, fichas, consentimientos y recordatorios. WhatsApp es solo la puerta.
+            </p>
           </div>
 
+          <div className="case-stage-wrap">
           <div className="case-stage" role="img" aria-label="Conversación real de la clínica por WhatsApp: la paciente pide cita a las 23:41 y Laura la agenda, le envía el consentimiento y programa el recordatorio.">
             <div className="ph-persp">
               <div className="ph-tilt">
@@ -128,6 +132,7 @@ export default function Caso() {
                 </p>
               </div>
             ))}
+          </div>
           </div>
 
           <div className="case-rest">

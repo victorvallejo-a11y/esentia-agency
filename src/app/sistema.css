@@ -4,8 +4,8 @@
    del tablero (1800×960 en escritorio, 760×1240 en móvil).
    ═══════════════════════════════════════════════════════════════════ */
 
-.sys { position: relative; }
-.sys-pin { position: relative; height: 100svh; min-height: 600px; overflow: hidden; }
+.sys { position: relative; height: 360svh; }
+.sys-pin { position: sticky; top: 0; height: 100svh; min-height: 600px; overflow: hidden; }
 .sys-copy { position: absolute; left: 0; right: 0; top: clamp(96px, 12svh, 132px); z-index: 3; display: grid; pointer-events: none; }
 .sys-st { grid-area: 1 / 1; max-width: 46rem; font-size: clamp(2rem, 3.6vw, 3.15rem); }
 .sys-st em { color: var(--dip-mute); }
@@ -180,6 +180,7 @@
 @keyframes bar { 0% { transform: scaleY(0.25); } 10%, 90% { transform: none; } 100% { transform: scaleY(0.25); } }
 
 @media (max-width: 860px) {
+  .sys { height: 320svh; }
   .sys-copy { top: 84px; text-align: center; justify-items: center; }
   .sys-st { font-size: clamp(1.6rem, 7.2vw, 2.15rem); }
   .sys-stage { top: clamp(220px, 30svh, 250px); bottom: 1svh; }

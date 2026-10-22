@@ -1,5 +1,3 @@
-import { LogoMark } from './ui'
-
 /* Cómo trabajamos · recorrido horizontal. Al bajar, las cuatro fases pasan de
    lado y cada una se monta sola: la videollamada, la propuesta, las conexiones
    y el informe del mes. Las barras de arriba avanzan como historias. */
@@ -87,11 +85,11 @@ export default function Metodo() {
             <div className="hp-vis v-doc" aria-hidden="true">
               <div className="pdoc">
                 <div className="pd-h">
-                  <span className="app-ic pd-logo"><LogoMark /></span>
                   <span>
                     <b>Propuesta</b>
                     <small>Ejemplo · 2 páginas</small>
                   </span>
+                  <span className="pd-brand">ESENTIA<small>AGENCY</small></span>
                 </div>
                 <div className="pd-s">
                   <small>Qué atacamos primero</small>

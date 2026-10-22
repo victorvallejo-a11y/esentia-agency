@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'Esentia · Servicios de IA para empresas que trabajan 24/7'
+export const alt = 'Esentia Agency · Tu negocio no duerme. Tus procesos tampoco.'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -16,24 +16,15 @@ export default function Image() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          backgroundColor: '#FAFAF7',
+          backgroundColor: '#F6F4EE',
           padding: '72px 80px',
           fontFamily: 'sans-serif',
         }}
       >
         {/* Marca */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-          <div
-            style={{
-              width: '26px',
-              height: '26px',
-              borderRadius: '8px',
-              backgroundColor: '#0F766E',
-            }}
-          />
-          <div style={{ fontSize: '34px', fontWeight: 600, color: '#1A1A1A', letterSpacing: '-0.02em' }}>
-            Esentia Agency
-          </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ fontSize: '34px', fontWeight: 700, color: '#14201E', letterSpacing: '0.08em' }}>ESENTIA</div>
+          <div style={{ fontSize: '17px', fontWeight: 500, color: '#5C6966', letterSpacing: '0.24em', marginTop: '4px' }}>AGENCY</div>
         </div>
 
         {/* Titular */}
@@ -49,13 +40,13 @@ export default function Image() {
               flexDirection: 'column',
             }}
           >
-            <span>Servicios de IA para</span>
+            <span>Tu negocio no duerme.</span>
             <span>
-              empresas que <span style={{ color: '#0F766E' }}>no duermen</span>
+              Tus procesos <span style={{ color: '#0F766E' }}>tampoco.</span>
             </span>
           </div>
           <div style={{ marginTop: '28px', fontSize: '30px', color: '#475569', display: 'flex' }}>
-            Chatbots de WhatsApp · Asistentes de voz · Automatización 24/7
+            Consultoría de IA · Encontramos el cuello de botella de tu negocio
           </div>
         </div>
 

@@ -39,23 +39,11 @@ export function Btn({ variant = 'primary', icon = 'arrow', className = '', child
   )
 }
 
-export function LogoMark() {
-  return (
-    <svg viewBox="0 0 60 56" aria-hidden="true">
-      <path d="M15 2.5L45 2.5L60 28L45 53.5L15 53.5L0 28L15 2.5Z" fill="currentColor" transform="scale(0.9) translate(3,1)" />
-      <path d="M18 18H36V23H23.5V25.5H34V30.5H23.5V33H36V38H18V18Z" className="logo-e" />
-    </svg>
-  )
-}
-
 export function Logo() {
   return (
     <span className="logo">
-      <LogoMark />
-      <span>
-        <b>ESENTIA</b>
-        <small>AGENCY</small>
-      </span>
+      <b>ESENTIA</b>
+      <small>AGENCY</small>
     </span>
   )
 }

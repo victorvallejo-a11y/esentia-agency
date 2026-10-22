@@ -1,5 +1,4 @@
 import Phone, { Ticks, WaInput, WaNav } from './Phone'
-import { LogoMark } from './ui'
 
 /* Qué hacemos · "alejar la cámara".
    Empieza pegado a un móvil con WhatsApp (lo que vende todo el mundo). Al bajar,
@@ -37,9 +36,7 @@ export default function Sistema() {
             <div className="hub">
               <span className="hub-wave" />
               <span className="hub-wave w2" />
-              <span className="app-ic hub-ic">
-                <LogoMark />
-              </span>
+              <span className="app-ic hub-ic">{STORE}</span>
               <b>Tu negocio</b>
             </div>
 
@@ -173,7 +170,7 @@ export default function Sistema() {
             <div className="mod mod-crm">
               <div className="wg lact">
                 <div className="live-t">
-                  <span className="app-ic live-ic"><LogoMark /></span>
+                  <span className="app-ic live-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5h16v10.5H4zM9 8.5V6.6A1.6 1.6 0 0 1 10.6 5h2.8A1.6 1.6 0 0 1 15 6.6v1.9M4 13.2h16" /></svg></span>
                   <span className="live-w">
                     <b>Hotel Sitges</b>
                     <small>Propuesta vista · seguimiento enviado</small>

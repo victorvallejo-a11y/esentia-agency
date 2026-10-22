@@ -5,8 +5,8 @@ const QUESTION = ['¿Y', 'en', 'tu', 'negocio?']
 export default function Dato() {
   return (
     <section className="dato" id="dato" aria-label="El dato">
-      <div className="dato-glow" aria-hidden="true" />
       <div className="dato-in">
+        <div className="dato-glow" aria-hidden="true" />
         <span className="dato-rule" aria-hidden="true" />
         <p className="dato-line" aria-label="El 94% de los empleados de pymes pierde tiempo en tareas repetitivas. ¿Y en tu negocio?">
           {WORDS.map((w, i) => (

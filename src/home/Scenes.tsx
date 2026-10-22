@@ -47,6 +47,7 @@ export default function Scenes() {
     ScrollTrigger.config({ ignoreMobileResize: true })
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     const mobile = window.innerWidth < 861
+    const smooth = mobile ? 0.35 : 1
     const board = document.querySelector('.board') as HTMLElement | null
     if (board) buildWires(board)
     const rebuild = () => board && buildWires(board)
@@ -69,8 +70,8 @@ export default function Scenes() {
     }
 
     const ctx = gsap.context(() => {
-      /* Nav oscura mientras pasa por el acto oscuro */
-      ScrollTrigger.create({ trigger: '.act', start: 'top 44px', end: 'bottom 44px', toggleClass: { targets: '#nav', className: 'on-dark' } })
+      /* Nav oscura mientras pasa por el acto oscuro (clase en <html>: React reescribe la de la barra) */
+      ScrollTrigger.create({ trigger: '.act', start: 'top 44px', end: 'bottom 44px', toggleClass: { targets: document.documentElement, className: 'nav-dark' }, refreshPriority: -1 })
 
       if (reduced) {
         document.documentElement.classList.add('rm')
@@ -81,7 +82,7 @@ export default function Scenes() {
         return
       }
 
-      /* Entradas suaves (se calculan al final, cuando ya existen todos los pines) */
+      /* Entradas suaves */
       gsap.utils.toArray<HTMLElement>('.rv').forEach((el) => {
         gsap.from(el, { opacity: 0, y: 28, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true, refreshPriority: -1 } })
       })
@@ -93,7 +94,7 @@ export default function Scenes() {
       gsap.set(words, { opacity: 0, y: 18, filter: mobile ? 'none' : 'blur(6px)' })
       gsap.set(['.dato-sub', '.dato-src'], { opacity: 0, y: 12 })
       gsap
-        .timeline({ scrollTrigger: { trigger: '.dato', start: 'top top', end: mobile ? '+=190%' : '+=230%', pin: true, scrub: 1, anticipatePin: 1 } })
+        .timeline({ scrollTrigger: { trigger: '.dato', start: 'top top', end: 'bottom bottom', scrub: smooth } })
         .to('.dato-glow', { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }, 0)
         .fromTo('.dato-rule', { scaleX: 0 }, { scaleX: 1, duration: 0.12 }, 0)
         .to(words, { opacity: 1, y: 0, filter: mobile ? 'none' : 'blur(0px)', duration: 0.18, stagger: 0.035, ease: 'power2.out' }, 0.03)
@@ -117,10 +118,8 @@ export default function Scenes() {
           scrollTrigger: {
             trigger: sys,
             start: 'top top',
-            end: mobile ? '+=220%' : '+=260%',
-            pin: true,
-            scrub: 1,
-            anticipatePin: 1,
+            end: 'bottom bottom',
+            scrub: smooth,
             invalidateOnRefresh: true,
             onUpdate: (s) => sys.classList.toggle('live', s.progress > 0.6),
           },
@@ -170,7 +169,8 @@ export default function Scenes() {
     if (!reduced && document.querySelector('.case-ph')) {
       mm.add({ desk: '(min-width: 861px)', mob: '(max-width: 860px)' }, (c) => {
         const desk = !!c.conditions?.desk
-        const pinEl = document.querySelector(desk ? '.case-pin' : '.case-stage') as HTMLElement
+        const zone = desk ? '.case-sec' : '.case-stage-wrap'
+        const smoothC = desk ? 0.8 : 0.35
         const ph = document.querySelector('.case-ph') as HTMLElement
         const tilt = document.querySelector('.ph-tilt') as HTMLElement
         const body = ph.querySelector('.wa-body') as HTMLElement
@@ -185,10 +185,10 @@ export default function Scenes() {
         gsap.fromTo(
           '.ph-persp',
           { opacity: 0 },
-          { opacity: 1, ease: 'none', scrollTrigger: { trigger: desk ? '.case-sec' : '.case-stage', start: 'top 85%', end: 'top 55%', scrub: true } },
+          { opacity: 1, ease: 'none', scrollTrigger: { trigger: zone, start: 'top 85%', end: 'top 55%', scrub: true } },
         )
         gsap
-          .timeline({ scrollTrigger: { trigger: desk ? '.case-sec' : '.case-stage', start: 'top 85%', end: 'top top', scrub: 1, invalidateOnRefresh: true } })
+          .timeline({ scrollTrigger: { trigger: zone, start: 'top 85%', end: 'top top', scrub: smoothC, invalidateOnRefresh: true } })
           .fromTo(
             ph,
             { rotateY: -400, rotateX: 22, rotateZ: -18, x: desk ? 220 : 0, y: desk ? 160 : 220, scale: 0.58 },
@@ -207,7 +207,7 @@ export default function Scenes() {
 
         const tl = gsap.timeline({
           defaults: { ease: 'power2.out' },
-          scrollTrigger: { trigger: pinEl, start: 'top top', end: desk ? '+=230%' : '+=260%', pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true },
+          scrollTrigger: { trigger: zone, start: 'top top', end: 'bottom bottom', scrub: smoothC, invalidateOnRefresh: true },
         })
         // Un leve giro mientras se lee, para que no se quede muerto.
         tl.fromTo(tilt, { rotateY: 0, rotateX: 0 }, { rotateY: 8, rotateX: -2, duration: 6.6, ease: 'none' }, 0)
@@ -290,16 +290,17 @@ export default function Scenes() {
         lis.forEach((li, i) => li.classList.toggle('on', c >= i - 0.5))
       }
       paint(0)
+      const size = () => { how.style.height = `${window.innerHeight + dist() * 1.2}px` }
+      size()
+      ScrollTrigger.addEventListener('refreshInit', size)
       const h = gsap.to(track, {
         x: () => -dist(),
         ease: 'none',
         scrollTrigger: {
-          trigger: '.how-pin',
+          trigger: how,
           start: 'top top',
-          end: () => `+=${dist() * 1.2}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
+          end: 'bottom bottom',
+          scrub: smooth,
           invalidateOnRefresh: true,
           onUpdate: (s) => paint(s.progress),
         },
@@ -358,6 +359,7 @@ export default function Scenes() {
     return () => {
       window.removeEventListener('load', onLoad)
       ScrollTrigger.removeEventListener('refreshInit', rebuild)
+      how?.style.removeProperty('height')
       mm.revert()
       hctx.revert()
       ctx.revert()

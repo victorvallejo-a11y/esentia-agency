@@ -3,15 +3,18 @@
    --ph es el alto del móvil; todo lo demás sale de ahí.
    ═══════════════════════════════════════════════════════════════════ */
 
-.case-sec { position: relative; background: var(--bg3); overflow: hidden; }
+.case-sec { position: relative; height: 330svh; background: var(--bg3); overflow: hidden; overflow: clip; }
 .case-sec::before { content: ""; position: absolute; right: -8%; top: 10%; width: 64%; height: 90%; pointer-events: none; background: radial-gradient(closest-side, rgba(15, 118, 110, 0.13), transparent); }
-.case-pin { position: relative; min-height: 100svh; display: flex; align-items: center; padding: 92px 0 36px; }
+.case-pin { position: sticky; top: 0; height: 100svh; display: flex; align-items: center; padding: 92px 0 36px; }
 .case {
   width: 100%; display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
   grid-template-areas: "head stage" "rest stage"; column-gap: clamp(28px, 4vw, 64px);
 }
 .case-head { grid-area: head; align-self: end; }
 .case-rest { grid-area: rest; align-self: start; margin-top: 30px; }
+/* Rótulo del caso: texto con una raya, sin pastilla */
+.case-k { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); }
+.case-k::before { content: ""; width: 32px; height: 1.5px; background: currentColor; }
 .who { margin: 0 0 16px; font-size: 17px; font-weight: 600; }
 .who small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; color: var(--faint); }
 .case .display { font-size: clamp(2.1rem, 3.7vw, 3.25rem); }
@@ -23,7 +26,8 @@
 .stat .l { margin-top: 8px; font-size: 13px; color: var(--mute); line-height: 1.35; }
 
 /* Escenario del móvil */
-.case-stage { grid-area: stage; position: relative; height: calc(100svh - 128px); max-height: 820px; display: grid; place-items: center; --ph: min(660px, calc(100svh - 200px), 55vw); --half: calc(var(--ph) * 0.2387); --sw: 238px; }
+.case-stage-wrap { grid-area: stage; }
+.case-stage { position: relative; height: calc(100svh - 128px); max-height: 820px; display: grid; place-items: center; --ph: min(660px, calc(100svh - 200px), 55vw); --half: calc(var(--ph) * 0.2387); --sw: 238px; }
 .ph-persp { position: relative; perspective: 1800px; }
 .ph-tilt { transform-style: preserve-3d; }
 .case-ph { font-size: calc(var(--ph) / 62); }
@@ -60,14 +64,21 @@
 @media (max-width: 1100px) and (min-width: 861px) {
   .stats { grid-template-columns: 1fr 1fr; }
   .stats .stat:last-child { grid-column: span 2; }
-  .case-stage { --sw: 210px; }
+  .case-stage { --sw: 196px; }
+  .side { grid-template-columns: 32px 1fr; gap: 9px; padding: 9px 12px 9px 9px; border-radius: 16px; }
+  .side-ic { width: 32px; height: 32px; border-radius: 8px; }
+  .side-ic svg { width: 18px; height: 18px; }
+  .side b { font-size: 13px; }
+  .side p { font-size: 12px; }
 }
 @media (max-width: 860px) {
-  .case-pin { display: block; min-height: 0; padding: clamp(80px, 12vw, 120px) 0 70px; }
+  .case-sec { height: auto; }
+  .case-pin { position: relative; display: block; height: auto; padding: clamp(80px, 12vw, 120px) 0 70px; }
+  .case-stage-wrap { height: 360svh; width: 100vw; margin-left: calc(var(--gutter) * -1); }
   .case { display: block; }
   .case-head { margin-bottom: 8px; }
   .case-stage {
-    width: 100vw; margin-left: calc(var(--gutter) * -1); height: 100svh; max-height: none;
+    position: sticky; top: 0; width: 100%; height: 100svh; max-height: none;
     display: flex; align-items: center; justify-content: center; padding: 64px 0 96px;
     --ph: min(560px, calc(100svh - 190px));
   }
@@ -76,6 +87,9 @@
   .stats { grid-template-columns: 1fr 1fr; }
   .stats .stat:last-child { grid-column: span 2; }
   .case-rest .eb { width: 100%; }
+  .side { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .ph-shadow { filter: none; }
+  .case-ph .ios-ban { background: rgba(248, 248, 248, 0.98); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 
 /* Sin movimiento: el móvil quieto y la conversación entera */

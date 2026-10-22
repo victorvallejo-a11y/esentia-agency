@@ -4,8 +4,8 @@
    (1em ≈ 10px en escritorio), así valen igual en móvil.
    ═══════════════════════════════════════════════════════════════════ */
 
-.how { position: relative; background: var(--bg); }
-.how-pin { position: relative; height: 100svh; min-height: 620px; overflow: hidden; display: flex; flex-direction: column; padding: clamp(92px, 12svh, 124px) 0 clamp(24px, 4svh, 44px); }
+.how { position: relative; height: 400svh; background: var(--bg); }
+.how-pin { position: sticky; top: 0; height: 100svh; min-height: 620px; overflow: hidden; display: flex; flex-direction: column; padding: clamp(92px, 12svh, 124px) 0 clamp(24px, 4svh, 44px); }
 .how-top { width: 100%; display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; margin-bottom: clamp(20px, 3.4svh, 36px); }
 .how-top .display { max-width: 15ch; font-size: clamp(2rem, 3.5vw, 3.05rem); }
 .how-prog { flex: 0 0 min(470px, 42%); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
@@ -52,7 +52,9 @@
 .v-doc { background: #ece9e1; }
 .pdoc { width: min(46em, 74%); padding: 2.6em 2.6em 2.2em; border-radius: 1em; background: #fff; transform: rotate(-1.4deg); box-shadow: 0 .1em .2em rgba(0, 0, 0, 0.06), 0 4em 7em -4em rgba(20, 32, 30, 0.6); }
 .pd-h { display: flex; align-items: center; gap: 1.2em; padding-bottom: 1.6em; border-bottom: .1em solid #ececee; }
-.pd-logo { width: 4.2em; height: 4.2em; border-radius: 1em; }
+.pd-h { justify-content: space-between; }
+.pd-brand { display: flex; flex-direction: column; align-items: flex-end; font-size: 1.15em; font-weight: 700; letter-spacing: .08em; line-height: 1; color: #1c1c1e; }
+.pd-brand small { margin-top: .3em; font-size: .62em; font-weight: 500; letter-spacing: .22em; color: #8e8e93; }
 .pd-h b { display: block; font-size: 2em; font-weight: 700; letter-spacing: -0.02em; }
 .pd-h small { font-size: 1.3em; color: #8e8e93; }
 .pd-s { padding: 1.5em 0; border-bottom: .1em solid #f0f0f2; }
@@ -130,7 +132,7 @@
   .how-prog { flex: none; }
   .how-prog span { font-size: 11px; margin-top: 7px; }
   .how-track { gap: 12px; }
-  .phs { width: 86vw; max-height: none; grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; border-radius: 26px; }
+  .phs { width: 86vw; max-height: none; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; border-radius: 26px; }
   .hp-vis { order: -1; }
   @container (min-width: 1px) { .hp-vis > * { font-size: min(2.85cqi, 2.3cqb); } }
   @container (min-width: 1px) { .v-map > .flow { font-size: min(3.3cqi, 2.6cqb); } }
@@ -152,6 +154,7 @@
 
 /* Sin movimiento: las fases en vertical y montadas */
 .rm .how-pin { height: auto; overflow: visible; }
+.rm .how { height: auto !important; }
 .rm .how-track { flex-direction: column; padding-right: var(--gutter); }
 .rm .phs { width: 100%; height: 560px; }
 .rm .neck-l, .rm .fs.neck::after { opacity: 1; }
