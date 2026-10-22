@@ -1,0 +1,84 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Caso · el iPhone entra girando y la conversación avanza con el scroll.
+   --ph es el alto del móvil; todo lo demás sale de ahí.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.case-sec { position: relative; background: var(--bg3); overflow: hidden; }
+.case-sec::before { content: ""; position: absolute; right: -8%; top: 10%; width: 64%; height: 90%; pointer-events: none; background: radial-gradient(closest-side, rgba(15, 118, 110, 0.13), transparent); }
+.case-pin { position: relative; min-height: 100svh; display: flex; align-items: center; padding: 92px 0 36px; }
+.case {
+  width: 100%; display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  grid-template-areas: "head stage" "rest stage"; column-gap: clamp(28px, 4vw, 64px);
+}
+.case-head { grid-area: head; align-self: end; }
+.case-rest { grid-area: rest; align-self: start; margin-top: 30px; }
+.who { margin: 0 0 16px; font-size: 17px; font-weight: 600; }
+.who small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; color: var(--faint); }
+.case .display { font-size: clamp(2.1rem, 3.7vw, 3.25rem); }
+.case-line { margin: 18px 0 0; max-width: 38ch; color: var(--mute); font-size: 16px; line-height: 1.5; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0 0 26px; }
+.stat { padding: 18px 18px 16px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px var(--line), 0 18px 34px -28px rgba(20, 32, 30, 0.5); }
+.stat .n { font-size: clamp(1.8rem, 2.8vw, 2.4rem); font-weight: 600; font-variation-settings: "wdth" 92; letter-spacing: -0.045em; line-height: 1; color: var(--teal); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stat .n small { margin-left: 0.12em; font-size: 0.42em; font-weight: 500; letter-spacing: 0; color: var(--mute); }
+.stat .l { margin-top: 8px; font-size: 13px; color: var(--mute); line-height: 1.35; }
+
+/* Escenario del móvil */
+.case-stage { grid-area: stage; position: relative; height: calc(100svh - 128px); max-height: 820px; display: grid; place-items: center; --ph: min(660px, calc(100svh - 200px), 55vw); --half: calc(var(--ph) * 0.2387); --sw: 238px; }
+.ph-persp { position: relative; perspective: 1800px; }
+.ph-tilt { transform-style: preserve-3d; }
+.case-ph { font-size: calc(var(--ph) / 62); }
+.case-ph .ph-l, .case-ph .ph-back { will-change: auto; }
+.ph-shadow {
+  position: absolute; z-index: -1; left: 50%; bottom: -4.5%; width: 86%; height: 6%; margin-left: -43%; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(20, 32, 30, 0.42), rgba(20, 32, 30, 0)); filter: blur(4px);
+}
+.av-cl { width: 100%; height: 100%; display: grid; place-items: center; background: linear-gradient(160deg, #e4c6b4, #ae7760); color: #fff; font-size: 1.2em; font-weight: 600; letter-spacing: .02em; }
+.case-ph .wa-list .k { opacity: 0; }
+
+/* Lo que pasa por detrás: avisos que salen del móvil */
+.side {
+  position: absolute; z-index: 3; width: var(--sw); display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center;
+  padding: 11px 16px 11px 11px; border-radius: 20px; font-family: var(--ui);
+  background: rgba(255, 255, 255, 0.88); -webkit-backdrop-filter: blur(14px) saturate(1.6); backdrop-filter: blur(14px) saturate(1.6);
+  box-shadow: 0 0 0 1px rgba(20, 32, 30, 0.06), 0 26px 50px -24px rgba(20, 32, 30, 0.55); opacity: 0;
+}
+.side-ic { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+.side-ic svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.c-cal .side-ic { background: linear-gradient(160deg, #ff6d63, #ff3b30); }
+.c-fic .side-ic { background: linear-gradient(160deg, #5ac8fa, #007aff); }
+.c-doc .side-ic { background: linear-gradient(160deg, #2dd4bf, #0f766e); }
+.c-bel .side-ic { background: linear-gradient(160deg, #ffd25e, #ff9500); }
+.side p { margin: 0; min-width: 0; font-size: 13px; line-height: 1.3; color: #6e6e73; }
+.side b { display: block; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; color: #1c1c1e; }
+.s1, .s3 { right: min(calc(50% + var(--half) - 18px), calc(100% - var(--sw) + 24px)); }
+.s2, .s4 { left: min(calc(50% + var(--half) - 18px), calc(100% - var(--sw) + 24px)); }
+.s1 { top: 17%; }
+.s2 { top: 35%; }
+.s3 { top: 56%; }
+.s4 { top: 73%; }
+
+@media (max-width: 1100px) and (min-width: 861px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stats .stat:last-child { grid-column: span 2; }
+  .case-stage { --sw: 210px; }
+}
+@media (max-width: 860px) {
+  .case-pin { display: block; min-height: 0; padding: clamp(80px, 12vw, 120px) 0 70px; }
+  .case { display: block; }
+  .case-head { margin-bottom: 8px; }
+  .case-stage {
+    width: 100vw; margin-left: calc(var(--gutter) * -1); height: 100svh; max-height: none;
+    display: flex; align-items: center; justify-content: center; padding: 64px 0 96px;
+    --ph: min(560px, calc(100svh - 190px));
+  }
+  .side { left: 50% !important; right: auto !important; top: auto !important; bottom: 18px; width: min(300px, calc(100vw - 40px)); margin-left: max(-150px, calc(-50vw + 20px)); }
+  .case-rest { margin-top: 0; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stats .stat:last-child { grid-column: span 2; }
+  .case-rest .eb { width: 100%; }
+}
+
+/* Sin movimiento: el móvil quieto y la conversación entera */
+.rm .case-ph .wa-list .k, .rm .side { opacity: 1; }
+.rm .case-ph .wty { display: none; }
+.rm .case-ph { transform: rotateY(-14deg) rotateX(6deg); }

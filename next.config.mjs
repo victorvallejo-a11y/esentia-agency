@@ -1,5 +1,12 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // La raíz es esta carpeta: hay otro package-lock.json en C:\Users\victo y Next
+  // tomaba la carpeta de usuario entera como proyecto (y se quedaba sin memoria).
+  outputFileTracingRoot: path.dirname(fileURLToPath(import.meta.url)),
+
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [],
@@ -41,11 +48,11 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https:",
-              "connect-src 'self' https://formspree.io https://www.google-analytics.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+              "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
               "frame-src 'none'",
               "object-src 'none'",
               "base-uri 'self'",
-              "form-action 'self' https://formspree.io",
+              "form-action 'self'",
             ].join('; '),
           },
         ],

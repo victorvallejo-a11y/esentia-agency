@@ -20,9 +20,9 @@ const config: Config = {
         textSec:  '#64748B',
       },
       fontFamily: {
-        inter:   ['var(--font-inter)', 'sans-serif'],
+        // Las páginas legales usan "font-inter": ahora apunta a la tipografía de la marca.
+        inter:   ['var(--font-archivo)', 'sans-serif'],
         mono:    ['var(--font-jetbrains)', 'monospace'],
-        barlow:  ['var(--font-barlow)', 'sans-serif'],
       },
     },
   },

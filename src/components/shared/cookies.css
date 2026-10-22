@@ -1,0 +1,56 @@
+/* Ventana de cookies: centrada en escritorio, hoja inferior en móvil. */
+.ckm { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; visibility: hidden; transition: visibility 0s 420ms; }
+.ckm.on { visibility: visible; transition: visibility 0s; }
+.ckm-bg { position: absolute; inset: 0; background: rgba(10, 20, 19, 0.34); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity 380ms ease; }
+.ckm.on .ckm-bg { opacity: 1; }
+.ckm-card {
+  position: relative; width: min(440px, 100%); padding: 28px 28px 20px; border-radius: 30px; background: #fff; color: var(--ink);
+  box-shadow: 0 0 0 1px rgba(20, 32, 30, 0.06), 0 40px 90px -30px rgba(10, 20, 19, 0.55);
+  opacity: 0; transform: translateY(14px) scale(0.97); transition: opacity 300ms ease, transform 520ms var(--ease-out);
+}
+.ckm.on .ckm-card { opacity: 1; transform: none; transition-delay: 60ms; }
+.ckm-ic { width: 52px; height: 52px; margin-bottom: 18px; border-radius: 15px; display: grid; place-items: center; background: var(--teal-soft); }
+.ckm-ic svg { width: 28px; height: 28px; fill: none; stroke: var(--teal); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ckm-ic circle { fill: var(--teal); stroke: none; }
+.ckm-card h2 { margin: 0 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+.ckm-card > p { margin: 0; color: var(--mute); font-size: 15px; line-height: 1.5; }
+.ckm-cfg { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 420ms var(--ease-out); }
+.ckm-cfg.on { grid-template-rows: 1fr; }
+.ckm-cfg > div { overflow: hidden; }
+.ckm-cfg.on > div { padding-top: 16px; }
+.ckm-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 0; border-top: 1px solid var(--line); }
+.ckm-row b { display: block; font-size: 15px; font-weight: 600; }
+.ckm-row small { display: block; margin-top: 2px; font-size: 13px; line-height: 1.4; color: var(--mute); }
+.ckm-tg { position: relative; width: 51px; height: 31px; flex: none; padding: 0; border: 0; border-radius: 16px; background: #e4e3de; cursor: pointer; transition: background-color 250ms ease; }
+.ckm-tg i { position: absolute; left: 2px; top: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16); transition: transform 300ms var(--ease-out); }
+.ckm-tg.on { background: var(--teal); }
+.ckm-tg.on i { transform: translateX(20px); }
+.ckm-tg.lock { opacity: 0.45; cursor: default; }
+.ckm-tg:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+.ckm-b { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 22px; }
+.ckm-b button { min-height: 48px; padding: 0 16px; border: 0; border-radius: 999px; font: 500 15px var(--sans); cursor: pointer; transition: transform 160ms var(--ease-out), background-color 200ms ease, box-shadow 200ms ease; }
+.ckm-b button:active { transform: scale(0.97); }
+.ckm-b .g { background: rgba(20, 32, 30, 0.05); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line2); }
+.ckm-b .p { background: var(--teal); color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 12px 26px -14px var(--teal-glow); }
+@media (hover: hover) {
+  .ckm-b .g:hover { box-shadow: inset 0 0 0 1px var(--teal); color: var(--teal); }
+  .ckm-b .p:hover { background: var(--teal-deep); }
+}
+.ckm-b button:focus-visible, .ckm-f :focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+.ckm-f { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 13.5px; }
+.ckm-f button { padding: 6px 0; border: 0; background: none; color: var(--teal); font: 500 13.5px var(--sans); cursor: pointer; }
+.ckm-f a { color: var(--mute); text-decoration: none; }
+@media (hover: hover) { .ckm-f a:hover { color: var(--teal); } }
+
+@media (max-width: 560px) {
+  .ckm { place-items: end center; padding: 0; }
+  .ckm-card {
+    width: 100%; padding: 24px 22px calc(18px + env(safe-area-inset-bottom)); border-radius: 28px 28px 0 0;
+    transform: translateY(100%); transition: opacity 200ms ease, transform 560ms var(--ease-drawer);
+  }
+  .ckm-ic { width: 46px; height: 46px; margin-bottom: 14px; border-radius: 13px; }
+  .ckm-card h2 { font-size: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ckm-card, .ckm-bg { transition-duration: 0.01ms !important; }
+}

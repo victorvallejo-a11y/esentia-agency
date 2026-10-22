@@ -16,7 +16,7 @@ export default function Cookies() {
         <h1 className="text-[clamp(1.8rem,4vw,2.8rem)] font-inter font-semibold tracking-[-0.02em] text-[#1A1A1A] mb-3">
           Política de Cookies
         </h1>
-        <p className="text-[13px] font-inter text-[#64748B] mb-12">Última actualización: mayo de 2026</p>
+        <p className="text-[13px] font-inter text-[#64748B] mb-12">Última actualización: octubre de 2026</p>
 
         <div className="prose prose-neutral max-w-none font-inter text-[15px] leading-relaxed text-[#374151] space-y-8">
 
@@ -28,43 +28,37 @@ export default function Cookies() {
           </section>
 
           <section>
-            <h2 className="text-[18px] font-semibold text-[#1A1A1A] mb-3">Tipos de cookies que utilizamos</h2>
+            <h2 className="text-[18px] font-semibold text-[#1A1A1A] mb-3">Qué usamos exactamente</h2>
 
             <div className="space-y-5 mt-3">
               <div className="bg-white rounded-xl p-5 border border-black/[0.06]">
-                <h3 className="text-[15px] font-semibold text-[#1A1A1A] mb-1">Cookies técnicas (necesarias)</h3>
+                <h3 className="text-[15px] font-semibold text-[#1A1A1A] mb-1">Necesaria · tu elección sobre cookies</h3>
                 <p className="text-[14px] text-[#64748B]">
-                  Son imprescindibles para el correcto funcionamiento del sitio web. No requieren consentimiento y no recopilan información personal identificable.
+                  Guardamos en tu navegador (almacenamiento local, clave <code>es-consent</code>) si has aceptado o rechazado la analítica, para no volver a preguntarte en cada visita. Se queda en tu dispositivo hasta que la borres y no identifica a nadie.
                 </p>
               </div>
-
               <div className="bg-white rounded-xl p-5 border border-black/[0.06]">
-                <h3 className="text-[15px] font-semibold text-[#1A1A1A] mb-1">Cookies analíticas</h3>
+                <h3 className="text-[15px] font-semibold text-[#1A1A1A] mb-1">Analítica · Google Analytics 4</h3>
                 <p className="text-[14px] text-[#64748B]">
-                  Nos permiten analizar el uso del sitio web de forma anónima y agregada para mejorar su rendimiento y contenido. Requieren su consentimiento previo.
+                  Solo si la aceptas. Instala las cookies <code>_ga</code> y <code>_ga_YXS7SWXMN7</code> (duración: 2 años) para contar visitas y saber qué secciones se usan, siempre de forma agregada. Sin publicidad ni perfiles. Mientras no aceptes, Google Analytics funciona en modo sin cookies (Consent Mode v2).
                 </p>
               </div>
-
               <div className="bg-white rounded-xl p-5 border border-black/[0.06]">
-                <h3 className="text-[15px] font-semibold text-[#1A1A1A] mb-1">Cookies de preferencias</h3>
+                <h3 className="text-[15px] font-semibold text-[#1A1A1A] mb-1">Rendimiento · Vercel Web Analytics</h3>
                 <p className="text-[14px] text-[#64748B]">
-                  Permiten recordar sus preferencias de navegación, como el idioma o la región. Mejoran su experiencia sin recopilar datos personales sensibles.
+                  Mide visitas de forma anónima sin instalar cookies ni guardar nada en tu dispositivo.
                 </p>
               </div>
             </div>
           </section>
 
           <section>
-            <h2 className="text-[18px] font-semibold text-[#1A1A1A] mb-3">Cookies de terceros</h2>
-            <p>
-              Este sitio puede utilizar servicios de terceros que instalan sus propias cookies, como Google Calendar (para la gestión de reuniones). Estos terceros tienen sus propias políticas de privacidad, sobre las cuales no tenemos control.
-            </p>
-          </section>
-
-          <section>
             <h2 className="text-[18px] font-semibold text-[#1A1A1A] mb-3">Cómo gestionar las cookies</h2>
             <p>Puede controlar y gestionar las cookies de las siguientes formas:</p>
             <ul className="list-disc list-outside ml-5 mt-2 space-y-1">
+              <li>
+                <strong>En esta web:</strong> el enlace «Preferencias de cookies» del pie de página vuelve a abrir la ventana para cambiar tu elección cuando quieras.
+              </li>
               <li>
                 <strong>Configuración del navegador:</strong> La mayoría de navegadores permiten bloquear o eliminar cookies desde su configuración de privacidad.
               </li>

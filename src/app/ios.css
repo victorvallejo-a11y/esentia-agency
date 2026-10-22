@@ -1,0 +1,184 @@
+/* ═══════════════════════════════════════════════════════════════════
+   iOS · el iPhone y sus apps (WhatsApp, avisos) en CSS.
+   Todo en em: 1em = 10px cuando el móvil mide 620px de alto.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.ph {
+  --ti: #3a3a3c; --ti-hi: #9a9aa0; --ti-lo: #161618; --glass: #232325;
+  position: relative; width: 29.6em; height: 62em; flex: none;
+  font-family: var(--ui); color: #000; -webkit-font-smoothing: antialiased;
+}
+.ph-natural { --ti: #b8b4ad; --ti-hi: #f1efea; --ti-lo: #7d7a74; --glass: #d5d2cb; }
+
+/* Frontal: aro de titanio + borde negro + pantalla */
+.ph-front {
+  position: absolute; inset: 0; border-radius: 5.5em; background: #030303;
+  box-shadow: inset 0 0 .3em .12em var(--ti-hi), inset 0 0 0 .5em var(--ti), inset 0 0 0 .6em #000;
+}
+.ph:not(.ph-3d) .ph-front { box-shadow: inset 0 0 .3em .12em var(--ti-hi), inset 0 0 0 .5em var(--ti), inset 0 0 0 .6em #000, 0 3em 6em -2em rgba(0, 0, 0, 0.7), 0 0 0 .06em rgba(0, 0, 0, 0.4); }
+.ph-scr {
+  position: absolute; inset: 1.18em; border-radius: 4.36em; overflow: hidden; isolation: isolate;
+  display: flex; flex-direction: column; background: #fff;
+}
+.ph-island {
+  position: absolute; z-index: 8; left: 50%; top: 2.2em; width: 8.6em; height: 2.5em; margin-left: -4.3em; border-radius: 1.25em; background: #000;
+  box-shadow: inset -1.1em 0 0 -.8em #000, inset -1.25em 0 .2em -.75em #1c2236;
+}
+.ph-home { position: absolute; z-index: 7; left: 50%; bottom: .7em; width: 10.6em; height: .42em; margin-left: -5.3em; border-radius: .21em; background: #0b0b0b; }
+.ph-glare {
+  position: absolute; inset: 0; z-index: 9; border-radius: 5.5em; pointer-events: none;
+  background: linear-gradient(112deg, transparent 38%, rgba(255, 255, 255, 0.16) 47%, rgba(255, 255, 255, 0.04) 53%, transparent 62%);
+  background-size: 300% 100%; background-position: var(--gx, 100%) 0;
+}
+
+/* Barra de estado */
+.ph-sb { position: relative; z-index: 6; flex: none; height: 5em; display: flex; align-items: center; justify-content: space-between; padding: .5em 2.4em 0 3.2em; }
+.ph-time { font-size: 1.52em; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.ph-ico { display: flex; align-items: center; gap: .5em; }
+.ph-ico svg { display: block; fill: currentColor; }
+.i-sig { width: 1.72em; height: 1.15em; }
+.i-wifi { width: 1.6em; height: 1.2em; }
+.i-bat { width: 2.65em; height: 1.25em; }
+
+/* Canto: capas apiladas que, de perfil, se leen como un marco sólido */
+.ph-3d { transform-style: preserve-3d; }
+.ph-3d .ph-front { transform: translateZ(1.75em); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.ph-l {
+  position: absolute; inset: 0; border-radius: 5.5em;
+  background: color-mix(in srgb, var(--ti-hi) var(--h), var(--ti-lo));
+  transform: translateZ(calc((var(--k) - 0.5) * 3.5em));
+}
+.ph-l.mid::before, .ph-l.mid::after { content: ""; position: absolute; background: inherit; filter: brightness(0.92); }
+/* Botón de acción y volumen (izquierda), encendido (derecha) */
+.ph-l.mid::before { left: -.32em; top: 11.6em; width: .4em; height: 3em; border-radius: .2em 0 0 .2em; box-shadow: 0 4.8em 0 .5em color-mix(in srgb, var(--ti-hi) var(--h), var(--ti-lo)), 0 10.8em 0 .5em color-mix(in srgb, var(--ti-hi) var(--h), var(--ti-lo)); }
+.ph-l.mid::after { right: -.32em; top: 17em; width: .4em; height: 8em; border-radius: 0 .2em .2em 0; }
+.ph-back {
+  position: absolute; inset: 0; border-radius: 5.5em; overflow: hidden;
+  transform: rotateY(180deg) translateZ(1.75em); backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background:
+    radial-gradient(120% 70% at 25% 15%, rgba(255, 255, 255, 0.1), transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--glass) 92%, #fff), var(--glass) 55%, color-mix(in srgb, var(--glass) 88%, #000));
+  box-shadow: inset 0 0 .3em .12em var(--ti-hi), inset 0 0 0 .5em var(--ti);
+}
+.ph-cam {
+  position: absolute; left: 1.7em; top: 1.7em; width: 13em; height: 13em; border-radius: 3.6em;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--glass) 85%, #fff), color-mix(in srgb, var(--glass) 92%, #000));
+  box-shadow: inset 0 .12em .2em rgba(255, 255, 255, 0.18), 0 .2em .6em rgba(0, 0, 0, 0.35);
+}
+.lens {
+  position: absolute; width: 5em; height: 5em; border-radius: 50%;
+  background: radial-gradient(circle, #0a0c14 0 22%, #1e2a44 25%, #07080c 40%, #1a1a1c 52%, #4a4a4e 58%, #18181a 64%, #2c2c2e 100%);
+  box-shadow: 0 0 0 .18em #0d0d0e, 0 .25em .5em rgba(0, 0, 0, 0.5);
+}
+.lens::after { content: ""; position: absolute; left: 30%; top: 26%; width: 18%; height: 14%; border-radius: 50%; background: rgba(160, 190, 255, 0.35); filter: blur(.08em); }
+.lens.l1 { left: 1em; top: 1em; }
+.lens.l2 { left: 1em; top: 7em; }
+.lens.l3 { left: 6.9em; top: 4em; }
+.flash { position: absolute; right: 1.5em; top: 1.4em; width: 1.5em; height: 1.5em; border-radius: 50%; background: radial-gradient(circle, #fff6dc, #c9b98e 60%, #6d6550); }
+.lidar { position: absolute; right: 1.6em; bottom: 1.5em; width: 1.3em; height: 1.3em; border-radius: 50%; background: radial-gradient(circle, #2a2a30, #050505); }
+
+/* ── WhatsApp (iOS, modo claro) ───────────────────────────────────── */
+.wa-app { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: -5em; }
+.wa-nav {
+  position: relative; z-index: 3; flex: none; display: flex; align-items: center; gap: .65em;
+  padding: 5.2em 1.5em .75em .9em; background: rgba(247, 247, 247, 0.97); box-shadow: 0 .08em 0 rgba(0, 0, 0, 0.13);
+}
+.wa-nav svg { flex: none; fill: none; stroke: #007aff; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.wa-back { width: 1.1em; height: 1.9em; }
+.wa-vid { width: 2.5em; height: 1.75em; margin-left: auto; }
+.wa-tel { width: 2.1em; height: 2.1em; margin-left: 1.3em; }
+.wa-av { width: 3.5em; height: 3.5em; flex: none; border-radius: 50%; overflow: hidden; display: grid; place-items: center; }
+.wa-who { min-width: 0; display: flex; flex-direction: column; }
+.wa-who b { font-size: 1.5em; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wa-who small { position: relative; height: 1.4em; font-size: 1.12em; line-height: 1.3; color: #8a8a8e; }
+.wa-who small span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+.wa-who small .typ { opacity: 0; color: #8a8a8e; }
+
+.wa-body {
+  position: relative; flex: 1; min-height: 0; overflow: hidden;
+  background-color: #efeae2;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' fill='none' stroke='%23000' stroke-opacity='.075' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='20' cy='22' r='6'/%3E%3Cpath d='M70 14h22a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H80l-6 5v-5h-4a6 6 0 0 1-6-6V20a6 6 0 0 1 6-6z'/%3E%3Cpath d='M118 50l3 6 6.5 1-4.8 4.6 1.2 6.4-5.9-3.1-5.9 3.1 1.2-6.4-4.8-4.6 6.5-1z'/%3E%3Cpath d='M10 80c6-6 12 6 18 0s12 6 18 0'/%3E%3Cpath d='M80 100c-6-5-11-9-11-14a5 5 0 0 1 11-2 5 5 0 0 1 11 2c0 5-5 9-11 14z'/%3E%3Cpath d='M112 116l20-8-8 20-3-8z'/%3E%3Ccircle cx='46' cy='122' r='3'/%3E%3Cpath d='M30 44l6 6-6 6-6-6z'/%3E%3C/svg%3E");
+  background-size: 15em 15em;
+}
+.wa-list { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; padding: .9em .9em 1.2em; will-change: transform; }
+.wa-day { align-self: center; margin: .2em 0 .5em; padding: .32em .85em; border-radius: .7em; background: #fff; box-shadow: 0 .08em .06em rgba(11, 20, 26, 0.1); font-size: 1.12em; color: #54656f; }
+.wa-sec { align-self: center; max-width: 88%; margin: 0 0 .6em; padding: .45em .8em; border-radius: .7em; background: #ffeecd; color: #54656f; font-size: 1.05em; line-height: 1.35; text-align: center; }
+
+.wr { position: relative; display: flex; margin-top: .22em; }
+.wr.t { margin-top: .7em; }
+.wr.o { justify-content: flex-end; }
+.wb {
+  position: relative; max-width: 80%; padding: .42em .62em .4em; border-radius: .6em;
+  font-size: 1.34em; line-height: 1.3; letter-spacing: -0.005em; color: #111b21;
+  box-shadow: 0 .06em .05em rgba(11, 20, 26, 0.13); transform-origin: 0 0;
+}
+.wr.i .wb { background: #fff; }
+.wr.o .wb { background: #d9fdd3; transform-origin: 100% 0; }
+.wr.t.i .wb { border-top-left-radius: 0; }
+.wr.t.o .wb { border-top-right-radius: 0; }
+.wr.t .wb::before { content: ""; position: absolute; top: 0; width: .5em; height: .7em; background: inherit; }
+.wr.t.i .wb::before { left: -.48em; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.wr.t.o .wb::before { right: -.48em; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.wb .sp { display: inline-block; width: 3.1em; height: 1px; }
+.wr.o .wb .sp { width: 4.3em; }
+.wt { position: absolute; right: .6em; bottom: .32em; display: flex; align-items: center; gap: .22em; font-size: .72em; color: #667781; font-variant-numeric: tabular-nums; }
+.wt-ck { width: 1.45em; height: 1em; fill: none; stroke: #53bdeb; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Escribiendo… */
+.wty {
+  position: absolute; left: 0; top: 0; display: flex; gap: .3em; padding: .95em .95em; border-radius: .6em; border-top-left-radius: 0;
+  background: #fff; box-shadow: 0 .06em .05em rgba(11, 20, 26, 0.13); opacity: 0;
+}
+.wty::before { content: ""; position: absolute; top: 0; left: -.48em; width: .5em; height: .7em; background: #fff; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.wty i { width: .62em; height: .62em; border-radius: 50%; background: #8696a0; animation: wdot 1.2s ease-in-out infinite; }
+.wty i:nth-child(2) { animation-delay: .16s; }
+.wty i:nth-child(3) { animation-delay: .32s; }
+@keyframes wdot { 0%, 60%, 100% { transform: none; opacity: .45; } 30% { transform: translateY(-.28em); opacity: 1; } }
+
+/* Mensaje con botón (cita) y documento */
+.wb.rich { width: 80%; padding: .3em .3em .4em; }
+.wb.rich .wt { bottom: 3.1em; }
+.ev { display: flex; gap: .6em; padding: .55em .5em .2em; }
+.ev-ic { width: 2.6em; height: 2.6em; flex: none; border-radius: .6em; display: flex; flex-direction: column; overflow: hidden; background: #fff; box-shadow: 0 0 0 .06em rgba(0, 0, 0, 0.12); text-align: center; }
+.ev-ic small { display: block; padding: .12em 0 .08em; background: #ff3b30; color: #fff; font-size: .48em; font-weight: 700; letter-spacing: .04em; }
+.ev-ic b { display: block; font-size: 1.05em; font-weight: 500; line-height: 1.25; }
+.ev div { min-width: 0; }
+.ev strong { display: block; font-size: .95em; font-weight: 600; }
+.ev span { display: block; font-size: .82em; color: #54656f; }
+.ev-note { margin: .35em .4em 1.4em; font-size: .92em; }
+.wbtn { display: flex; align-items: center; justify-content: center; gap: .4em; margin: .1em -.3em -.4em; padding: .6em .4em; border-top: .07em solid rgba(11, 20, 26, 0.1); color: #027eb5; font-size: .92em; font-weight: 500; }
+.wbtn svg { width: 1.1em; height: 1.1em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.dc { display: flex; align-items: center; gap: .6em; margin-bottom: 1.5em; padding: .65em .6em; border-radius: .45em; background: #f5f6f6; }
+.dc-ic { position: relative; width: 2.2em; height: 2.7em; flex: none; border-radius: .25em; background: #fff; box-shadow: 0 0 0 .06em rgba(0, 0, 0, 0.12); }
+.dc-ic::after { content: "PDF"; position: absolute; left: -.2em; bottom: .35em; padding: .05em .25em; border-radius: .15em; background: #e5252a; color: #fff; font-size: .5em; font-weight: 700; }
+.dc div { min-width: 0; }
+.dc strong { display: block; font-size: .9em; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dc span { display: block; font-size: .74em; color: #667781; }
+
+/* Barra de escribir */
+.wa-in {
+  position: relative; z-index: 3; flex: none; display: flex; align-items: center; gap: 1em;
+  padding: .75em 1.3em 2.6em; background: rgba(247, 247, 247, 0.97); box-shadow: 0 -.08em 0 rgba(0, 0, 0, 0.12);
+}
+.wa-in svg { flex: none; width: 2.1em; height: 2.1em; fill: none; stroke: #007aff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.wa-field { flex: 1; height: 2.9em; display: flex; align-items: center; justify-content: flex-end; padding: 0 .55em; border-radius: 1.45em; background: #fff; box-shadow: inset 0 0 0 .08em rgba(0, 0, 0, 0.13); }
+.wa-field svg { width: 1.8em; height: 1.8em; }
+
+/* Aviso de iOS (banner) */
+.ios-ban {
+  position: absolute; z-index: 9; left: .8em; right: .8em; top: 5.2em; display: grid; grid-template-columns: 3.6em 1fr; gap: 0 .95em; align-items: center;
+  padding: 1em 1.2em; border-radius: 2em; background: rgba(246, 246, 246, 0.86);
+  -webkit-backdrop-filter: blur(1.4em) saturate(1.8); backdrop-filter: blur(1.4em) saturate(1.8);
+  box-shadow: 0 1em 2.6em -.8em rgba(0, 0, 0, 0.38); opacity: 0;
+}
+.ios-ban .app { width: 3.6em; height: 3.6em; border-radius: .85em; display: grid; place-items: center; background: linear-gradient(160deg, #5ef08a, #1fb253); }
+.ios-ban .app svg { width: 2.2em; height: 2.2em; fill: #fff; }
+.ios-ban p { margin: 0; min-width: 0; font-size: 1.3em; line-height: 1.28; }
+.ios-ban p b { display: flex; justify-content: space-between; gap: .5em; font-weight: 600; }
+.ios-ban p b small { font-weight: 400; color: #7c7c80; font-size: .85em; }
+
+/* Icono de app con la marca */
+.app-ic { display: grid; place-items: center; background: linear-gradient(160deg, #2dd4bf, #0f766e 58%, #0b4f4a); box-shadow: inset 0 .08em 0 rgba(255, 255, 255, 0.35); }
+.app-ic svg { width: 58%; height: auto; }
+.app-ic svg path:first-child { fill: #fff; }
+.app-ic svg .logo-e { fill: #0f766e; }

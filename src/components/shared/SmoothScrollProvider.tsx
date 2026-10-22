@@ -1,33 +1,29 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import Lenis from '@studio-freight/lenis'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+/** Scroll suave (solo rueda de ratón) sincronizado con el reloj de GSAP y ScrollTrigger. */
 export default function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
-  const lenisRef = useRef<Lenis | null>(null)
-
   useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    gsap.registerPlugin(ScrollTrigger)
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.15,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     })
-    lenisRef.current = lenis
-
-    let raf: number
-    const animate = (time: number) => {
-      lenis.raf(time)
-      raf = requestAnimationFrame(animate)
-    }
-    raf = requestAnimationFrame(animate)
-
-    // Expose lenis globally for GSAP integration
+    lenis.on('scroll', ScrollTrigger.update)
+    const tick = (time: number) => lenis.raf(time * 1000)
+    gsap.ticker.add(tick)
+    gsap.ticker.lagSmoothing(0)
     ;(window as unknown as Record<string, unknown>).__lenis = lenis
 
     return () => {
-      cancelAnimationFrame(raf)
+      gsap.ticker.remove(tick)
       lenis.destroy()
-      // No dejar una instancia destruida colgada en window: si Lenis desaparece,
-      // el navbar cae al fallback de scroll suave nativo en lugar de llamar a algo muerto.
+      // No dejar una instancia destruida colgada en window.
       const w = window as unknown as Record<string, unknown>
       if (w.__lenis === lenis) delete w.__lenis
     }

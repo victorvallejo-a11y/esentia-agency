@@ -1,17 +1,23 @@
-import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono, Barlow_Condensed } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Archivo, Inter, JetBrains_Mono } from 'next/font/google'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider'
-import CustomCursor from '@/components/shared/CustomCursor'
-import Navbar from '@/components/shared/Navbar'
+import CookieConsent from '@/components/shared/CookieConsent'
 
+const archivo = Archivo({
+  subsets: ['latin'],
+  variable: '--font-archivo',
+  display: 'swap',
+  axes: ['wdth'],
+})
+
+// Interfaz de las maquetas (móviles, widgets): lo más parecido a la San Francisco de iOS.
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-ui',
   display: 'swap',
-  weight: ['400', '500', '600'],
 })
 
 const jetbrains = JetBrains_Mono({
@@ -21,16 +27,10 @@ const jetbrains = JetBrains_Mono({
   weight: ['400', '500'],
 })
 
-const barlow = Barlow_Condensed({
-  subsets: ['latin'],
-  variable: '--font-barlow',
-  display: 'swap',
-  weight: ['600', '700', '800'],
-})
-
 const SITE_URL = 'https://esentiaagency.es'
+const GA_ID = 'G-YXS7SWXMN7'
 const SITE_DESCRIPTION =
-  'Consultoría de IA para empresas en Barcelona. Analizamos tu negocio, encontramos por dónde se te escapan clientes y dinero, y automatizamos con IA para cerrar esa fuga. Sistemas a medida, no bots de plantilla.'
+  'Consultoría de IA para empresas en Barcelona. Encontramos el cuello de botella de tu negocio (captación, pedidos, facturas, seguimiento o atención) y construimos el sistema a medida que lo quita. Diagnóstico gratis de 30 minutos.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -45,8 +45,9 @@ export const metadata: Metadata = {
     'servicios de IA para empresas',
     'automatización de procesos con IA',
     'automatización con IA',
-    'IA para PYMES',
-    'atención al cliente automatizada',
+    'IA para pymes',
+    'IA para inmobiliarias',
+    'automatizar pedidos WhatsApp',
     'chatbot WhatsApp',
     'asistente de voz IA',
     'consultoría IA Barcelona',
@@ -54,20 +55,18 @@ export const metadata: Metadata = {
   authors: [{ name: 'Víctor Vallejo', url: SITE_URL }],
   creator: 'Esentia Agency',
   publisher: 'Esentia Agency',
-  alternates: {
-    canonical: SITE_URL,
-  },
+  alternates: { canonical: SITE_URL },
   openGraph: {
     type: 'website',
     locale: 'es_ES',
     url: SITE_URL,
     siteName: 'Esentia Agency',
-    title: 'La consultoría de IA que encuentra la fuga de tu negocio',
+    title: 'Tu negocio no duerme. Tus procesos tampoco.',
     description: SITE_DESCRIPTION,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'La consultoría de IA que encuentra la fuga de tu negocio',
+    title: 'Tu negocio no duerme. Tus procesos tampoco.',
     description: SITE_DESCRIPTION,
   },
   robots: {
@@ -95,6 +94,13 @@ export const metadata: Metadata = {
   category: 'technology',
 }
 
+export const viewport: Viewport = {
+  themeColor: '#F6F4EE',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
@@ -102,6 +108,7 @@ const jsonLd = {
   name: 'Esentia Agency',
   description: SITE_DESCRIPTION,
   url: SITE_URL,
+  image: `${SITE_URL}/opengraph-image`,
   email: 'victor.vallejo@esentiaagency.es',
   telephone: '+34711237051',
   founder: { '@type': 'Person', name: 'Víctor Vallejo' },
@@ -114,38 +121,40 @@ const jsonLd = {
   areaServed: { '@type': 'Country', name: 'España' },
   knowsAbout: [
     'Inteligencia artificial para empresas',
-    'Chatbots de WhatsApp',
+    'Automatización de procesos',
+    'Captación de propietarios para inmobiliarias',
+    'Automatización de pedidos por WhatsApp',
+    'Lectura automática de facturas',
     'Asistentes de voz con IA',
-    'Automatización de atención al cliente',
   ],
   makesOffer: [
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Chatbots de WhatsApp con IA' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Asistentes de voz con IA' } },
-    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Automatizaciones de negocio con IA' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Diagnóstico gratuito de procesos' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Sistemas de IA a medida para pymes' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Asistentes de WhatsApp y de voz con IA' } },
   ],
 }
 
+// Consent Mode v2: todo denegado hasta que la persona acepte en el aviso.
+const consentBoot = `
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+try{if(localStorage.getItem('es-consent')==='granted'){gtag('consent','update',{analytics_storage:'granted'});}}catch(e){}
+gtag('js',new Date());gtag('config','${GA_ID}');
+document.documentElement.classList.add('js');
+`
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${inter.variable} ${jetbrains.variable} ${barlow.variable}`}>
+    <html lang="es" className={`${archivo.variable} ${inter.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: consentBoot }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <Script src="https://www.googletagmanager.com/gtag/js?id=G-YXS7SWXMN7" strategy="afterInteractive" />
-      <Script id="google-analytics" strategy="afterInteractive">{`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-YXS7SWXMN7');
-      `}</Script>
-      <body className="font-inter antialiased">
+      <body>
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <SmoothScrollProvider>
-          <CustomCursor />
-          <Navbar />
           {children}
+          <CookieConsent />
           <Analytics />
         </SmoothScrollProvider>
       </body>
