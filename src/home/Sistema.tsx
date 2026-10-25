@@ -81,9 +81,9 @@ export default function Sistema() {
             <div className="mod mod-capt">
               <div className="nts">
                 {[
-                  ['Particular nuevo · Terrassa', 'Piso 3 hab · 189.000 € · con teléfono', 'ahora'],
-                  ['Particular nuevo · Sabadell', 'Ático 2 hab · 245.000 € · con teléfono', '4 min'],
-                  ['Particular nuevo · Rubí', 'Casa 4 hab · 320.000 € · con teléfono', '9 min'],
+                  ['Propietario nuevo · Terrassa', 'Pide valoración · piso 3 hab · cita el martes', 'ahora'],
+                  ['Propietario nuevo · Sabadell', 'Pide valoración · ático 2 hab · cita el miércoles', '4 min'],
+                  ['Propietario nuevo · Rubí', 'Pide valoración · casa 4 hab · cita el jueves', '9 min'],
                 ].map(([t, b, w], i) => (
                   <div className={`nt n${i}`} key={t}>
                     <span className="nt-ic">

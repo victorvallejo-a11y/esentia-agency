@@ -143,7 +143,7 @@ export default function Caso() {
               </div>
               <div className="stat">
                 <div className="n"><span data-count="3284">3.284</span><small>€/mes</small></div>
-                <div className="l">en tratamientos</div>
+                <div className="l">recuperados en citas que antes se perdían</div>
               </div>
               <div className="stat">
                 <div className="n">24<small>/7</small></div>

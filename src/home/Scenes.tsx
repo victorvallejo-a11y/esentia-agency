@@ -290,7 +290,12 @@ export default function Scenes() {
         lis.forEach((li, i) => li.classList.toggle('on', c >= i - 0.5))
       }
       paint(0)
-      const size = () => { how.style.height = `${window.innerHeight + dist() * 1.2}px` }
+      // Alto con la pantalla fijada (100svh), no con innerHeight: en iPhone innerHeight
+      // cambia al esconderse la barra y, al recalcular, todo lo de abajo pegaba un salto.
+      const pin = how.querySelector('.how-pin') as HTMLElement
+      // Pausa al llegar, para que el diagnóstico se lea antes de que empiece a deslizar.
+      const hold = () => pin.offsetHeight * (mobile ? 0.7 : 0.5)
+      const size = () => { how.style.height = `${pin.offsetHeight + hold() + dist() * 1.2}px` }
       size()
       ScrollTrigger.addEventListener('refreshInit', size)
       const h = gsap.to(track, {
@@ -298,9 +303,10 @@ export default function Scenes() {
         ease: 'none',
         scrollTrigger: {
           trigger: how,
-          start: 'top top',
+          start: () => `top+=${hold()} top`,
           end: 'bottom bottom',
-          scrub: smooth,
+          // En móvil, pegado al dedo: con retardo, al cambiar de sentido seguía un instante hacia el otro lado.
+          scrub: mobile ? true : smooth,
           invalidateOnRefresh: true,
           onUpdate: (s) => paint(s.progress),
         },

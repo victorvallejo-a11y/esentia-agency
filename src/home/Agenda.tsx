@@ -268,7 +268,10 @@ export default function Agenda() {
                               ),
                             )}
                       </div>
-                      <p className="cal-note">Abro solo los tres próximos días laborables.</p>
+                      <p className="cal-note">
+                        Abro los cinco próximos días laborables. ¿No te va bien ninguno?{' '}
+                        <a href={WA_URL} target="_blank" rel="noopener" tabIndex={step === 1 ? 0 : -1}>Escríbeme y lo cuadramos</a>.
+                      </p>
                       {status === 'ready' && day && (
                         <div className="slots-wrap">
                           <p className="slot-day">{fmtDay(day)}</p>

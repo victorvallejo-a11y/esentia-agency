@@ -42,7 +42,7 @@ export default function Dudas() {
           <a className="cc" href={WA_URL} target="_blank" rel="noopener">
             <span className="k">WhatsApp</span>
             <b>+34 711 237 051</b>
-            <span>Respondo yo, no un bot.</span>
+            <span>Hablas directamente conmigo.</span>
           </a>
           <a className="cc" href={`mailto:${MAIL}`}>
             <span className="k">Email</span>

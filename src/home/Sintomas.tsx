@@ -5,30 +5,30 @@ type Item = { q: string; title: string; tag: string; lead: ReactNode; ui: ReactN
 
 const ITEMS: Item[] = [
   {
-    q: '“Los pisos de particulares me llegan tarde.”',
+    q: '“Cuando llamo al propietario, ya ha firmado con otro.”',
     title: 'Captación de propietarios',
     tag: 'inmobiliarias',
     lead: (
       <>
-        <b>Cada mañana, los particulares nuevos de tu zona.</b> Con teléfono.
+        <b>El propietario que pide valoración, atendido en un minuto.</b> Y con la cita ya en tu agenda.
       </>
     ),
     ui: (
       <div className="ui cap">
-        <h6>Particulares nuevos · hoy 8:00</h6>
+        <h6>Valoraciones pedidas · hoy</h6>
         {[
-          ['Piso · Terrassa · 3 hab · 92 m²', '189.000 €', 'hace 2 h'],
-          ['Ático · Sabadell · 2 hab · 70 m²', '245.000 €', 'hace 5 h'],
-          ['Casa · Rubí · 4 hab · 160 m²', '320.000 €', 'ayer'],
+          ['Piso · Terrassa · 3 hab · 92 m²', 'mar 10:00', 'hace 2 h'],
+          ['Ático · Sabadell · 2 hab · 70 m²', 'mié 12:30', 'hace 5 h'],
+          ['Casa · Rubí · 4 hab · 160 m²', 'jue 17:00', 'ayer'],
         ].map(([a, b, c], i) => (
           <div className={`cap-r r${i}`} key={a}>
-            <span className="cap-a">{a}<small>{c} · tel. ✓</small></span>
+            <span className="cap-a">{a}<small>{c} · atendido ✓</small></span>
             <b>{b}</b>
           </div>
         ))}
         <div className="cap-wa">
-          <small>WhatsApp redactado</small>
-          <p>Hola, he visto tu piso en Terrassa. Trabajo la zona y tengo compradores buscando 3 habitaciones…</p>
+          <small>WhatsApp al propietario</small>
+          <p>Hola Marta, gracias por pedir la valoración. Te confirmo la visita a tu piso de Terrassa el martes a las 10:00…</p>
         </div>
       </div>
     ),
