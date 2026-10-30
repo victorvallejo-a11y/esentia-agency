@@ -40,6 +40,12 @@ export async function POST(req: Request) {
     phone: txt(b.phone, 40),
     start: txt(b.start, 40),
     needs: Array.isArray(b.needs) ? b.needs.slice(0, 8).map((n) => txt(n, 40)) : [],
+    dedica: txt(b.dedica, 300),
+    objetivo: txt(b.objetivo, 300),
+    ig: txt(b.ig, 80),
+    webEmpresa: txt(b.webEmpresa, 160),
+    decisor: txt(b.decisor, 200),
+    tz: txt(b.tz, 60),
     ref: txt(b.ref, 200),
     q: txt(b.q, 200),
   }

@@ -1,13 +1,10 @@
 'use client'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { aSuZona, diferencia, nombreZona, type Day, type Slot } from './agendaZona'
 import { Arrow, WA_URL, WaIcon } from './ui'
-
-type Slot = { t: string; start: string }
-type Day = { date: string; slots: Slot[] }
 
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
 const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
-const NEEDS = ['Captación', 'Pedidos', 'Facturas y papeles', 'Seguimiento de clientes', 'Llamadas', 'Atención', 'Otro']
 
 const parse = (iso: string) => {
   const [y, m, d] = iso.split('-').map(Number)
@@ -27,9 +24,9 @@ export default function Agenda() {
   const [days, setDays] = useState<Day[]>([])
   const [day, setDay] = useState<string | null>(null)
   const [slot, setSlot] = useState<Slot | null>(null)
+  const [tz, setTz] = useState('Europe/Madrid')
   const [month, setMonth] = useState<{ y: number; m: number } | null>(null)
   const [step, setStep] = useState(1)
-  const [needs, setNeeds] = useState<string[]>([])
   const [sending, setSending] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
   const [errs, setErrs] = useState<Record<string, boolean>>({})
@@ -41,7 +38,9 @@ export default function Agenda() {
       const r = await fetch('/api/agenda', { cache: 'no-store' })
       const j = await r.json()
       if (!j.ok || !Array.isArray(j.days)) throw new Error('agenda')
-      const ds: Day[] = j.days.filter((d: Day) => d.slots?.length)
+      const zona = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Madrid'
+      const ds: Day[] = aSuZona(j.days.filter((d: Day) => d.slots?.length), zona)
+      setTz(zona)
       setDays(ds)
       setStatus(ds.length ? 'ready' : 'error')
       if (ds.length) {
@@ -102,6 +101,10 @@ export default function Agenda() {
   }
 
   const todayIso = ymd(new Date())
+  // misma hora que en Madrid: se sigue diciendo "Hora de Madrid" y no hace falta aclarar nada
+  const fueraDeMadrid = days.some((d) => d.slots.some((s) => s.es !== s.t))
+  const zonaTxt = fueraDeMadrid ? nombreZona(tz) : 'Madrid'
+  const avisoHora = fueraDeMadrid ? `Ves los horarios en la hora de tu país (${zonaTxt}). ${diferencia(days[0]?.slots[0])}` : 'Horarios en hora de España (Madrid).'
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -109,28 +112,34 @@ export default function Agenda() {
     const fd = new FormData(e.currentTarget)
     const data = {
       name: String(fd.get('name') || '').trim(),
-      business: String(fd.get('business') || '').trim(),
       email: String(fd.get('email') || '').trim(),
       phone: String(fd.get('phone') || '').trim(),
+      dedica: String(fd.get('dedica') || '').trim(),
+      objetivo: String(fd.get('objetivo') || '').trim(),
+      ig: String(fd.get('ig') || '').trim(),
+      webEmpresa: String(fd.get('webEmpresa') || '').trim(),
+      decisor: String(fd.get('decisor') || '').trim(),
       website: String(fd.get('website') || ''),
     }
     const bad = {
       name: data.name.length < 2,
       email: !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(data.email),
+      dedica: data.dedica.length < 3,
+      objetivo: data.objetivo.length < 3,
     }
     setErrs(bad)
-    if (bad.name || bad.email) return
+    if (bad.name || bad.email || bad.dedica || bad.objetivo) return
     setSending(true)
     setNotice(null)
     try {
       const r = await fetch('/api/agenda', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, needs, start: slot.start, ref: document.referrer, q: location.search }),
+        body: JSON.stringify({ ...data, start: slot.start, tz, ref: document.referrer, q: location.search }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'servidor' }))
       if (j.ok) {
-        setDone({ when: `${fmtDay(day)} a las ${slot.t}`, email: data.email, name: data.name.split(' ')[0], meet: j.meet })
+        setDone({ when: `${fmtDay(day)} a las ${slot.t}${fueraDeMadrid ? ` (hora de ${zonaTxt})` : ''}`, email: data.email, name: data.name.split(' ')[0], meet: j.meet })
         setStep(3)
         const w = window as unknown as { gtag?: (...a: unknown[]) => void }
         w.gtag?.('event', 'reserva_diagnostico', { slot: slot.start })
@@ -178,7 +187,7 @@ export default function Agenda() {
                   <svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="13" height="12" rx="2.5" /><path d="M15.5 11l6-3.5v9l-6-3.5z" /></svg>Videollamada (Google Meet)
                 </li>
                 <li>
-                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18" /></svg>Hora de Madrid
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18" /></svg>Hora de {zonaTxt}
                 </li>
               </ul>
               {slot && day && step < 3 && (
@@ -275,6 +284,7 @@ export default function Agenda() {
                       {status === 'ready' && day && (
                         <div className="slots-wrap">
                           <p className="slot-day">{fmtDay(day)}</p>
+                          <p className="tz-note">{avisoHora}</p>
                           {[['Mañana', am], ['Tarde', pm]].map(([lab, list]) =>
                             (list as Slot[]).length ? (
                               <div className="slot-blk" key={lab as string}>
@@ -324,6 +334,7 @@ export default function Agenda() {
                     {slot && day && (
                       <p className="sum">
                         <b>{slot.t}</b> · {fmtDay(day)} · 30 min · videollamada
+                        {fueraDeMadrid && ` · hora de ${zonaTxt} (en España, las ${slot.es})`}
                       </p>
                     )}
                     <div className="form">
@@ -332,36 +343,34 @@ export default function Agenda() {
                         <input id="f-name" name="name" type="text" autoComplete="name" className={errs.name ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
                       </label>
                       <label>
-                        Negocio
-                        <input name="business" type="text" placeholder="Inmobiliaria, distribuidora, clínica…" tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <label>
                         Email
                         <input name="email" type="email" autoComplete="email" inputMode="email" className={errs.email ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
                       </label>
                       <label>
-                        Teléfono <em>· opcional</em>
+                        <span>Teléfono <em>· opcional</em></span>
                         <input name="phone" type="tel" autoComplete="tel" inputMode="tel" tabIndex={step === 2 ? 0 : -1} />
                       </label>
+                      <label>
+                        <span>Instagram <em>· opcional</em></span>
+                        <input name="ig" type="text" autoComplete="off" placeholder="Tu usuario" tabIndex={step === 2 ? 0 : -1} />
+                      </label>
                       <input className="hp" name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-                      <div className="need">
-                        <span>
-                          ¿Qué te frena más? <em>· opcional</em>
-                        </span>
-                        <div className="chips">
-                          {NEEDS.map((n) => (
-                            <button
-                              key={n}
-                              type="button"
-                              aria-pressed={needs.includes(n)}
-                              tabIndex={step === 2 ? 0 : -1}
-                              onClick={() => setNeeds((s) => (s.includes(n) ? s.filter((x) => x !== n) : [...s, n]))}
-                            >
-                              {n}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+                      <label className="wide">
+                        ¿A qué se dedica tu empresa y cuántas personas trabajan en ella?
+                        <input name="dedica" type="text" className={errs.dedica ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
+                      </label>
+                      <label className="wide">
+                        ¿Qué te gustaría conseguir con la llamada?
+                        <input name="objetivo" type="text" className={errs.objetivo ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
+                      </label>
+                      <label className="wide">
+                        <span>¿Cuál es la web o el Instagram de tu empresa? <em>· opcional</em></span>
+                        <input name="webEmpresa" type="text" tabIndex={step === 2 ? 0 : -1} />
+                      </label>
+                      <label className="wide">
+                        <span>¿Decides tú o hay alguien más que deba estar en la llamada? <em>· opcional</em></span>
+                        <input name="decisor" type="text" tabIndex={step === 2 ? 0 : -1} />
+                      </label>
                     </div>
                     <p className="legal">
                       Al confirmar aceptas que use tus datos solo para esta reunión. <a href="/privacidad">Privacidad</a>
