@@ -41,6 +41,7 @@ export async function POST(req: Request) {
     start: txt(b.start, 40),
     needs: Array.isArray(b.needs) ? b.needs.slice(0, 8).map((n) => txt(n, 40)) : [],
     dedica: txt(b.dedica, 300),
+    plantilla: txt(b.plantilla, 60),
     objetivo: txt(b.objetivo, 300),
     ig: txt(b.ig, 80),
     webEmpresa: txt(b.webEmpresa, 160),

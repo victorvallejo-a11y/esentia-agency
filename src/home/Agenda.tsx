@@ -115,6 +115,7 @@ export default function Agenda() {
       email: String(fd.get('email') || '').trim(),
       phone: String(fd.get('phone') || '').trim(),
       dedica: String(fd.get('dedica') || '').trim(),
+      plantilla: String(fd.get('plantilla') || '').trim(),
       objetivo: String(fd.get('objetivo') || '').trim(),
       ig: String(fd.get('ig') || '').trim(),
       webEmpresa: String(fd.get('webEmpresa') || '').trim(),
@@ -125,10 +126,11 @@ export default function Agenda() {
       name: data.name.length < 2,
       email: !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(data.email),
       dedica: data.dedica.length < 3,
+      plantilla: !data.plantilla,
       objetivo: data.objetivo.length < 3,
     }
     setErrs(bad)
-    if (bad.name || bad.email || bad.dedica || bad.objetivo) return
+    if (bad.name || bad.email || bad.dedica || bad.plantilla || bad.objetivo) return
     setSending(true)
     setNotice(null)
     try {
@@ -356,8 +358,12 @@ export default function Agenda() {
                       </label>
                       <input className="hp" name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />
                       <label className="wide">
-                        ¿A qué se dedica tu empresa y cuántas personas trabajan en ella?
+                        ¿A qué se dedica tu empresa?
                         <input name="dedica" type="text" className={errs.dedica ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
+                      </label>
+                      <label className="wide">
+                        ¿Cuántas personas trabajan en ella?
+                        <input name="plantilla" type="text" inputMode="numeric" className={errs.plantilla ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
                       </label>
                       <label className="wide">
                         ¿Qué te gustaría conseguir con la llamada?
