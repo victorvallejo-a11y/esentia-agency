@@ -61,9 +61,7 @@ export function CamposReserva({ errs, tab }: { errs: Errores; tab: 0 | -1 }) {
         </label>
       )}
       <label className="wide">
-        <span>
-          Instagram <em>· opcional</em>
-        </span>
+        Si me has escrito por Instagram, dime tu usuario
         <input name="ig" type="text" autoComplete="off" autoCapitalize="none" placeholder="@tuusuario" tabIndex={tab} />
       </label>
       <input className="hp" name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />

@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { aSuZona, diferencia, nombreZona, type Day, type Slot } from '@/home/agendaZona'
 import { HORIZONTE_TXT, leerFormulario, leerUrl, type Errores } from '@/home/agendaForm'
 import { CamposReserva, Compromiso, LegalReserva } from '@/home/CamposReserva'
@@ -105,9 +105,36 @@ export default function ReservaClient() {
   const zonaTxt = fueraDeMadrid ? nombreZona(tz) : 'Madrid'
   const avisoHora = fueraDeMadrid ? `Ves las horas en tu país (${zonaTxt}). ${diferencia(days[0]?.slots[0])}` : 'Horas en España (Madrid).'
 
+  // Los pasos tienen su propia entrada en el historial: deslizar hacia atrás (o el botón de atrás del móvil) vuelve a elegir hora
+  // en vez de sacar al lead de la página. Una vez confirmada la reserva, atrás ya no reabre el formulario.
+  const hecha = useRef(false)
+  useEffect(() => {
+    hecha.current = !!done
+  }, [done])
+  useEffect(() => {
+    const onPop = (e: PopStateEvent) => {
+      if (hecha.current) return setStep(3)
+      setStep(e.state?.rvStep === 2 ? 2 : 1)
+      window.scrollTo({ top: 0 })
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+  const aHoras = () => {
+    if (window.history.state?.rvStep === 2) window.history.back()
+    else setStep(1)
+    window.scrollTo({ top: 0 })
+  }
   const ir = (n: number) => {
-    setStep(n)
     setNotice(null)
+    if (n === 1) return aHoras()
+    setStep(n)
+    try {
+      if (n === 2) window.history.pushState({ rvStep: 2 }, '')
+      else window.history.replaceState({ rvStep: 3 }, '')
+    } catch {
+      /* sin historial: los botones siguen funcionando */
+    }
     window.scrollTo({ top: 0 })
   }
 
@@ -150,8 +177,7 @@ export default function ReservaClient() {
         w.gtag?.('event', 'reserva_diagnostico', { slot: slot.start, canal: enlace ? 'instagram' : 'web' })
       } else if (j.error === 'ocupado') {
         setNotice('Ese hueco se acaba de ocupar. Te he cargado los que quedan libres.')
-        setStep(1)
-        window.scrollTo({ top: 0 })
+        aHoras()
         load(true)
       } else if (j.error === 'datos') {
         setNotice('Revisa los datos: alguno no parece válido (email o teléfono con prefijo).')
@@ -195,6 +221,14 @@ export default function ReservaClient() {
               <small>Fundador de Esentia · la llamada la hago yo</small>
             </div>
           </div>
+          {step === 2 && (
+            <button type="button" className="rv-back" onClick={() => ir(1)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 5l-7 7 7 7" />
+              </svg>
+              Elegir otra hora
+            </button>
+          )}
           <h1>{titulo}</h1>
           {step === 1 && <p className="rv-sub">Media hora. Sales sabiendo qué atacar primero.</p>}
           {step === 1 && (
@@ -269,7 +303,7 @@ export default function ReservaClient() {
                             <p className="rv-lab">{ico as ReactNode}{lab as string}</p>
                             <div className="rv-slots">
                               {(list as Slot[]).map((s) => (
-                                <button key={s.start} type="button" className="rv-slot" aria-pressed={slot?.start === s.start} onClick={() => setSlot(s)}>
+                                <button key={s.start} type="button" className="rv-slot" aria-pressed={slot?.start === s.start} onClick={() => setSlot(slot?.start === s.start ? null : s)}>
                                   {s.t}
                                 </button>
                               ))}

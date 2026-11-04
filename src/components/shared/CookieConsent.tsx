@@ -33,7 +33,10 @@ export default function CookieConsent() {
       t = setTimeout(() => setOpen(true), 300)
     }
     const onIntro = () => show()
-    if (!read()) {
+    // /reserva (enlace de Instagram): sin ventana, tapaba la mitad de la pantalla del navegador de Instagram.
+    // La analítica sigue apagada (Consent Mode v2 denegado por defecto), así que no se pone ninguna cookie.
+    const sinVentana = location.pathname.startsWith('/reserva')
+    if (!read() && !sinVentana) {
       if (!document.querySelector('.hero') || (window as unknown as { __introDone?: boolean }).__introDone) t = setTimeout(() => setOpen(true), 650)
       else {
         window.addEventListener('es:intro', onIntro, { once: true })
