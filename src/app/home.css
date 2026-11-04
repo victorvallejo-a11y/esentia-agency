@@ -494,6 +494,30 @@ button.day[aria-pressed="true"] { background: var(--teal); color: #fff; }
 .form input:focus { box-shadow: inset 0 0 0 1.5px var(--teal), 0 0 0 4px var(--teal-soft); }
 .form input.err { box-shadow: inset 0 0 0 1.5px #c0392b; }
 .form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.form select { width: 100%; padding: 13px 40px 13px 15px; border: 0; border-radius: 14px; outline: 0; -webkit-appearance: none; appearance: none; background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%235C6966' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 15px center / 12px; box-shadow: inset 0 0 0 1px var(--line2); color: var(--ink); font: 400 16px var(--sans); transition: box-shadow 200ms ease; }
+.form select:focus { box-shadow: inset 0 0 0 1.5px var(--teal), 0 0 0 4px var(--teal-soft); }
+.form select.err { box-shadow: inset 0 0 0 1.5px #c0392b; }
+.form .grp { grid-column: 1 / -1; margin: 10px 0 -2px; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+.form .grp:first-child { margin-top: 0; }
+.phone-row { display: flex; gap: 8px; }
+.phone-row input { flex: 1 1 auto; min-width: 0; }
+.pfx { flex: 0 0 auto; min-width: 62px; display: grid; place-items: center; padding: 0 12px; border-radius: 14px; background: var(--bg3); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font: 500 15px var(--sans); font-variant-numeric: tabular-nums; }
+.form .phone-row input.pfx-in { flex: 0 0 84px; width: 84px; }
+.chk, .form label.chk { display: flex; flex-direction: row; align-items: flex-start; gap: 12px; font-size: 14px; font-weight: 400; line-height: 1.45; color: var(--ink); cursor: pointer; }
+.chk input[type="checkbox"], .form .chk input[type="checkbox"] { -webkit-appearance: none; appearance: none; flex: 0 0 24px; width: 24px; height: 24px; margin: 1px 0 0; padding: 0; border-radius: 7px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line2); display: grid; place-items: center; cursor: pointer; }
+.chk input[type="checkbox"]:checked { background: var(--teal); box-shadow: none; }
+.chk input[type="checkbox"]:checked::after { content: ""; width: 6px; height: 11px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.chk input[type="checkbox"]:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.compromiso { margin: 16px 0 0; padding: 14px 15px; border-radius: 14px; background: var(--bg3); box-shadow: inset 0 0 0 1px var(--line); }
+.compromiso.err { box-shadow: inset 0 0 0 1.5px #c0392b; }
+.cp-t { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.cp-txt { margin: 0 0 12px; font-size: 14px; line-height: 1.5; color: var(--ink); }
+.legal-d { margin: 16px 0 0; font-size: 12.5px; color: var(--mute); }
+.legal-d summary { display: inline-block; padding: 6px 0; cursor: pointer; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; list-style: none; }
+.legal-d summary::-webkit-details-marker { display: none; }
+.legal-d p { margin: 6px 0 0; line-height: 1.5; }
+.legal-d a { color: var(--teal); font-weight: 500; }
+.cp-t svg { flex: 0 0 18px; width: 18px; height: 18px; fill: none; stroke: var(--teal); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .tz-note { margin: 0 0 12px; font-size: 13px; color: var(--mute); }
 .legal { margin: 16px 0 0; font-size: 12px; color: var(--faint); }
 .legal a { color: var(--mute); }

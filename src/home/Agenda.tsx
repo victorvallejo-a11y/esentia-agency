@@ -1,6 +1,8 @@
 'use client'
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { aSuZona, diferencia, nombreZona, type Day, type Slot } from './agendaZona'
+import { HORIZONTE_TXT, leerFormulario, leerUrl, type Errores } from './agendaForm'
+import { CamposReserva, Compromiso, LegalReserva } from './CamposReserva'
 import { Arrow, WA_URL, WaIcon } from './ui'
 
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
@@ -29,7 +31,7 @@ export default function Agenda() {
   const [step, setStep] = useState(1)
   const [sending, setSending] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
-  const [errs, setErrs] = useState<Record<string, boolean>>({})
+  const [errs, setErrs] = useState<Errores>({})
   const [done, setDone] = useState<{ when: string; email: string; name: string; meet?: string } | null>(null)
 
   const load = useCallback(async (keep = false) => {
@@ -109,35 +111,20 @@ export default function Agenda() {
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!slot || !day) return
-    const fd = new FormData(e.currentTarget)
-    const data = {
-      name: String(fd.get('name') || '').trim(),
-      email: String(fd.get('email') || '').trim(),
-      phone: String(fd.get('phone') || '').trim(),
-      dedica: String(fd.get('dedica') || '').trim(),
-      plantilla: String(fd.get('plantilla') || '').trim(),
-      objetivo: String(fd.get('objetivo') || '').trim(),
-      ig: String(fd.get('ig') || '').trim(),
-      webEmpresa: String(fd.get('webEmpresa') || '').trim(),
-      decisor: String(fd.get('decisor') || '').trim(),
-      website: String(fd.get('website') || ''),
-    }
-    const bad = {
-      name: data.name.length < 2,
-      email: !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(data.email),
-      dedica: data.dedica.length < 3,
-      plantilla: !data.plantilla,
-      objetivo: data.objetivo.length < 3,
-    }
+    const { data, errs: bad, ok } = leerFormulario(new FormData(e.currentTarget))
     setErrs(bad)
-    if (bad.name || bad.email || bad.dedica || bad.plantilla || bad.objetivo) return
+    if (!ok) {
+      setNotice('Te falta algún dato (en rojo). Todos son obligatorios salvo Instagram y la web.')
+      return
+    }
     setSending(true)
     setNotice(null)
     try {
+      const { r: enlace, test } = leerUrl()
       const r = await fetch('/api/agenda', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, start: slot.start, tz, ref: document.referrer, q: location.search }),
+        body: JSON.stringify({ ...data, start: slot.start, tz, ref: document.referrer, q: location.search.replace(/[?&](r|test)=[^&]*/g, ''), r: enlace, test }),
       })
       const j = await r.json().catch(() => ({ ok: false, error: 'servidor' }))
       if (j.ok) {
@@ -150,7 +137,7 @@ export default function Agenda() {
         setStep(1)
         load(true)
       } else if (j.error === 'datos') {
-        setNotice('Revisa el email: no parece válido.')
+        setNotice('Revisa los datos: alguno no parece válido (email o teléfono con prefijo).')
       } else {
         setNotice('No he podido confirmarla ahora mismo. Escríbeme por WhatsApp y te la cierro yo en un minuto.')
       }
@@ -212,7 +199,7 @@ export default function Agenda() {
               {notice && (
                 <p className="notice" role="status">
                   {notice}
-                  {!notice.startsWith('Ese hueco') && !notice.startsWith('Revisa') && (
+                  {!notice.startsWith('Ese hueco') && !notice.startsWith('Revisa') && !notice.startsWith('Te falta') && (
                     <a href={WA_URL} target="_blank" rel="noopener">Abrir WhatsApp</a>
                   )}
                 </p>
@@ -280,8 +267,8 @@ export default function Agenda() {
                             )}
                       </div>
                       <p className="cal-note">
-                        Abro los cinco próximos días laborables. ¿No te va bien ninguno?{' '}
-                        <a href={WA_URL} target="_blank" rel="noopener" tabIndex={step === 1 ? 0 : -1}>Escríbeme y lo cuadramos</a>.
+                        {HORIZONTE_TXT}{' '}
+                        <a href={WA_URL} target="_blank" rel="noopener" tabIndex={step === 1 ? 0 : -1}>Abrir WhatsApp</a>
                       </p>
                       {status === 'ready' && day && (
                         <div className="slots-wrap">
@@ -340,47 +327,10 @@ export default function Agenda() {
                       </p>
                     )}
                     <div className="form">
-                      <label>
-                        Nombre
-                        <input id="f-name" name="name" type="text" autoComplete="name" className={errs.name ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <label>
-                        Email
-                        <input name="email" type="email" autoComplete="email" inputMode="email" className={errs.email ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <label>
-                        <span>Teléfono <em>· opcional</em></span>
-                        <input name="phone" type="tel" autoComplete="tel" inputMode="tel" tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <label>
-                        <span>Instagram <em>· opcional</em></span>
-                        <input name="ig" type="text" autoComplete="off" placeholder="Tu usuario" tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <input className="hp" name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-                      <label className="wide">
-                        ¿A qué se dedica tu empresa?
-                        <input name="dedica" type="text" className={errs.dedica ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <label className="wide">
-                        ¿Cuántas personas trabajan en ella?
-                        <input name="plantilla" type="text" inputMode="numeric" className={errs.plantilla ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <label className="wide">
-                        ¿Qué te gustaría conseguir con la llamada?
-                        <input name="objetivo" type="text" className={errs.objetivo ? 'err' : ''} tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <label className="wide">
-                        <span>¿Cuál es la web o el Instagram de tu empresa? <em>· opcional</em></span>
-                        <input name="webEmpresa" type="text" tabIndex={step === 2 ? 0 : -1} />
-                      </label>
-                      <label className="wide">
-                        <span>¿Decides tú o hay alguien más que deba estar en la llamada? <em>· opcional</em></span>
-                        <input name="decisor" type="text" tabIndex={step === 2 ? 0 : -1} />
-                      </label>
+                      <CamposReserva errs={errs} tab={step === 2 ? 0 : -1} />
                     </div>
-                    <p className="legal">
-                      Al confirmar aceptas que use tus datos solo para esta reunión. <a href="/privacidad">Privacidad</a>
-                    </p>
+                    <Compromiso error={errs.compromiso} tab={step === 2 ? 0 : -1} />
+                    <LegalReserva />
                     <div className="pane-foot">
                       <button type="button" className="eb eb-ghost eb-back" onClick={() => setStep(1)} tabIndex={step === 2 ? 0 : -1}>
                         <span className="eb-t">Atrás</span>
@@ -418,7 +368,7 @@ export default function Agenda() {
                         <span className="eb-i" aria-hidden="true"><WaIcon /></span>
                       </a>
                     </div>
-                    <p className="fine">Si te surge algo, responde a la invitación y lo movemos.</p>
+                    <p className="fine">Si no puedes venir, avísame con al menos 2 horas: responde a la invitación o escríbeme por Instagram o WhatsApp.</p>
                   </div>
                 </div>
               </div>

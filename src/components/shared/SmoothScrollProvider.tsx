@@ -8,6 +8,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 export default function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // /reserva es la página ligera del enlace de Instagram: sin scroll suave ni reloj de GSAP
+    if (location.pathname.startsWith('/reserva')) return
     gsap.registerPlugin(ScrollTrigger)
     const lenis = new Lenis({
       duration: 1.15,
