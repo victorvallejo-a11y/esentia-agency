@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
+import { cifraValida, presupuestoValido } from '../../../home/agendaForm'
 
 // Agenda de la web ↔ n8n (flujos "WEB · Agenda · huecos" y "WEB · Agenda · reservar"),
 // que leen y escriben en el Google Calendar de victor.vallejo@esentiaagency.es.
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
     objetivo: txt(b.objetivo, 400),
     ticket: txt(b.ticket, 80),
     clientesMes: txt(b.clientesMes, 60),
+    presupuesto: txt(b.presupuesto, 40),
     cuando: txt(b.cuando, 120),
     webEmpresa: txt(b.webEmpresa, 160),
     decisor: txt(b.decisor, 200),
@@ -78,8 +80,9 @@ export async function POST(req: Request) {
     body.dedica.length < 3 ||
     !body.plantilla ||
     body.objetivo.length < 3 ||
-    !body.ticket ||
-    !body.clientesMes ||
+    !cifraValida(body.ticket) ||
+    !cifraValida(body.clientesMes) ||
+    !presupuestoValido(body.presupuesto) ||
     body.cuando.length < 2 ||
     body.decisor.length < 2 ||
     body.pais.length < 2

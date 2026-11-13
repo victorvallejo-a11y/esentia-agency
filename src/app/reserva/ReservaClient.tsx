@@ -36,7 +36,7 @@ const IMail = () => <I><rect x="3" y="5" width="18" height="14" rx="3" /><path d
 const IBell = () => <I><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4" /></I>
 const IMeet = () => <I><rect x="2.5" y="6" width="13" height="12" rx="2.5" /><path d="M15.5 11l6-3.5v9l-6-3.5z" /></I>
 
-const REQUERIDOS = ['name', 'email', 'phone', 'dedica', 'plantilla', 'ticket', 'clientesMes', 'objetivo', 'cuando', 'decisor']
+const REQUERIDOS = ['name', 'email', 'phone', 'dedica', 'plantilla', 'ticket', 'clientesMes', 'objetivo', 'cuando', 'presupuesto', 'decisor']
 const TOTAL = REQUERIDOS.length + 1
 
 type Status = 'loading' | 'ready' | 'error'

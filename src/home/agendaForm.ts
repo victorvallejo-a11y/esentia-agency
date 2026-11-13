@@ -67,6 +67,15 @@ export const paisPorZona = (tz: string) => ZONA_PAIS.find(([re]) => re.test(tz))
 /** "Solo yo", "nadie más", "decido yo"…: no hay nadie más en la decisión. */
 export const esSolo = (t: string) => /^\s*(solo|sólo|solamente|nadie|ninguno|ninguna|yo|decido yo|soy yo|no hay nadie)(\s|$|[.,;!])/i.test(t)
 
+/** Una cifra real: lleva al menos un dígito distinto de 0 (así no vale «0», «000» ni «-»). Puede ser aproximada: «3.000 €», «unos 10». */
+export const cifraValida = (t: string) => /[1-9]/.test(t)
+
+/** Inversión total del primer año (instalación + cuotas). Tramos cerrados: el texto es lo que llega a la invitación. */
+export const tramosPresupuesto = (s: string) => [`Menos de 1.500 ${s}`, `1.500 – 3.000 ${s}`, `3.000 – 6.000 ${s}`, `6.000 – 10.000 ${s}`, `Más de 10.000 ${s}`]
+/** Euros en España y la zona euro; dólares en el resto (mismos números, sin conversión). */
+export const monedaPorPais = (pais: string) => (['España', 'Portugal', 'Francia', 'Italia', 'Alemania'].includes(pais) ? '€' : '$')
+export const presupuestoValido = (v: string) => ['€', '$'].some((s) => tramosPresupuesto(s).includes(v))
+
 export const HORIZONTE_TXT = 'Abro los próximos 3 días hábiles. Si ninguno te encaja, escríbeme por Instagram o WhatsApp.'
 
 export const COMPROMISO_TIT = 'Un compromiso, por respeto al tiempo de los dos'
@@ -77,7 +86,7 @@ export const COMPROMISO_CHK = 'Lo entiendo y me comprometo a venir'
 export const PRIVACIDAD_TXT =
   'Uso tu nombre, email, teléfono y lo que me cuentas de tu empresa solo para esta reunión: reservar el hueco, enviarte la invitación y preparar la llamada. Se guardan en Google Calendar y en mis herramientas de gestión. Puedes pedirme que los borre cuando quieras.'
 
-export type Errores = Partial<Record<'name' | 'email' | 'phone' | 'pais' | 'dedica' | 'plantilla' | 'objetivo' | 'ticket' | 'clientesMes' | 'cuando' | 'decisor' | 'compromiso', boolean>>
+export type Errores = Partial<Record<'name' | 'email' | 'phone' | 'pais' | 'dedica' | 'plantilla' | 'objetivo' | 'ticket' | 'clientesMes' | 'presupuesto' | 'cuando' | 'decisor' | 'compromiso', boolean>>
 
 export type DatosReserva = {
   name: string
@@ -90,6 +99,7 @@ export type DatosReserva = {
   objetivo: string
   ticket: string
   clientesMes: string
+  presupuesto: string
   cuando: string
   webEmpresa: string
   decisor: string
@@ -120,6 +130,7 @@ export function leerFormulario(fd: FormData): { data: DatosReserva; errs: Errore
     objetivo: g('objetivo'),
     ticket: g('ticket'),
     clientesMes: g('clientesMes'),
+    presupuesto: g('presupuesto'),
     cuando: g('cuando'),
     webEmpresa: g('webEmpresa'),
     decisor,
@@ -136,8 +147,9 @@ export function leerFormulario(fd: FormData): { data: DatosReserva; errs: Errore
     dedica: data.dedica.length < 3,
     plantilla: !data.plantilla,
     objetivo: data.objetivo.length < 3,
-    ticket: !data.ticket,
-    clientesMes: !data.clientesMes,
+    ticket: !cifraValida(data.ticket),
+    clientesMes: !cifraValida(data.clientesMes),
+    presupuesto: !presupuestoValido(data.presupuesto),
     cuando: data.cuando.length < 2,
     decisor: decisor.length < 2,
     compromiso: !data.compromiso,

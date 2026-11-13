@@ -1,11 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { COMPROMISO_CHK, COMPROMISO_TIT, COMPROMISO_TXT, PAISES, PAIS_OTRO, PRIVACIDAD_TXT, esSolo, paisPorZona, type Errores } from './agendaForm'
+import { COMPROMISO_CHK, COMPROMISO_TIT, COMPROMISO_TXT, PAISES, PAIS_OTRO, PRIVACIDAD_TXT, cifraValida, esSolo, monedaPorPais, paisPorZona, tramosPresupuesto, type Errores } from './agendaForm'
 
 // Campos de la reserva, iguales en la home y en /reserva. Va dentro de <div className="form">.
 export function CamposReserva({ errs, tab }: { errs: Errores; tab: 0 | -1 }) {
   const [pais, setPais] = useState('España')
   const [decisor, setDecisor] = useState('')
+  const [presupuesto, setPresupuesto] = useState('')
+  const [ticket, setTicket] = useState('')
+  const [clientesMes, setClientesMes] = useState('')
   useEffect(() => {
     try {
       setPais(paisPorZona(Intl.DateTimeFormat().resolvedOptions().timeZone || ''))
@@ -13,10 +16,17 @@ export function CamposReserva({ errs, tab }: { errs: Errores; tab: 0 | -1 }) {
       /* se queda España */
     }
   }, [])
+  const tramos = tramosPresupuesto(monedaPorPais(pais))
+  // si cambia de país y con él la moneda, el tramo elegido ya no existe: que lo vuelva a elegir
+  useEffect(() => {
+    setPresupuesto('')
+  }, [tramos[0]])
   const otro = pais === PAIS_OTRO
   const prefijo = PAISES.find((p) => p.n === pais)?.p ?? ''
   const hayOtroDecisor = decisor.trim().length >= 2 && !esSolo(decisor)
   const c = (k: keyof Errores) => (errs[k] ? 'err' : '')
+  // cifras: en cuanto escribe, manda lo que ve (rojo si es 0 o no hay cifra); si está vacío, manda el error del envío
+  const vivo = (v: string, k: keyof Errores) => (v === '' ? c(k) : cifraValida(v) ? '' : 'err')
 
   return (
     <>
@@ -82,11 +92,13 @@ export function CamposReserva({ errs, tab }: { errs: Errores; tab: 0 | -1 }) {
       </label>
       <label>
         Ticket medio por cliente u obra
-        <input name="ticket" type="text" placeholder="Ej. 3.000 €" className={c('ticket')} tabIndex={tab} />
+        <input name="ticket" type="text" value={ticket} onChange={(e) => setTicket(e.target.value)} placeholder="Ej. 3.000 € (aproximado, mayor que 0)" className={vivo(ticket, 'ticket')} aria-invalid={ticket !== '' && !cifraValida(ticket)} tabIndex={tab} />
+        {ticket !== '' && !cifraValida(ticket) && <span style={{ color: '#c0392b', fontSize: 12.5, fontWeight: 400 }}>Pon una cifra mayor que 0, aunque sea aproximada.</span>}
       </label>
       <label>
         ¿Cuántos clientes nuevos suelen venirte al mes?
-        <input name="clientesMes" type="text" inputMode="numeric" placeholder="Ej. 10" className={c('clientesMes')} tabIndex={tab} />
+        <input name="clientesMes" type="text" inputMode="numeric" value={clientesMes} onChange={(e) => setClientesMes(e.target.value)} placeholder="Ej. 10 (aproximado, mayor que 0)" className={vivo(clientesMes, 'clientesMes')} aria-invalid={clientesMes !== '' && !cifraValida(clientesMes)} tabIndex={tab} />
+        {clientesMes !== '' && !cifraValida(clientesMes) && <span style={{ color: '#c0392b', fontSize: 12.5, fontWeight: 400 }}>Pon una cifra mayor que 0, aunque sea aproximada.</span>}
       </label>
       <p className="grp wide">La llamada</p>
       <label className="wide">
@@ -98,7 +110,26 @@ export function CamposReserva({ errs, tab }: { errs: Errores; tab: 0 | -1 }) {
         <input name="cuando" type="text" placeholder="Ej. este mes, en 3 meses" className={c('cuando')} tabIndex={tab} />
       </label>
       <label className="wide">
-        ¿Quién más participa en la decisión?
+        Presupuesto
+        {/* sin value controlado: el formulario escucha «input» y React lo devolvía a vacío antes del «change». La key lo reinicia al cambiar de moneda. */}
+        <select key={tramos[0]} name="presupuesto" defaultValue="" onChange={(e) => setPresupuesto(e.target.value)} className={c('presupuesto')} tabIndex={tab}>
+          <option value="" disabled>
+            Elige un tramo
+          </option>
+          {tramos.map((p) => (
+            <option key={p} value={p}>
+              {p}
+            </option>
+          ))}
+        </select>
+        {presupuesto === tramos[0] && (
+          <span role="note" style={{ marginTop: 2, padding: '10px 12px', borderRadius: 12, background: 'rgba(192,57,43,0.06)', boxShadow: 'inset 0 0 0 1px rgba(192,57,43,0.35)', color: '#c0392b', fontSize: 13, fontWeight: 400, lineHeight: 1.45 }}>
+            Trabajo con un número limitado de clientes al mes para garantizar la calidad, y la mayoría de los proyectos superan esta cantidad. Si aun así quieres reservar, adelante.
+          </span>
+        )}
+      </label>
+      <label className="wide">
+        ¿Quién más tiene que dar el visto bueno?
         <input name="decisor" type="text" value={decisor} onChange={(e) => setDecisor(e.target.value)} placeholder="Ej. mi socio Pedro, o «solo yo»" className={c('decisor')} tabIndex={tab} />
       </label>
       {hayOtroDecisor && (
