@@ -71,7 +71,7 @@ export const esSolo = (t: string) => /^\s*(solo|sólo|solamente|nadie|ninguno|ni
 export const cifraValida = (t: string) => /[1-9]/.test(t)
 
 /** Inversión total del primer año (instalación + cuotas). Tramos cerrados: el texto es lo que llega a la invitación. */
-export const tramosPresupuesto = (s: string) => [`Menos de 1.500 ${s}`, `1.500 – 3.000 ${s}`, `3.000 – 6.000 ${s}`, `6.000 – 10.000 ${s}`, `Más de 10.000 ${s}`]
+export const tramosPresupuesto = (s: string) => [`Menos de 2.000 ${s}`, `2.000 – 4.000 ${s}`, `4.000 – 6.000 ${s}`, `6.000 – 10.000 ${s}`, `Más de 10.000 ${s}`]
 /** Euros en España y la zona euro; dólares en el resto (mismos números, sin conversión). */
 export const monedaPorPais = (pais: string) => (['España', 'Portugal', 'Francia', 'Italia', 'Alemania'].includes(pais) ? '€' : '$')
 export const presupuestoValido = (v: string) => ['€', '$'].some((s) => tramosPresupuesto(s).includes(v))
