@@ -124,7 +124,7 @@ export function CamposReserva({ errs, tab }: { errs: Errores; tab: 0 | -1 }) {
         </select>
         {presupuesto === tramos[0] && (
           <span role="note" style={{ marginTop: 2, padding: '10px 12px', borderRadius: 12, background: 'rgba(192,57,43,0.06)', boxShadow: 'inset 0 0 0 1px rgba(192,57,43,0.35)', color: '#c0392b', fontSize: 13, fontWeight: 400, lineHeight: 1.45 }}>
-            Trabajo con un número limitado de clientes al mes para garantizar la calidad, y la mayoría de los proyectos superan esta cantidad. Si aun así quieres reservar, adelante.
+            Trabajo con un número limitado de clientes al mes para garantizar la calidad, y los proyectos superan esta cantidad. Si reservas, que sea sabiendo que la inversión será mayor.
           </span>
         )}
       </label>
