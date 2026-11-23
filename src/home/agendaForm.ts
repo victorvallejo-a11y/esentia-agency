@@ -71,10 +71,13 @@ export const esSolo = (t: string) => /^\s*(solo|sólo|solamente|nadie|ninguno|ni
 export const cifraValida = (t: string) => /[1-9]/.test(t)
 
 /** Inversión total del primer año (instalación + cuotas). Tramos cerrados: el texto es lo que llega a la invitación. */
-export const tramosPresupuesto = (s: string) => [`Menos de 2.000 ${s}`, `2.000 – 4.000 ${s}`, `4.000 – 6.000 ${s}`, `6.000 – 10.000 ${s}`, `Más de 10.000 ${s}`]
+// 23-nov (consejo de Alberto): mínimo más alto y tramos más anchos. Un tramo estrecho (2.000–4.000) ancla al suelo: casi todos marcaban el más bajo.
+export const tramosPresupuesto = (s: string) => [`Menos de 3.500 ${s}`, `3.500 – 7.000 ${s}`, `7.000 – 11.000 ${s}`, `Más de 11.000 ${s}`]
+/** Tramos anteriores: se siguen aceptando por si alguien tiene abierta la página antigua al enviar. No se muestran. */
+const tramosAntiguos = (s: string) => [`Menos de 2.000 ${s}`, `2.000 – 4.000 ${s}`, `4.000 – 6.000 ${s}`, `6.000 – 10.000 ${s}`, `Más de 10.000 ${s}`]
 /** Euros en España y la zona euro; dólares en el resto (mismos números, sin conversión). */
 export const monedaPorPais = (pais: string) => (['España', 'Portugal', 'Francia', 'Italia', 'Alemania'].includes(pais) ? '€' : '$')
-export const presupuestoValido = (v: string) => ['€', '$'].some((s) => tramosPresupuesto(s).includes(v))
+export const presupuestoValido = (v: string) => ['€', '$'].some((s) => tramosPresupuesto(s).includes(v) || tramosAntiguos(s).includes(v))
 
 export const HORIZONTE_TXT = 'Abro los próximos 3 días hábiles. Si ninguno te encaja, escríbeme por Instagram o WhatsApp.'
 
