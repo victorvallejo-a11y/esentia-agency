@@ -1,0 +1,98 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prueba · Tu visita en presupuesto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--crema:#F6EEE4;--tinta:#1F1A17;--terra:#E2583E;--mostaza:#F2B33D;--teal:#2F6F73;--gris:#8A8178}
+*{box-sizing:border-box}body{margin:0;background:var(--crema);font-family:Inter,system-ui,sans-serif;color:var(--tinta)}
+main{max-width:560px;margin:0 auto;padding:28px 16px 60px}
+.tag{display:inline-block;background:var(--tinta);color:#fff;font-weight:800;font-size:12px;letter-spacing:2px;padding:7px 14px;border-radius:99px}
+h1{font-family:Sora,sans-serif;font-size:30px;line-height:1.1;margin:14px 0 8px;letter-spacing:-.5px}h1 span{color:var(--terra)}
+.sub{color:#4a423c;font-size:16px;line-height:1.45;margin:0 0 18px}
+.card{background:#fff;border-radius:22px;padding:20px;margin-bottom:14px;box-shadow:0 10px 30px rgba(60,40,20,.08)}
+.paso{font-weight:800;font-size:13px;letter-spacing:1.5px;color:var(--gris);margin-bottom:12px}
+.rec{display:flex;align-items:center;gap:16px}
+.mic{width:78px;height:78px;border-radius:50%;border:0;background:var(--terra);color:#fff;font-size:30px;flex:none;box-shadow:0 10px 20px rgba(226,88,62,.35);cursor:pointer}
+.mic.on{background:var(--tinta);animation:lat 1s infinite}@keyframes lat{50%{transform:scale(1.08)}}
+#estadoRec{font-weight:700}#tiempo{font-family:Sora;font-size:26px;font-weight:800;margin-top:2px}
+audio{width:100%;margin-top:14px}.link{background:none;border:0;color:var(--terra);font-weight:700;padding:8px 0;cursor:pointer}
+details{margin-top:14px}summary{font-weight:700;color:var(--teal);cursor:pointer}
+textarea,input{width:100%;font:inherit;font-size:16px;border:2px solid #EDE5DC;border-radius:14px;padding:12px 14px;margin-top:6px;background:#FCFAF7}
+textarea{min-height:120px;resize:vertical}label{display:block;font-weight:700;font-size:14px;margin-bottom:12px}
+.fuera{background:var(--tinta);color:#fff;border-radius:18px;padding:16px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.4}.fuera[hidden]{display:none}.fuera small{color:#d8cfc6;font-size:13px}
+.btnNav{display:block;text-align:center;background:var(--mostaza);color:var(--tinta);font-weight:800;font-size:16px;border:0;border-radius:12px;padding:12px;text-decoration:none;cursor:pointer}.btnNav.sec{background:#fff}.btnNav[hidden]{display:none}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.cta{width:100%;border:0;border-radius:16px;background:var(--mostaza);color:var(--tinta);font-family:Sora;font-weight:800;font-size:20px;padding:17px;margin-top:4px;cursor:pointer;box-shadow:0 10px 20px rgba(160,110,0,.25)}
+.cta:disabled{opacity:.5}.nota{font-size:13px;color:var(--gris);text-align:center;margin:12px 0 0}.error{color:#C0392B;font-weight:700;text-align:center;min-height:1em}
+.center{text-align:center}.spin{width:54px;height:54px;border-radius:50%;border:6px solid #EDE5DC;border-top-color:var(--terra);margin:6px auto 12px;animation:g 1s linear infinite}@keyframes g{to{transform:rotate(360deg)}}
+</style></head><body><main>
+<div id="fuera" class="fuera" hidden><b>🎙️ Aquí no me deja usar el micro.</b><span id="fueraTxt">Ábrelo en tu navegador para grabar el audio:</span><a id="abrirNav" class="btnNav" href="#">Abrir en el navegador</a><button id="copiar" type="button" class="btnNav sec">Copiar enlace</button><small>O sin salir: pulsa el micro de tu <b>teclado</b> y díctalo en el cuadro de abajo.</small></div>
+<div class="tag">PRUEBA · REFORMAS</div>
+<h1>Cuéntame una visita y te devuelvo el <span>presupuesto</span></h1>
+<p class="sub">Grábalo como se lo contarías a tu encargado: qué estancia, medidas más o menos y qué hay que hacer. En un minuto tienes las partidas ordenadas con precios de ejemplo.</p>
+<section class="card" id="c1">
+<div class="paso">1 · LA VISITA</div>
+<div class="rec"><button id="grabar" type="button" class="mic" aria-label="Grabar">🎙️</button><div><div id="estadoRec">Pulsa para grabar (máx. 2 min)</div><div id="tiempo">0:00</div></div></div>
+<audio id="oir" controls hidden></audio><button id="borrar" type="button" class="link" hidden>Borrar y repetir</button>
+<details id="det"><summary>Prefiero escribirlo</summary><textarea id="texto" maxlength="1500" placeholder="Ej.: Baño de 5 m², quitar la bañera y poner plato de ducha de 120, alicatar paredes hasta el techo, cambiar lavabo y váter y poner un punto de luz nuevo."></textarea></details>
+</section>
+<section class="card" id="c2">
+<div class="paso">2 · A QUIÉN SE LO MANDO</div>
+<label>Tu nombre<input id="nombre" maxlength="40" autocomplete="given-name"></label>
+<label>Tu empresa<input id="empresa" maxlength="60" autocomplete="organization"></label>
+<label>Email (te llega una copia)<input id="email" type="email" maxlength="120" autocomplete="email" inputmode="email"></label>
+<input id="web" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button id="enviar" type="button" class="cta">Hacer mi presupuesto</button>
+<p class="nota">Máximo 2 pruebas por persona · Los precios son de ejemplo, no tu tarifa</p>
+<p id="error" class="error"></p>
+</section>
+<section id="cargando" hidden class="card center"><div class="spin"></div><p id="paso" style="font-weight:800">Escuchando tu audio…</p></section>
+<section id="resultado" hidden></section>
+</main><script>
+const $=id=>document.getElementById(id);const t0=Date.now();const r=new URLSearchParams(location.search).get('r')||'';
+let rec=null,trozos=[],blob=null,timer=null,seg=0,stream=null;
+const TIPOS=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus','audio/ogg'];
+function parar(){clearInterval(timer);if(rec&&rec.state==='recording')rec.stop();}
+const UA=navigator.userAgent||'';const inApp=/Instagram|FBAN|FBAV|FB_IAB|Messenger|TikTok|musical_ly|Threads/i.test(UA);const android=/Android/i.test(UA);
+if(android){$('abrirNav').href='intent://'+location.host+location.pathname+location.search+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(location.href)+';end';}
+else{$('abrirNav').href='x-safari-'+location.href;$('fueraTxt').textContent='Ábrelo en tu navegador para grabar el audio. Si el botón no hace nada, toca los ··· de arriba a la derecha → «Abrir en el navegador externo».';}
+
+$('copiar').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('copiar').textContent='Copiado ✓';}catch(e){prompt('Copia este enlace:',location.href);}};
+function ayudaMicro(){$('fuera').hidden=false;$('det').open=true;$('fuera').scrollIntoView({behavior:'smooth'});}
+
+$('grabar').onclick=async()=>{
+ if(rec&&rec.state==='recording'){parar();return;}
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){$('estadoRec').textContent='Aquí no puedo grabar 👆';ayudaMicro();return;}
+ try{stream=await navigator.mediaDevices.getUserMedia({audio:true});}catch(e){$('estadoRec').textContent=(e&&e.name==='NotAllowedError'&&!inApp)?'Dale permiso al micro en el candado de la barra de direcciones, o díctalo abajo 👇':'No me deja usar el micro 👆';if(inApp||!e||e.name!=='NotAllowedError')ayudaMicro();else $('det').open=true;return;}
+ const tipo=TIPOS.find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
+ rec=new MediaRecorder(stream,tipo?{mimeType:tipo,audioBitsPerSecond:32000}:undefined);trozos=[];
+ rec.ondataavailable=e=>{if(e.data&&e.data.size)trozos.push(e.data);};
+ rec.onstop=()=>{blob=new Blob(trozos,{type:rec.mimeType||tipo||'audio/webm'});$('oir').src=URL.createObjectURL(blob);$('oir').hidden=false;$('borrar').hidden=false;$('estadoRec').textContent='Audio listo ✓';stream.getTracks().forEach(t=>t.stop());$('grabar').classList.remove('on');$('grabar').textContent='🎙️';};
+ rec.start(1000);seg=0;$('tiempo').textContent='0:00';$('grabar').classList.add('on');$('grabar').textContent='■';$('estadoRec').textContent='Grabando… pulsa para parar';
+ timer=setInterval(()=>{seg++;$('tiempo').textContent=Math.floor(seg/60)+':'+String(seg%60).padStart(2,'0');if(seg>=120)parar();},1000);
+};
+$('borrar').onclick=()=>{blob=null;$('oir').hidden=true;$('borrar').hidden=true;$('tiempo').textContent='0:00';$('estadoRec').textContent='Pulsa para grabar (máx. 2 min)';};
+const b64=b=>new Promise((ok,ko)=>{const f=new FileReader();f.onload=()=>ok(String(f.result).split(',')[1]||'');f.onerror=ko;f.readAsDataURL(b);});
+const PASOS=['Escuchando tu audio…','Ordenando las partidas…','Poniendo precios de ejemplo…','Sumando el total…'];
+$('enviar').onclick=async()=>{
+ $('error').textContent='';
+ if(rec&&rec.state==='recording'){parar();await new Promise(x=>setTimeout(x,600));}
+ const texto=$('texto').value.trim(),email=$('email').value.trim();
+ if(!blob&&texto.length<20){$('error').textContent='Graba un audio o escribe la visita (un par de frases).';return;}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){$('error').textContent='Pon un email válido: te llega una copia.';return;}
+ if(blob&&blob.size>4000000){$('error').textContent='El audio es muy largo: máximo 2 minutos.';return;}
+ $('enviar').disabled=true;$('cargando').hidden=false;let i=blob?0:1;$('paso').textContent=PASOS[i];
+ const iv=setInterval(()=>{i=Math.min(i+1,3);$('paso').textContent=PASOS[i];},4500);$('cargando').scrollIntoView({behavior:'smooth',block:'center'});
+ try{
+  const cuerpo={nombre:$('nombre').value.trim(),empresa:$('empresa').value.trim(),email,texto,web:$('web').value,t0,r};
+  if(blob){cuerpo.audioB64=await b64(blob);cuerpo.audioTipo=(blob.type||'audio/webm').split(';')[0];}
+  const res=await fetch('https://devn8n.esentiaagency.es/webhook/form/reforma/enviar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cuerpo)});
+  const d=await res.json().catch(()=>({}));clearInterval(iv);$('cargando').hidden=true;
+  if(!d.ok){$('error').textContent=d.error||'No ha podido ser. Prueba otra vez en un momento.';$('enviar').disabled=false;return;}
+  $('c1').hidden=true;$('c2').hidden=true;$('resultado').innerHTML=d.html;$('resultado').hidden=false;
+  if(d.pdf){try{const bin=atob(d.pdf),u8=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)u8[k]=bin.charCodeAt(k);
+   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([u8],{type:'application/pdf'}));a.download=d.pdfNombre||'presupuesto.pdf';a.target='_blank';a.className='cta';a.style.display='block';a.style.textAlign='center';a.style.textDecoration='none';a.style.margin='0 0 14px';a.textContent='📄 Descargar el PDF';
+   $('resultado').prepend(a);}catch(e){}}
+  window.scrollTo({top:0,behavior:'smooth'});
+ }catch(e){clearInterval(iv);$('cargando').hidden=true;$('error').textContent='Se ha cortado la conexión. Prueba otra vez.';$('enviar').disabled=false;}
+};
+</script></body></html>

@@ -15,6 +15,13 @@ const nextConfig = {
   // Oculta el header "X-Powered-By: Next.js" — no des pistas al atacante
   poweredByHeader: false,
 
+  // /prueba = regalo REFORMA de Instagram (página estática en public/prueba.html, la genera
+  // demos-video-n8n/_gen_prueba_reforma.cjs). Va aquí y no en n8n porque n8n sirve sus páginas
+  // con CSP sandbox y el navegador bloquea el micro.
+  async rewrites() {
+    return [{ source: '/prueba', destination: '/prueba.html' }]
+  },
+
   // ── Security Headers ─────────────────────────────────────────────────────
   async headers() {
     // En desarrollo, Next necesita 'unsafe-eval' para el hot-reload (HMR/React Refresh).
@@ -57,6 +64,29 @@ const nextConfig = {
           },
         ],
       },
+      // Página de prueba: micro permitido y solo puede hablar con el webhook de n8n
+      ...['/prueba', '/prueba.html'].map((source) => ({
+        source,
+        headers: [
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(self), geolocation=(), payment=()' },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: blob: https:",
+              "media-src 'self' blob:",
+              "connect-src 'self' https://devn8n.esentiaagency.es",
+              "frame-src 'none'",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join('; '),
+          },
+        ],
+      })),
     ]
   },
 }
